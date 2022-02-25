@@ -14,7 +14,7 @@
                             <div class="card income-card card-primary">
                                 <div class="card-body text-center">
                                     <div class="round-box">
-                                        <!-- <img src="{{ asset('assets/images/dashboard/check.png') }}" style="width: 60%; height: 60%;"> -->
+                                        <!-- <img src="{{ asset('public/assets/images/dashboard/check.png') }}" style="width: 60%; height: 60%;"> -->
                                         <i class="fa fa-check" style="font-size: 30px; padding: 10px;"></i>
                                     </div>
                                     <h5>{{ $approved }}</h5>
@@ -30,7 +30,7 @@
                             <div class="card income-card card-primary">
                                 <div class="card-body text-center">
                                     <div class="round-box">
-                                        <img src="{{ asset('images/Capture.jpg') }}" height="50px" width="50px">
+                                        <img src="{{ asset('public/images/Capture.jpg') }}" height="50px" width="50px">
                                         <!-- <i class="fa fa-user-times" style="font-size: 30px; padding: 10px;"></i> -->
                                     </div>
                                     <h5>{{ $pending }}</h5>
@@ -46,7 +46,7 @@
                             <div class="card income-card card-primary">
                                 <div class="card-body text-center approved">
                                     <div class="round-box">
-                                        <!-- <img src="{{ asset('assets/images/dashboard/check.png') }}" style="width: 60%; height: 60%;"> -->
+                                        <!-- <img src="{{ asset('public/assets/images/dashboard/check.png') }}" style="width: 60%; height: 60%;"> -->
                                         <i class="fa fa-users" style="font-size: 30px; padding: 10px;"></i>
                                     </div>
                                     <h5>{{ $users->where('type', 'user')->count() }}</h5>
@@ -60,7 +60,7 @@
                             <div class="card income-card card-primary">
                                 <div class="card-body text-center">
                                     <div class="round-box">
-                                        <img src="{{ asset('images/4532517.png') }}" height="50px" width="50px">
+                                        <img src="{{ asset('public/images/4532517.png') }}" height="50px" width="50px">
                                         <!--  <i class="fa fa-ban" style="font-size: 30px; padding: 10px;"></i> -->
                                     </div>
                                     <h5>{{ $rejected }}</h5>
@@ -76,7 +76,7 @@
                             <div class="card income-card card-primary">
                                 <div class="card-body text-center">
                                     <div class="round-box">
-                                        <!-- <img src="{{ asset('assets/images/dashboard/check.png') }}" style="width: 60%; height: 60%;"> -->
+                                        <!-- <img src="{{ asset('public/assets/images/dashboard/check.png') }}" style="width: 60%; height: 60%;"> -->
                                         <i class="fa fa-trash" style="font-size: 30px; padding: 10px;"></i>
                                     </div>
                                     <h5>{{ $deleted }}</h5>
