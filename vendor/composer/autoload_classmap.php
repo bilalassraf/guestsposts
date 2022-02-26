@@ -1238,6 +1238,8 @@ return array(
     'Faker\\Provider\\zh_TW\\Text' => $vendorDir . '/fakerphp/faker/src/Faker/Provider/zh_TW/Text.php',
     'Faker\\UniqueGenerator' => $vendorDir . '/fakerphp/faker/src/Faker/UniqueGenerator.php',
     'Faker\\ValidGenerator' => $vendorDir . '/fakerphp/faker/src/Faker/ValidGenerator.php',
+    'Fideloper\\Proxy\\TrustProxies' => $vendorDir . '/fideloper/proxy/src/TrustProxies.php',
+    'Fideloper\\Proxy\\TrustedProxyServiceProvider' => $vendorDir . '/fideloper/proxy/src/TrustedProxyServiceProvider.php',
     'Fruitcake\\Cors\\CorsService' => $vendorDir . '/fruitcake/php-cors/src/CorsService.php',
     'Fruitcake\\Cors\\CorsServiceProvider' => $vendorDir . '/fruitcake/laravel-cors/src/CorsServiceProvider.php',
     'Fruitcake\\Cors\\Exceptions\\InvalidOptionException' => $vendorDir . '/fruitcake/php-cors/src/Exceptions/InvalidOptionException.php',
