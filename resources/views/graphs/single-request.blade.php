@@ -30,7 +30,7 @@
                             <div class="card income-card card-primary">
                                 <div class="card-body text-center">
                                     <div class="round-box">
-                                        <img src="{{ asset('public/images/Capture.jpg') }}" height="50px" width="50px">
+                                        <img src="{{ asset('images/Capture.jpg') }}" height="50px" width="50px">
                                         <!-- <i class="fa fa-user-times" style="font-size: 30px; padding: 10px;"></i> -->
                                     </div>
                                     <h5>{{ $pending }}</h5>
@@ -60,7 +60,7 @@
                             <div class="card income-card card-primary">
                                 <div class="card-body text-center">
                                     <div class="round-box">
-                                        <img src="{{ asset('public/images/4532517.png') }}" height="50px" width="50px">
+                                        <img src="{{ asset('images/4532517.png') }}" height="50px" width="50px">
                                         <!--  <i class="fa fa-ban" style="font-size: 30px; padding: 10px;"></i> -->
                                     </div>
                                     <h5>{{ $rejected }}</h5>

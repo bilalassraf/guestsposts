@@ -28,7 +28,7 @@ button.btn.btn-primary.bg-green.text-centergi {
             <div class="card card-primary card-outline">
               <div class="card-body box-profile">
                 <div class="text-center">
-                  <img class="profile-user-img  rounded-circle" src="{{asset('public/'.$user->profile)}}"  height="100px" width="100px">
+                  <img class="profile-user-img  rounded-circle" src="{{asset($user->profile)}}"  height="100px" width="100px">
                 </div>
 
                 <h3 class="profile-username text-center">{{$user->name}}</h3>

@@ -11,8 +11,8 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
-<script src="{{asset('public/plugins/jquery/jquery.min.js')}}"></script>
-<script src="{{asset('public/plugins/bootstrap-toggle/js/bootstrap-toggle.min.js')}}"></script>
+<script src="{{asset('plugins/jquery/jquery.min.js')}}"></script>
+<script src="{{asset('plugins/bootstrap-toggle/js/bootstrap-toggle.min.js')}}"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
@@ -39,25 +39,25 @@
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="{{ asset('public/plugins/fontawesome-free/css/all.min.css')}}">
+  <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css')}}">
   <!-- IonIcons -->
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Theme style -->
-  <link rel="stylesheet" href="{{ asset('public/dist/css/adminlte.min.css')}}">
+  <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css')}}">
   <!-- jQuery -->
-<script src="{{ asset('public/plugins/jquery/jquery.min.js')}}"></script>
+<script src="{{ asset('plugins/jquery/jquery.min.js')}}"></script>
 <!-- Bootstrap -->
-<script src="{{ asset('public/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+<script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 <!-- AdminLTE -->
-<script src="{{ asset('public/dist/js/adminlte.js')}}"></script>
+<script src="{{ asset('dist/js/adminlte.js')}}"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <!-- OPTIONAL SCRIPTS -->
-<script src="{{ asset('public/plugins/chart.js/Chart.min.js')}}"></script>
+<script src="{{ asset('plugins/chart.js/Chart.min.js')}}"></script>
 <!-- AdminLTE for demo purposes -->
 {{-- <script src="{{ asset('dist/js/demo.js')}}"></script> --}}
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="{{ asset('public/dist/js/pages/dashboard3.js')}}"></script>
+<script src="{{ asset('dist/js/pages/dashboard3.js')}}"></script>
   <style>
     .nav-pills .nav-link.active, .nav-pills .show>.nav-link
     {

@@ -29,7 +29,7 @@
 }
 
 .bg-image {
-  background-image: url('{{ asset('public/images/login-image.png') }}');
+  background-image: url('{{ asset('images/login-image.png') }}');
   background-size: cover;
   background-position: center;
 }
@@ -119,7 +119,7 @@
                         <div class="card-body">
                           <form class="theme-form login-form" method="POST" action="{{ route('login') }}">
                             @csrf
-
+                            
                                 <h2>Login</h2>
                                 <h6>Welcome back! Log in to your account.</h6>
                                 <div class="form-group">

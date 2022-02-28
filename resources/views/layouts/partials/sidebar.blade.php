@@ -15,7 +15,7 @@
             @if(auth()->user()->profile)
             <img src="{{ asset(auth()->user()->profile) }}" class="img-circle rounded-circle" alt="User Image" height="200px" width="200px">
             @else()
-            <img src="{{ asset('./public/images/00000b.png') }}" class="img-circle rounded-circle" alt="User Image" height="200px" width="200px">
+            <img src="{{ asset('./images/00000b.png') }}" class="img-circle rounded-circle" alt="User Image" height="200px" width="200px">
             @endif
           </div>
           <div class="info">
@@ -24,7 +24,8 @@
             @else
             <a href="#" class="d-block text-white pl-4">{{ auth()->user()->name }}</a>
             @endif
-            <a href="#" class="d-block text-white">{{ auth()->user()->email }}</a>
+            <a href="{{ route('user.profile',auth()->user()->id) }}" class="d-block text-white">{{ auth()->user()->email }}</a>
+
           </div>
         </div>
 

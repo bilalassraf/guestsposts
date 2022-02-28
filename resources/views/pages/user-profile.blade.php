@@ -55,9 +55,9 @@ Profile
                     <div class="card-body box-profile">
                         <div class="text-center">
                             @if($user->profile)
-                            <img class="profile-user-img  rounded-circle" src="{{ asset('public/'.$user->profile) }}" height="100px" width="100px">
+                            <img class="profile-user-img  rounded-circle" src="{{ asset($user->profile) }}" height="100px" width="100px">
                             @else
-                            <img src="{{ asset('./public/images/00000b.png') }}" class="img-circle rounded-circle" alt="User Image" height="100px" width="100px">
+                            <img src="{{ asset('./images/00000b.png') }}" class="img-circle rounded-circle" alt="User Image" height="100px" width="100px">
                             @endif
                         </div>
 
