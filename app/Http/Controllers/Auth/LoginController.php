@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+
+
 
 class LoginController extends Controller
 {
@@ -37,4 +40,26 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+    public function showLoginForm()
+    {
+        return view('authentication.login');
+    }
+    public function login(Request $request)
+    {
+
+        $usernamefield = Filter_var($request->email,FILTER_VALIDATE_EMAIL) ? 'email': 'name';
+        if(auth()->attempt([$usernamefield => $request->email, 'password' => $request->password]))
+        {
+            return redirect()->route('dashboard');
+        }else{
+        return back()->with('error','Credentails Does Not Match');
+        }
+    }
+    public function logout ()
+    {
+        auth()->logout();
+        return view('authentication.login');
+    }
+
+
 }

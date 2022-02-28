@@ -51,6 +51,3 @@ Route::post('import/store',[AdminController::class,'importstore'])->name('import
 Route::get('/add/web', function () {
     return view('pages.user.user-add');
 })->name('addWeb');
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
