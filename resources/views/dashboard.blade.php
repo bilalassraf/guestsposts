@@ -71,7 +71,7 @@ Dashboard
                                     <input type="checkbox" name="rejected" id="rejected" class="float-right status">
                                     <label for="rejected">
                                     <div class="round-box">
-                                        <img src="{{ asset('images/4532517.png') }}" height="50px" width="50px">
+                                        <img src="{{ asset('public/images/4532517.png') }}" height="50px" width="50px">
                                         <!--  <i class="fa fa-ban" style="font-size: 30px; padding: 10px;"></i> -->
                                     </div>
                                     <h5>{{ $rejected }}</h5>
