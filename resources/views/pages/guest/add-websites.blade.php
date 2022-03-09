@@ -25,10 +25,21 @@ Add Website
                             </div>
                         </div>
                         <input type="hidden" value="{{ auth()->user()->id }}" name="user_id">
+                        @if (auth()->user()->type == "admin")
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="outreachcoodinator1">Outreach Coordinator</label>
+                                    <select class="form-control" name="coordinator[]" id="outreachcoodinator1">
+                                        @foreach ($guestCoordinator as $Coordinator)
+                                            <option>{{$Coordinator}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        @endif
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="outreachcoodinator">Outreach Coordinator</label>
-                                <input class="form-control" id="outreachcoodinator" type="text" placeholder="Outreach Coordinator" value="{{  old('coordinator') }}" name="coordinator" autocomplete="off" required>
+                                <input class="form-control" id="outreachcoodinator" type="hidden" value="{{ auth()->user()->email }}" name="coordinator" autocomplete="off" required>
                             </div>
                         </div>
                     </div>
@@ -142,19 +153,21 @@ Add Website
 </div>
 @endsection
 <style>
-    .select2-search__field{
-        display: none;
-    }.select2-container--default .select2-selection--multiple .select2-selection__choice__display {
-    padding-left: 17px !important;
-    }.select2-selection__choice__remove:hover {
-    color: black !important;
-    margin-left: 0px !important;
-    }
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    padding-left: 20px !important;
+}
+textarea.select2-search__field {
+    display: none;
+}
 </style>
+
 <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script type="text/javascript">
+
     $(document).ready(function() {
         //called when key is pressed in textbox
         $("#price").keypress(function(e) {
@@ -184,8 +197,10 @@ Add Website
         });
     });
     $(document).ready(function() {
-        $('.select2').select2({
-            tags: true
-        });
+        $('.select2').select2({});
+        $('#mySelect2').val(null).trigger('change');
+    });
+    $(document).ready(function(){
+        $("#outreachcoodinator1").select2();
     });
 </script>

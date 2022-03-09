@@ -24,8 +24,11 @@
             @else
             <a href="#" class="d-block text-white pl-4">{{ auth()->user()->name }}</a>
             @endif
+            @if(auth()->user()->type == 'admin')
             <a href="{{ route('user.profile',auth()->user()->id) }}" class="d-block text-white">{{ auth()->user()->email }}</a>
-
+            @else
+            <a href="#" class="d-block text-white">{{ auth()->user()->email }}</a>
+            @endif
           </div>
         </div>
 
@@ -96,31 +99,31 @@
               <li class="nav-item @if(Route::currentRouteName()=='admin.add.niche' || Route::currentRouteName()=='admin.show.niches' ||Route::currentRouteName()=='admin.show.deleted.niche') menu-is-opening menu-open @endif">
                 <a href="#" class="nav-link">
                   <i class="nav-icon fa fa-list-alt text-white"></i>
-                  <p class="text-white"> Niche Post <i class="fas fa-angle-left right text-white"></i></p>
+                  <p class="text-white"> Niche Edits <i class="fas fa-angle-left right text-white"></i></p>
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item active">
                     <a href="{{ route('admin.add.niche') }}" class="nav-link text-white {{ (\Request::route()->getName() == 'admin.add.niche') ? 'active' : '' }}">
                       <i class="far fa-menu nav-icon"></i>
-                      <p>Add Niche</p>
+                      <p>Add Website</p>
                     </a>
                   </li>
                   <li class="nav-item active">
                     <a href="{{route('admin.show.niches')}}" class="nav-link text-white {{ (\Request::route()->getName() == 'admin.show.niches') ? 'active' : '' }}">
                       <i class="far fa-menu nav-icon"></i>
-                      <p>View Niche</p>
+                      <p>View Websites</p>
                     </a>
                   </li>
                   <li class="nav-item active">
                     <a href="{{route('admin.show.deleted.niche')}}" class="nav-link text-white{{ (\Request::route()->getName() == 'admin.show.deleted.niche') ? 'active' : '' }}">
                       <i class="far fa-menu nav-icon "></i>
-                      <p>Deleted Niches</p>
+                      <p>Deleted Websites</p>
                     </a>
                   </li>
                 </ul>
               </li>
             @endif
-            @if(auth()->user()->type == 'user')
+            @if(auth()->user()->type == 'user' || auth()->user()->type == 'outreach_coordinator' || auth()->user()->type == 'moderator')
               <li class="nav-item active">
                 <a href="{{route('dashboard')}}" class="nav-link text-white {{ (\Request::route()->getName() == 'dashboard') ? 'active' : '' }}">
                   <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -207,7 +210,7 @@
                   <a href="" class="nav-link ">
                     <i class="nav-icon fa fa-television text-white"></i>
                     <p class="text-white">
-                      Niche Post
+                      Niche Edits
                       <i class="fas fa-angle-left right text-white"></i>
                     </p>
                   </a>
@@ -216,7 +219,7 @@
                       <li class="nav-item active">
                         <a href="{{ route('admin.add.niche') }}" class="nav-link text-white {{ (\Request::route()->getName() == 'admin.add.niche') ? 'active' : '' }}">
                           <i class="far fa-menu nav-icon "></i>
-                          <p >Add Niche</p>
+                          <p >Add Website</p>
                         </a>
                       </li>
                     @endif
@@ -224,7 +227,7 @@
                       <li class="nav-item">
                         <a href="{{route('admin.show.niches')}}" class="nav-link text-white {{ (\Request::route()->getName() == 'admin.show.niches') ? 'active' : '' }}">
                           <i class="far fa-menu nav-icon "></i>
-                          <p >View Niche</p>
+                          <p >View Websites</p>
                         </a>
                       </li>
                     @endif

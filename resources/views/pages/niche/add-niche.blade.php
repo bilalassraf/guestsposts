@@ -23,11 +23,18 @@
                                 </div>
                             </div>
                             <input type="hidden" value="{{ auth()->user()->id }}" name="user_id">
+                            @if (auth()->user()->type == "admin")
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="outreachcoodinator">Outreach Coordinator</label>
+                                        <input class="form-control" id="outreachcoodinator" type="text"
+                                            placeholder="Outreach Coordinator" name="coordinator" value="{{  old('coordinator') }}" autocomplete="off" required>
+                                    </div>
+                                </div>
+                            @endif
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="outreachcoodinator">Outreach Coordinator</label>
-                                    <input class="form-control" id="outreachcoodinator" type="text"
-                                        placeholder="Outreach Coordinator" name="coordinator" value="{{  old('coordinator') }}" autocomplete="off" required>
+                                    <input class="form-control" id="outreachcoodinator" type="hidden" name="coordinator" value="{{ auth()->user()->email }}" autocomplete="off" required>
                                 </div>
                             </div>
                         </div>

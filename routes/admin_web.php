@@ -35,6 +35,9 @@ Route::get('get-niche-requests', [AdminController::class,'nicheRequests'])->name
 //user request datd
 Route::get('get-user-requests', [AdminController::class,'userRequestsData'])->name('get-user-requests');
 
+Route::post('user/new/price/{id}',[AdminController::class,'newPrice'])->name('user.new.price');
+Route::post('user/niche/new/price/{id}',[AdminController::class,'nicheNewPrice'])->name('user.niche.new.price');
+
 Route::get('admin/show/user/request/search',[AdminController::class,'showSearch'])->name('showSearch');
 Route::get('admin/show/user/request/{id}',[AdminController::class,'showSingleRequest'])->name('admin.show.single.request');
 Route::get('admin/show/guest/requests',[AdminController::class,'showGuestRequests'])->name('admin.show.guest.request');
@@ -77,7 +80,8 @@ Route::get('specific/chart',[AdminController::class,'specific_chart'])->name('sp
 
 //user/permission
 Route::post('admin/allow/user/{id}',[AdminController::class,'permissions'])->name('admin.user.permissions');
-
+Route::get('get/details/{id}',[AdminController::class,'getDetails'])->name('getDetails');
+Route::get('get/niche/details/{id}',[AdminController::class,'getNicheDetails'])->name('getNicheDetails');
 //niche
 Route::get('admin/add/niche',[AdminController::class,'addNicheForm'])->name('admin.add.niche');
 Route::post('admin/store/niche',[AdminController::class,'addStoreNiche'])->name('admin.store.niche');

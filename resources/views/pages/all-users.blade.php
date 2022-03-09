@@ -17,7 +17,7 @@ User-Info
                         <div class="float-right mt-3">
                             <a href="#addUserModal" class="btn btn-primary bg-white p-2 border-0 " data-toggle="modal" style="font-weight: 600 !important;"><i class="text-green fa fa-plus" style="font-size: 17px;"></i> <span>Add User</span></a>
                             {{-- <a href="" id="delete-selected" class="btn btn-primary bg-white p-2 border-0 " style="font-weight: 600 !important;"><i class="text-green fa fa-trash" style="font-size: 20px;"> </i> <span>Delete selected</span></a> --}}
-                            <button type="submit" class="btn btn-primary bg-white border-0" style="font-weight: 600 !important; padding:8px;"><i class="text-green fa fa-trash" style="font-size: 17px;"></i><span> Delete Selected</span></button>
+                            <button type="submit" class="btn btn-primary bg-white border-0" style="font-weight: 600 !important; padding:8px;"><i class="text-green fa fa-trash" style="font-size: 17px;"></i><span> Delete</span></button>
                         </div>
                     </div>
                     <div class="card-body table-responsive p-0">

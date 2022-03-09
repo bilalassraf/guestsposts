@@ -190,7 +190,7 @@ class FrontendController extends Controller
          $userRequest->web_description = $request->web_description;
          $userRequest->special_note = $request->special_note;
          $userRequest->update();
-         
+
         return redirect(route('user.requests'))->with('success','Your request has updated');
     }
     public function userShowProfile($id)

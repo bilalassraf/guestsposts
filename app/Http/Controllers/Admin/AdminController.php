@@ -22,6 +22,7 @@ use Prophecy\Doubler\Generator\Node\ReturnTypeNode;
 // use Excel;
 use DB;
 use App\Imports\UserRequestImport;
+use App\Models\Permission;
 use Illuminate\Support\Facades\DB as FacadesDB;
 use DataTables;
 class AdminController extends Controller
@@ -33,7 +34,24 @@ class AdminController extends Controller
         $rejected = UserRequest::where('status', 'rejected')->count();
         $deleted = UserRequest::where('status', 'deleted')->count();
         $pending = UserRequest::where('status', 'pending')->count();
+
         return view('admin.dashboard.admin-dashboard', compact('users', 'approved', 'pending', 'deleted', 'rejected'));
+    }
+    public function newPrice(Request $request , $id)
+    {
+        $new_price = UserRequest::find($id);
+        $new_price->new_price = $request->new_price;
+        $new_price->status = 'pending';
+        $new_price->update();
+        return back()->with('success', 'New Price Updated Successfully');
+    }
+    public function nicheNewPrice(Request $request , $id)
+    {
+        $niche_new_price = Niche::find($id);
+        $niche_new_price->niche_new_price = $request->niche_new_price;
+        $niche_new_price->status = 'pending';
+        $niche_new_price->update();
+        return back()->with('success', 'New Price Updated Successfully');
     }
     public function addCategory(Request $request)
     {
@@ -117,8 +135,7 @@ class AdminController extends Controller
         $users = User::all();
         return view('pages.all-users', compact('users'));
     }
-    public function createUser(Request $request)
-    {
+    public function createUser(Request $request){
         $request->validate([
             'name' => 'required',
             'email' => 'required|string|email|max:255|unique:users',
@@ -127,6 +144,7 @@ class AdminController extends Controller
         User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'type' => $request->type,
             'password' => bcrypt($request->password),
         ]);
         return back()->with('success', 'User added successfully');
@@ -155,25 +173,44 @@ class AdminController extends Controller
     public function userProfile($id)
     {
         $user = User::find($id);
+        $user_permissions = $user->permissions()->pluck('permissions.id')->toArray();
         $request = UserRequest::where('user_id', $user->id)->get();
         $user_niche = User::find($id);
         $request_niche = Niche::where('user_id', $user->id)->get();
-        return view('pages.user-profile', compact('user', 'request','user_niche' , 'request_niche'));
+        $permission = Permission::where('type',1)->get();
+        $permissionNiche = Permission::where('type',2)->get();
+        return view('pages.user-profile', compact('user', 'request','user_niche' , 'request_niche','permission','user_permissions','permissionNiche'));
     }
     public function addGuestRequestForm()
     {
         $categories = Category::all();
-        return view('pages.guest.add-websites', compact('categories'));
+        $guestCoordinator = UserRequest::pluck('Coordinator');
+        return view('pages.guest.add-websites', compact('categories','guestCoordinator'));
     }
     public function showGuestRequests()
     {
         $user = User::find(Auth::user()->id);
+        $user_permissions = $user->permissions()->where('type', 1)->pluck('permissions.name')->toArray();
         if($user->type == 'admin'){
             $guest_requests = UserRequest::orderBy('id', 'DESC')->get();
         }else{
             $guest_requests = $user->user_request;
         }
-        return view('pages.guest.all-web-requests', compact("guest_requests"));
+        return view('pages.guest.all-web-requests', compact("guest_requests","user_permissions"));
+    }
+    public function getDetails($id)
+    {
+        $data['guest_request']= UserRequest::where('id', $id)->first();
+        $data['user_permissions'] = Auth::user()->permissions()->where('type', 1)->pluck('permissions.name')->toArray();
+        $html = view('pages.guestDetails',$data)->render();
+        return $html;
+    }
+    public function getNicheDetails($id)
+    {
+        $data['niche_request']= Niche::where('id', $id)->first();
+        $data['user_permissions'] = Auth::user()->permissions()->where('type', 2)->pluck('permissions.name')->toArray();
+        $html = view('pages.nicheDetails',$data)->render();
+        return $html;
     }
     public function allGuestRequests()
     {
@@ -212,9 +249,9 @@ class AdminController extends Controller
     public function guestRequestDelete($id)
     {
         $permission = UserRequest::find($id);
-        if ($permission->status == 'pending' || $permission->status == 'approved' || $permission->status == 'rejected') {
+
             $permission->status = 'deleted';
-            $permission->update();
+            $permission->update();if ($permission->status == 'pending' || $permission->status == 'approved' || $permission->status == 'rejected') {
             $permission->delete();
             return redirect(route('admin.show.guest.request'))->with('success', 'Request has been deleted');
         }
@@ -555,6 +592,7 @@ class AdminController extends Controller
     }
     public function permissions(Request $request, $id)
     {
+      //  dd($request->all());
         $user = User::find($id);
         $user->user_info = $request->user_info ? 'on' : 'off';
         $user->add_guest_post = $request->add_guest_post ? 'on' : 'off';
@@ -566,6 +604,11 @@ class AdminController extends Controller
         $user->add_category = $request->add_category ? 'on' : 'off';
         $user->view_all_categories = $request->view_all_categories ? 'on' : 'off';
         $user->update();
+
+        if($request->ids){
+         $user->permissions()->sync($request->ids);
+        }
+
         return back()->with('success', 'Changes Updated Successfully');
     }
 
@@ -583,7 +626,7 @@ class AdminController extends Controller
         $host =  str_replace('www.' , '', $host);
         $request->web_url = $host;
         $request->validate([
-            
+
             'coordinator'      => 'required',
             'price'            => 'required|integer',
             // 'company_price'    => 'required|integer',
@@ -597,7 +640,7 @@ class AdminController extends Controller
             'citation_flow'     => 'required',
             'email'             => 'required',
             'web_description'   => 'required',
-           
+
             // 'special_note'      => 'required',
         ],
         [
@@ -651,17 +694,16 @@ class AdminController extends Controller
 
             return '<label><input type="checkbox" class="check sub_chk" value="'.$row->id.'" name="ids[]"></label>
                     <a href="#" style="cursor: pointer; color:black; display: inline;" class="detail dropdown-toggle">
-                        Detail
                     </a>';
         })->addColumn('actions', function($request){
             return view('pages.guest.actions', compact('request'));
+        })->editColumn('price', function($request){
+            return view('pages.guest.newPrice', compact('request'));
         })->addColumn('categories', function ($request) {
             return implode(', ', $request->categories->pluck('category')->toArray());
-        })
-        ->editColumn('updated_at', function($row){
-           return date("Y-m-d h:i:s", strtotime($row->updated_at));
-        })
-     ->rawColumns(['check_box','action','categories'])
+        })->editColumn('updated_at', function($row){
+           return date("Y-m-d", strtotime($row->updated_at));
+        })->rawColumns(['check_box','action','categories'])
         ->make(true);
     }
     public function nicheRequests()
@@ -677,13 +719,13 @@ class AdminController extends Controller
 
             return '<label><input type="checkbox" class="check sub_chk" value="'.$row->id.'" name="ids[]"></label>
                     <a href="#" style="cursor: pointer; color:black; display: inline;" class="detail dropdown-toggle">
-                        Detail
                     </a>';
         })->addColumn('niche_actions', function($niche){
             return view('pages.niche.niche-actions', compact('niche'));
-        })
-        ->editColumn('updated_at', function($row){
-           return date("Y-m-d h:i:s", strtotime($row->updated_at));
+        })->editColumn('price', function($request){
+            return view('pages.niche.newPrice', compact('request'));
+        })->editColumn('updated_at', function($row){
+           return date("Y-m-d", strtotime($row->updated_at));
         })->addColumn('categories', function ($row) {
             return implode(', ', $row->categories->pluck('category')->toArray());
         })
@@ -698,7 +740,6 @@ class AdminController extends Controller
 
             return '<label><input type="checkbox" class="check sub_chk" value="'.$row->id.'" name="ids[]"></label>
                     <a href="#" style="cursor: pointer; color:black; display: inline;" class="detail dropdown-toggle">
-                        Detail
                     </a>';
         })->addColumn('categories', function ($request) {
             return implode(', ', $request->categories->pluck('category')->toArray());
@@ -717,8 +758,10 @@ class AdminController extends Controller
         }else{
             $niches = $user->Niche;
         }
+        $user_permissions = $user->permissions()->where('type', 2)->pluck('permissions.name')->toArray();
         $categories = Category::all();
-        return view('pages.niche.all-niche-request', compact('niches', 'categories'));
+        //dd( $user_permissions);
+        return view('pages.niche.all-niche-request', compact('niches', 'categories', 'user_permissions'));
     }
     public function editNicheRequest(Request $request, $id)
     {
@@ -1115,7 +1158,7 @@ class AdminController extends Controller
     }
     public function importExportView()
     {
-       return view('admin.show.guest.request');
+       return view('admin.show.guest.request', compact('guestCoordinator'));
     }
 
     public function importstore(Request $request)

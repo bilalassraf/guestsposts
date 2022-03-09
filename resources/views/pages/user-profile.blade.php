@@ -494,8 +494,7 @@ Profile
                                         <div class="card-header bg-dark">Access to user Information</div>
                                         <div class="card-body">
                                             <div class="form-row">
-                                                <div class="form-group col-md-2">
-                                                    {{--<input type="checkbox" id="user_info" name="user_info" value="1" data-style="slow" data-on="Allow" data-off="Deny" data-onstyle="dark" @if ($user->user_info == 'on') checked @endif> --}}
+                                                <div class="form-group col-md-4">
                                                     <div class="wrapper">
                                                         <div class="switch_box box_1">
                                                             <label for="addfund" class="pr-3">User Info</label>
@@ -510,19 +509,49 @@ Profile
                                             <div class="form-row ">
                                                 <div class="wrapper col-md-4">
                                                     <div class="switch_box box_1">
-                                                        <label for="addfund" class="pr-3">Add Guest Post</label>
+                                                        <label for="addfund" class="pr-3">Add Websites</label>
                                                       <input type="checkbox" class="switch_1" id="guest_info" name="add_guest_post" value="1" data-style="slow" data-on="Allow" data-off="Deny" data-onstyle="dark" @if ($user->add_guest_post == 'on') checked @endif >
                                                     </div>
                                                 </div>
                                                 <div class="wrapper col-md-4">
                                                     <div class="switch_box box_1">
-                                                        <label for="addfund" class="pr-3">View Guest Post</label>
+                                                        <label for="addfund" class="pr-3">View Websites</label>
                                                       <input type="checkbox" class="switch_1" id="view_Guest_info" name="view_all_guest_post" value="1" data-style="slow" data-on="Allow" data-off="Deny" data-onstyle="dark" @if ($user->view_all_guest_post == 'on') checked @endif>
                                                     </div>
                                                 </div>
+                                                <div class="modal" id="newPriceModel" tabindex="-1" data-backdrop="false" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered">
+                                                      <div class="modal-content">
+                                                        <div class="modal-header  bg-green">
+                                                          <h5 class="modal-title" id="exampleModalLabel1">Change Permissions Setting</h5>
+                                                          <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                          </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-group row">
+                                                                @csrf
+                                                                @foreach ($permission as $permission)
+                                                                    <div class="wrapper col-md-6 mb-3">
+                                                                        <div class="switch_box box_1 row">
+                                                                            <label for="input-{{$permission->id}}" class="col-md-8">{{$permission->name}}</label>
+                                                                        <input type="checkbox" class="switch_1 col-md-3" id="input-{{$permission->id}}" name="ids[]" value="{{$permission->id}}" data-style="slow" data-on="Allow" data-off="Deny" data-onstyle="dark" @if (in_array($permission->id, $user_permissions)) checked @endif>
+                                                                        {{-- @if ($user->add_guest_post == 'on') checked @endif --}}
+                                                                        </div>
+                                                                    </div>
+                                                                @endforeach
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancle</button>
+                                                                <input type="submit" value="Save" class="btn bg-lightblack text-white mybutton">
+                                                            </div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
                                                 <div class="wrapper col-md-4">
                                                     <div class="switch_box box_1">
-                                                        <label for="addfund" class="pr-3">View Deleted Posts</label>
+                                                        <label for="addfund" class="pr-3">View Deleted Websites</label>
                                                       <input type="checkbox" class="switch_1" id="deleted_info" name="view_deleted_guest_post" value="1" data-style="slow" data-on="Allow" data-off="Deny" data-onstyle="dark" @if ($user->view_deleted_guest_post == 'on') checked @endif>
                                                     </div>
                                                 </div>
@@ -533,19 +562,48 @@ Profile
                                             <div class="form-row">
                                                 <div class="wrapper col-md-4">
                                                     <div class="switch_box box_1">
-                                                        <label for="addfund" class="pr-3">Add Niche</label>
+                                                        <label for="addfund" class="pr-3">Add Websites</label>
                                                       <input type="checkbox" class="switch_1" id="niche_info" name="add_niche" data-style="slow" value="1" data-on="Allow" data-off="Deny" data-onstyle="dark" @if ($user->add_niche == 'on') checked @endif>
                                                     </div>
                                                 </div>
                                                 <div class="wrapper col-md-4">
                                                     <div class="switch_box box_1">
-                                                        <label for="addfund" class="pr-3">View Niches</label>
-                                                        <input type="checkbox" class="switch_1" id="view_niche_info" name="view_niches" data-style="slow"  value="1" data-on="Allow" data-off="Deny" data-onstyle="dark" @if ($user->view_niches == 'on') checked @endif>
+                                                        <label for="addfund" class="pr-3">View Websites</label>
+                                                        <input type="checkbox"  class="switch_1" id="view_niche_info" name="view_niches" data-style="slow"  value="1" data-on="Allow" data-off="Deny" data-onstyle="dark" @if ($user->view_niches == 'on') checked @endif>
+                                                    </div>
+                                                </div>
+                                                <div class="modal" id="nichePriceModel" tabindex="-1" data-backdrop="false" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered">
+                                                      <div class="modal-content">
+                                                        <div class="modal-header  bg-green">
+                                                          <h5 class="modal-title" id="exampleModalLabel1">Change Permissions Setting</h5>
+                                                          <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                          </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-group row">
+                                                                @csrf
+                                                                @foreach ($permissionNiche as $np)
+                                                                    <div class="wrapper col-md-6 mb-3">
+                                                                        <div class="switch_box box_1 row">
+                                                                            <label for="input-{{$np->id}}" class="col-md-8">{{$np->name}}</label>
+                                                                        <input type="checkbox" class="switch_1 col-md-3" id="input-{{$np->id}}" name="ids[]" value="{{$np->id}}" data-style="slow" data-on="Allow" data-off="Deny" data-onstyle="dark" @if (in_array($np->id, $user_permissions)) checked @endif>
+                                                                        </div>
+                                                                    </div>
+                                                                @endforeach
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancle</button>
+                                                                <input type="submit" value="Save" class="btn bg-lightblack text-white mybutton">
+                                                            </div>
+                                                        </div>
+                                                      </div>
                                                     </div>
                                                 </div>
                                                 <div class="wrapper col-md-4">
                                                     <div class="switch_box box_1">
-                                                        <label for="addfund" class="pr-3">View Deleted Niches</label>
+                                                        <label for="addfund" class="pr-3">View Deleted Websites</label>
                                                         <input type="checkbox" class="switch_1" id="del_niche_info" name="deleted_niches" data-style="slow" value="1" data-on="Allow" data-off="Deny" data-onstyle="dark" @if ($user->deleted_niches == 'on') checked @endif>
                                                     </div>
                                                 </div>
@@ -569,6 +627,7 @@ Profile
                                                 </div>
                                             </div>
                                         </div>
+
                                 </div>
                                         <div class="d-flex justify-content-center mt-3">
                                             <button type="submit" class="btn text-white bg-lightblack px-4 px-5 text-center">Update</button>
@@ -589,3 +648,26 @@ Profile
 </section>
 @endsection
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script>
+    $( document ).ready(function() {
+        $('#view_Guest_info').click(function(){
+            if($(this).is(":checked")){
+                $("#newPriceModel").modal('show');
+            }
+            else {
+                $("#newPriceModel").modal('hide');
+            }
+        });
+
+        $('#view_niche_info').click(function(){
+            if($(this).is(":checked")){
+                $("#nichePriceModel").modal('show');
+            }
+            else {
+                $("#nichePriceModel").modal('hide');
+            }
+        });
+
+    });
+</script>

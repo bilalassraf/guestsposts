@@ -20,11 +20,12 @@ use Illuminate\Support\Facades\Auth;
 */
 
 @include_once('admin_web.php');
-
+Route::view('demo','demo');
 Route::get('/', function () {
     return view('authentication.login');
 })->name('index');
 Route::get('ajax-chart-data', [AdminController::class,'getData'])->name('ajaxChart');
+
 
 Route::get('linechart', 'LinechartController@linechart');
 //user routes

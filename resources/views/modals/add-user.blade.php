@@ -9,6 +9,20 @@
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				</div>
 				<div class="modal-body">
+                            <div class="form-group">
+                                <label>Role</label>
+                                <div class="small-group">
+                                    <div class="input-group">
+                                        <span class="input-group-text text-green"><i class="fa fa-user"></i></span>
+                                        <select class="form-control" placeholder="Enter Your Name" name="type">
+                                            <option value="admin">Admin</option>
+                                            <option value="user">User</option>
+                                            <option value="moderator">Moderator</option>
+                                            <option value="outreach_coordinator">Outreach Coordinator</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
 	                        <div class="form-group">
 	                            <label>Your Name</label>
 	                            <div class="small-group">

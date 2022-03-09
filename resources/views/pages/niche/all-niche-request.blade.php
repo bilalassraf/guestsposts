@@ -24,17 +24,27 @@ Show Niche
                         <table class="table" id="users-table" style="width: 100%;">
                             <thead>
                                 <tr>
-                                    <th scope="col">
-                                        <input type="checkbox" class="check-all" id="check-all" onClick="toggle(this)" style="margin-left: -8px">
-                                        <label for="check-all">&nbsp;&nbsp; Select All</label>
-                                    </th>
-                                    <th>Name</th>
-                                    <th>Email</th>
+                                    @if (auth()->user()->type == 'admin' || in_array('Check Box',$user_permissions))
+                                        <th scope="col">
+                                            <input type="checkbox" class="check-all" id="check-all" onClick="toggle(this)" style="margin-left: -8px">
+                                            <label for="check-all">&nbsp;&nbsp; Select All</label>
+                                        </th>
+                                    @endif
+                                    <th>Web Name</th>
+                                    @if (auth()->user()->type == 'admin')
+                                        <th>Outreach Coordinator</th>
+                                    @endif
+                                    <th>Price (Webmaster)</th>
                                     <th>Category</th>
-                                    <th>web Description</th>
+                                    @if (auth()->user()->type == 'admin')
+                                        <th>Domain Rating</th>
+                                        <th>Organic Traffic (Ahrefs)</th>
+                                    @endif
                                     <th>Status</th>
-                                    <th>Date</th>
-                                    <th>Actions</th>
+                                    <th>Updated at</th>
+                                    @if(auth()->user()->type == 'admin')
+                                        <th>Actions</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -61,20 +71,41 @@ function toggle(source) {
   }
 }
 
-var table = $('#users-table').DataTable({
-    serverSide: true,
-    ajax: "{{ route('get-niche-requests') }}",
-    columns: [
+var detailUrl = "{{url('get/niche/details')}}";
+var cols =[];
+if ('{{ auth()->user()->type }}' == 'admin') {
+    cols = [
+
         {data: 'check_box', name:'check_box', "orderable":false,"searchable":false},
         {data: 'web_name', name: 'web_name'},
-        {data: 'email_webmaster', name: 'email_webmaster'},
+        {data: 'Coordinator', name: 'Coordinator'},
+        {data: 'price', name: 'price'},
         {data: 'categories', name: 'categories'},
-        {data: 'web_description', name: 'web_description'},
+        {data: 'domain_rating', name: 'domain_rating' },
+        {data: 'organic_trafic_ahrefs', name: 'organic_trafic_ahrefs' },
         {data: 'status', name: 'status'},
         {data: 'updated_at', name: 'updated_at'},
         {data: 'niche_actions', name: 'niche_actions', "orderable":false,"searchable":false}
-    ],
+    ];
+}else{
+    cols= [
+
+    @if( in_array('Check Box',$user_permissions))
+    {data: 'check_box', name:'check_box', "orderable":false,"searchable":false},
+    @endif
+    {data: 'web_name', name: 'web_name'},
+    {data: 'price', name: 'price'},
+    {data: 'categories', name: 'categories'},
+    {data: 'status', name: 'status'},
+    {data: 'updated_at', name: 'updated_at'},
+    ];
+}
+var table = $('#users-table').DataTable({
+    serverSide: true,
+    ajax: "{{ route('get-niche-requests') }}",
+    columns:cols,
 });
+
 
 // Add event listener for opening and closing details
 $('#users-table tbody').on('click', '.detail', function () {
@@ -89,9 +120,23 @@ $('#users-table tbody').on('click', '.detail', function () {
     }
     else {
       var data = row.data();
-      var html = '<div class="row" style="width: 100% !important"><div class="col-md-12"><div class="card"><div class="card-body" style="background-color:rgba(36, 41, 57, 0.09);"><div class="row"><div class="col-sm-3"><div class="your-details"><h6 class="f-w-600">Website Name</h6>'+data.web_name+'</div></div><div class="col-sm-3"><div class="your-details your-details-xs"><h6 class="f-w-600">OutreachCoordinator </h6>'+data.Coordinator+'</div></div><div class="col-sm-3"><div class="your-details"><h6 class="f-w-600">Webmaster Price</h6>'+data.price+'</div></div><div class="col-sm-3"><div class="your-details"><h6 class="f-w-600">Status</h6>'+data.status+'</div></div></div><hr> <div class="row"><div class="col-sm-3"><div class="your-details"><h6 class="f-w-600">Company Price</h6>'+data.company_price+'</div></div><div class="col-sm-3"><div class="your-details your-details-xs"><h6 class="f-w-600">Category </h6>'+data.categories+'</div></div><div class="col-sm-3"><div class="your-details"><h6 class="f-w-600">Domain Authority</h6>'+data.domain_authority+'</div></div><div class="col-sm-3"><div class="your-details"><h6 class="f-w-600">Spam Score</h6>'+data.span_score+'</div></div></div><hr><div class="row"><div class="col-sm-2"><div class="your-details"><h6 class="f-w-600">Domain Rating</h6>'+data.domain_rating+'</div></div><div class="col-sm-2"><div class="your-details your-details-xs"><h6 class="f-w-600">Organic Traffic  (Ahrefs)</h6>'+data.organic_trafic_ahrefs+'</div></div><div class="col-sm-2"><div class="your-details"><h6 class="f-w-600">Orgainic Traffic (Sem)</h6>'+data.organic_trafic_sem+'</div></div><div class="col-sm-2"><div class="your-details"><h6 class="f-w-600">Trust Flow</h6>'+data.trust_flow+'</div></div><div class="col-sm-2"><div class="your-details"><h6 class="f-w-600">Citation Flow</h6>'+ data.citation_flow +'</div></div><div class="col-sm-2"><div class="your-details your-details-xs"><h6 class="f-w-600">Email (Webmaster)</h6>'+ data.email_webmaster +'</div></div></div><hr><div class="row"><div class="col-sm-6"><div class="your-details your-details-xs"><h6 class="f-w-600">Website Description</h6>'+data.web_description+'</div></div><div class="col-sm-6"><div class="your-details your-details-xs"><h6 class="f-w-600">Special Note</h6>'+ data.special_note+'</div></div></div> </div></div></div></div>';
-        row.child( html  ).show();
+      var html = "";
+
+      if ('{{ auth()->user()->type }}' == 'admin') {
+         html = '<div class="row" style="width: 100% !important"><div class="col-md-12"><div class="card"><div class="card-body" style="background-color:rgba(36, 41, 57, 0.09);"><div class="row"><div class="col-sm-3"><div class="your-details"><h6 class="f-w-600">Website Name</h6>'+data.web_name+'</div></div><div class="col-sm-3"><div class="your-details your-details-xs"><h6 class="f-w-600">OutreachCoordinator </h6>'+data.Coordinator+'</div></div><div class="col-sm-3"><div class="your-details"><h6 class="f-w-600">Webmaster Price</h6>'+data.price+'</div></div><div class="col-sm-3"><div class="your-details"><h6 class="f-w-600">Status</h6>'+data.status+'</div></div></div><hr> <div class="row"><div class="col-sm-3"><div class="your-details"><h6 class="f-w-600">Company Price</h6>'+data.company_price+'</div></div><div class="col-sm-3"><div class="your-details your-details-xs"><h6 class="f-w-600">Category </h6>'+data.categories+'</div></div><div class="col-sm-3"><div class="your-details"><h6 class="f-w-600">Domain Authority</h6>'+data.domain_authority+'</div></div><div class="col-sm-3"><div class="your-details"><h6 class="f-w-600">Spam Score</h6>'+data.span_score+'</div></div></div><hr><div class="row"><div class="col-sm-2"><div class="your-details"><h6 class="f-w-600">Domain Rating</h6>'+data.domain_rating+'</div></div><div class="col-sm-2"><div class="your-details your-details-xs"><h6 class="f-w-600">Organic Traffic  (Ahrefs)</h6>'+data.organic_trafic_ahrefs+'</div></div><div class="col-sm-2"><div class="your-details"><h6 class="f-w-600">Orgainic Traffic (Sem)</h6>'+data.organic_trafic_sem+'</div></div><div class="col-sm-2"><div class="your-details"><h6 class="f-w-600">Trust Flow</h6>'+data.trust_flow+'</div></div><div class="col-sm-2"><div class="your-details"><h6 class="f-w-600">Citation Flow</h6>'+ data.citation_flow +'</div></div><div class="col-sm-2"><div class="your-details your-details-xs"><h6 class="f-w-600">Email (Webmaster)</h6>'+ data.email_webmaster +'</div></div></div><hr><div class="row"><div class="col-sm-6"><div class="your-details your-details-xs"><h6 class="f-w-600">Website Description</h6>'+data.web_description+'</div></div><div class="col-sm-6"><div class="your-details your-details-xs"><h6 class="f-w-600">Special Note</h6>'+ data.special_note+'</div></div></div> </div></div></div></div>';
+         row.child( html  ).show();
         tr.addClass('shown');
+        }else{
+        $.ajax({
+        url: detailUrl+'/'+data.id,
+        type:"get",
+        success:function(data1){
+            console.log('hhihi');
+            row.child( data1 ).show();
+            tr.addClass('shown');
+        }
+      });
+      }
     }
 });
 

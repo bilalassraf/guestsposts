@@ -210,7 +210,6 @@
     </div>
 
     <script>
-        // /* global Chart:false */
 
         $(function() {
             'use strict'
@@ -222,9 +221,6 @@
 
             var mode = 'index'
             var intersect = true
-
-            //
-
             var $visitorsChart = $('#visitors-chart');
             // eslint-disable-next-line no-unused-vars
             var visitorsChart = new Chart($visitorsChart, {
@@ -281,7 +277,6 @@
             })
         })
 
-        // // lgtm [js/unused-local-variable]
     </script>
 @endsection
 
@@ -455,26 +450,3 @@ a#dropdownMenuLink {
     margin-top: -30px;
 }
 </style>
-{{-- <style type="text/css">
-    @media screen and (max-width:  768px)
-    {
-    .card-body.text-center.approved
-    {
-    height: 167px !important;
-    }
-    }
-    @media screen and (max-width:  1024px)
-    {
-        .card-body.text-center.approved
-        {
-        height: 167px !important;
-        }
-    }
-    @media screen and (max-width:  1197px)
-    {
-        .card-body.text-center.approved
-        {
-        height: 165px !important;
-        }
-    }
-</style> --}}
