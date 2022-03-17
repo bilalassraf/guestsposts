@@ -37,6 +37,24 @@ class AdminController extends Controller
 
         return view('admin.dashboard.admin-dashboard', compact('users', 'approved', 'pending', 'deleted', 'rejected'));
     }
+    public function getUrl(Request $request)
+    {
+        // dd($request->all());
+        $value = Niche::where( 'web_url', $request->value)->first();
+        if($value){
+            echo " This website is already there in database. So you
+            can not add it again. ";
+        }
+    }
+    public function getName(Request $request)
+    {
+        // dd($request->all());
+        $value = Niche::where( 'web_name', $request->webname)->first();
+        if($value){
+            echo " This website name is already there in database. So you
+            can not add it again. ";
+        }
+    }
     public function newPrice(Request $request , $id)
     {
         $new_price = UserRequest::find($id);
@@ -156,6 +174,7 @@ class AdminController extends Controller
         ]);
         $user =  User::find($id);
         $user->name = $request->name;
+        $user->type= $request->type;
         $user->email = $request->email;
         if( $request->password){
             $user->password = bcrypt($request->password);

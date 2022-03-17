@@ -18,8 +18,9 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="websitename">Website Name</label>
-                                    <input class="form-control @error('websitename') is-invalid @enderror" id="websitename"
+                                    <input class="webname form-control @error('websitename') is-invalid @enderror" id="websitename"
                                         type="text" placeholder="Website Name" name="web_name" value="{{  old('web_name') }}" autocomplete="off" required>
+                                        <div id="div2" class="text-danger"></div>
                                 </div>
                             </div>
                             <input type="hidden" value="{{ auth()->user()->id }}" name="user_id">
@@ -135,8 +136,9 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="url">Website Url</label>
-                                    <input class="form-control" id="url" type="url" autocomplete="off" placeholder="https://www.google.com/"
+                                    <input class="form-control ent" id="url" type="url" autocomplete="off" placeholder="https://www.google.com/"
                                         name="web_url" value="{{  old('web_url') }}" required>
+                                    <div id="div1" class="text-danger"></div>
                                 </div>
                             </div>
                         </div>
@@ -180,6 +182,24 @@
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
+        $(".ent").change(function(){
+            var value = $(this).val();
+            $.ajax({url: "/get/url",
+            data:{'value': value},
+             success: function(result){
+            $("#div1").html(result);
+            }});
+        });
+        $(".webname").change(function(){
+            var webname = $(this).val();
+            console.log(webname);
+            $.ajax({url: "/get/webname",
+            data:{'webname': webname},
+             success: function(result){
+            $("#div2").html(result);
+            }});
+        });
+
         //called when key is pressed in textbox
         $("#price").keypress(function(e) {
             //if the letter is not digit then display error and don't type anything
@@ -199,17 +219,6 @@
                 $("#companyprice").val(0);
             }
 
-        });
-    });
-    $(document).ready(function() {
-        //called when key is pressed in textbox
-        $("#companyprice").keypress(function(e) {
-            //if the letter is not digit then display error and don't type anything
-            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
-                //display error message
-                $("#errmsg1").html("Please Enter Integer Value!!").show().fadeOut("slow").css('color', 'red');
-                return false;
-            }
         });
     });
     $(document).ready(function() {

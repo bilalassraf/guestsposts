@@ -82,6 +82,9 @@ Route::get('specific/chart',[AdminController::class,'specific_chart'])->name('sp
 Route::post('admin/allow/user/{id}',[AdminController::class,'permissions'])->name('admin.user.permissions');
 Route::get('get/details/{id}',[AdminController::class,'getDetails'])->name('getDetails');
 Route::get('get/niche/details/{id}',[AdminController::class,'getNicheDetails'])->name('getNicheDetails');
+//ajex route
+Route::get('get/url',[AdminController::class,'getUrl'])->name('getUrl');
+Route::get('get/webname',[AdminController::class,'getName'])->name('getName');
 //niche
 Route::get('admin/add/niche',[AdminController::class,'addNicheForm'])->name('admin.add.niche');
 Route::post('admin/store/niche',[AdminController::class,'addStoreNiche'])->name('admin.store.niche');

@@ -96,7 +96,7 @@ Profile
                             <li class="nav-item"><a class="nav-link site" href="#niche" data-toggle="tab">Niche Post</a></li>
                             <li class="nav-item"><a class="nav-link site" href="#about" data-toggle="tab">About</a></li>
                             <li class="nav-item"><a class="nav-link site" href="#update-profile" data-toggle="tab"> Update Profile</a></li>
-                            <li class="nav-item"><a class="nav-link site" href="#permissions" data-toggle="tab">@if ($user->type == 'user')Permissions @endif</a></li>
+                            <li class="nav-item"><a class="nav-link site" href="#permissions" data-toggle="tab">Permissions</a></li>
                         </ul>
                     </div><!-- /.card-header -->
                     <div class="card-body">

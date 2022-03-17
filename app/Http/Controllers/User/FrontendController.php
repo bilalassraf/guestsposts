@@ -9,6 +9,7 @@ use App\Models\UserRequest;
 use Illuminate\Http\Request;
 use Carbon\CarbonPeriod;
 use Carbon\Carbon;
+use Auth;
 class FrontendController extends Controller
 {
     public function index()
@@ -152,8 +153,15 @@ class FrontendController extends Controller
     }
     public function user_request()
     {
-        $niches = UserRequest::where('user_id', auth()->user()->id)->get();
-        return view('pages.user.user-requests',compact('niches'));
+        $user = User::find(Auth::user()->id);
+        $user_permissions = $user->permissions()->where('type', 1)->pluck('permissions.name')->toArray();
+        if($user->type == 'admin'){
+            $guest_requests = UserRequest::orderBy('id', 'DESC')->get();
+        }else{
+            $guest_requests = $user->user_request;
+        }
+        // $niches = UserRequest::where('user_id', auth()->user()->id)->get();
+        return view('pages.user.user-requests',compact('user', 'user_permissions','guest_requests'));
     }
     public function showNicheForm()
     {

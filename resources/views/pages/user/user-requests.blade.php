@@ -11,22 +11,57 @@
                 </div>
             </div>
             <div class="card-body table-responsive p-3">
-                <table class="table" id="users-table" style="width: 100%;">
+                <table id="users-table" style="width: 100%;">
                     <thead>
-                        <tr>
-                            <th>Website Name</th>
-                            <th>Category</th>
-                            <th>Webmaster Price</th>
-                            <th>Status</th>
-                            <th>Approval Date</th>
-                            {{-- <th>Actions</th> --}}
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
+                      <tr>
+                          @if(auth()->user()->type == 'admin' || in_array('Check Box',$user_permissions))
+                          <th scope="col">
+                              <input type="checkbox" class="check-all" id="check-all" onClick="toggle(this)" style="margin-left: -8px">
+                              <label for="check-all">&nbsp;&nbsp; Select All</label>
+                          </th>
+                          @endif
+                          @if(auth()->user()->type == 'admin' || in_array('Website Name',$user_permissions))
+                          <th>Web Name</th>
+                          @endif
+                          @if (auth()->user()->type == 'admin' || in_array('Coordinator',$user_permissions))
+                              <th>Outreach Coordinator</th>
+                          @endif
+                          @if (auth()->user()->type == 'admin' || in_array('Price',$user_permissions))
+                          <th>Price (Webmaster)</th>
+                          @endif
+                          @if (auth()->user()->type == 'admin' || in_array('Categories',$user_permissions))
+                          <th>Category</th>
+                          @endif
+                          @if (auth()->user()->type == 'admin' || in_array('price',$user_permissions))
+                              <th>Domain Rating</th>
+                              <th>Organic Traffic (Ahrefs)</th>
+                          @endif
+                          @if (auth()->user()->type == 'admin' || in_array('Status',$user_permissions))
+                          <th>Status</th>
+                          @endif
+                          <th>Updated at</th>
+                          @if(auth()->user()->type == 'admin' || in_array('updated at',$user_permissions))
+                              <th>Actions</th>
+                          @endif
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <div class="modal fade" id="getCodeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-lg">
+                             <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel"> API CODE </h4>
+                              </div>
+                              <div class="modal-body" id="getCode" style="overflow-x: scroll;">
+                                 //ajax success content here.
+                              </div>
+                           </div>
+                          </div>
+                        </div>
+                  </tbody>
                 </table>
-                </div>
-            </div>
+              </div>
         </div>
     </div>
 </div>
@@ -50,17 +85,89 @@ $(".range_input").on("input",function(){
     var id = $(this).attr('data-id');
     $("#"+id).text(value);
 });
+var detailUrl = "{{url('get/details')}}";
+$(".range_input").on("input",function(){
+    var value = $(this).val();
+    var id = $(this).attr('data-id');
+    $("#"+id).text(value);
+});
+var cols =[];
+if ('{{ auth()->user()->type }}' == 'admin') {
+    cols = [
+        {data: 'check_box', name:'check_box', "orderable":false,"searchable":false},
+        {data: 'web_name', name: 'web_name'},
+        {data: 'Coordinator', name: 'Coordinator'},
+        {data: 'price', name: 'price'},
+        {data: 'categories', name: 'categories'},
+        {data: 'domain_rating', name: 'domain_rating' },
+        {data: 'organic_trafic_ahrefs', name: 'organic_trafic_ahrefs' },
+        {data: 'status', name: 'status'},
+        {data: 'updated_at', name: 'updated_at'},
+        {data: 'actions', name: 'actions', "orderable":false,"searchable":false}
+    ];
+}else{
+    cols= [
+    @if( in_array('Check Box',$user_permissions))
+        {data: 'check_box', name:'check_box', "orderable":false,"searchable":false},
+    @endif
+    @if( in_array('Website Name',$user_permissions))
+        {data: 'web_name', name: 'web_name'},
+    @endif
+    @if( in_array('Price',$user_permissions))
+        {data: 'price', name: 'price'},
+    @endif
+    @if( in_array('Categories',$user_permissions))
+        {data: 'categories', name: 'categories'},
+    @endif
+    @if( in_array('Status',$user_permissions))
+    {   data: 'status', name: 'status'},
+    @endif
+        {data: 'updated_at', name: 'updated_at'},
+    ];
+}
 
 var table = $('#users-table').DataTable({
     serverSide: true,
-    ajax: "{{ route('get-user-requests') }}",
-    columns: [
-        {data: 'web_name', name: 'web_name'},
-        {data: 'categories', name: 'categories'},
-        {data: 'price', name: 'price'},
-        {data: 'status', name: 'status'},
-        {data: 'updated_at', name: 'updated_at' ,"orderable":false,"searchable":false}
-    ],
+    ajax: "{{ route('get-web-requests') }}",
+    columns:cols,
+});
+
+// Add event listener for opening and closing details
+$('#users-table tbody').on('click', '.detail', function () {
+
+    var tr = $(this).closest('tr');
+    var row = table.row( tr );
+
+    if ( row.child.isShown() ) {
+        // This row is already open - close it
+        row.child.hide();
+        tr.removeClass('shown');
+    }
+    else {
+      var data = row.data();
+      var html = "";
+
+      if ('{{ auth()->user()->type }}' == 'admin') {
+         html = '<div class="row" style="width: 100% !important"><div class="col-md-12"><div class="card"><div class="card-body" style="background-color:rgba(36, 41, 57, 0.09);"><div class="row"><div class="col-sm-3"><div class="your-details"><h6 class="f-w-600">Website Name</h6>'+data.web_name+'</div></div><div class="col-sm-3"><div class="your-details your-details-xs"><h6 class="f-w-600">OutreachCoordinator </h6>'+data.Coordinator+'</div></div><div class="col-sm-3"><div class="your-details"><h6 class="f-w-600">Webmaster Price</h6>'+data.price+'</div></div><div class="col-sm-3"><div class="your-details"><h6 class="f-w-600">Status</h6>'+data.status+'</div></div></div><hr> <div class="row"><div class="col-sm-3"><div class="your-details"><h6 class="f-w-600">Company Price</h6>'+data.company_price+'</div></div><div class="col-sm-3"><div class="your-details your-details-xs"><h6 class="f-w-600">Category </h6>'+data.categories+'</div></div><div class="col-sm-3"><div class="your-details"><h6 class="f-w-600">Domain Authority</h6>'+data.domain_authority+'</div></div><div class="col-sm-3"><div class="your-details"><h6 class="f-w-600">Spam Score</h6>'+data.span_score+'</div></div></div><hr><div class="row"><div class="col-sm-2"><div class="your-details"><h6 class="f-w-600">Domain Rating</h6>'+data.domain_rating+'</div></div><div class="col-sm-2"><div class="your-details your-details-xs"><h6 class="f-w-600">Organic Traffic  (Ahrefs)</h6>'+data.organic_trafic_ahrefs+'</div></div><div class="col-sm-2"><div class="your-details"><h6 class="f-w-600">Orgainic Traffic (Sem)</h6>'+data.organic_trafic_sem+'</div></div><div class="col-sm-2"><div class="your-details"><h6 class="f-w-600">Trust Flow</h6>'+data.trust_flow+'</div></div><div class="col-sm-2"><div class="your-details"><h6 class="f-w-600">Citation Flow</h6>'+ data.citation_flow +'</div></div><div class="col-sm-2"><div class="your-details your-details-xs"><h6 class="f-w-600">Email (Webmaster)</h6>'+ data.email_webmaster +'</div></div></div><hr><div class="row"><div class="col-sm-6"><div class="your-details your-details-xs"><h6 class="f-w-600">Website Description</h6>'+data.web_description+'</div></div><div class="col-sm-6"><div class="your-details your-details-xs"><h6 class="f-w-600">Special Note</h6>'+ data.special_note+'</div></div></div> </div></div></div></div>';
+         row.child( html  ).show();
+        tr.addClass('shown');
+        }else{
+        $.ajax({
+        url: detailUrl+'/'+data.id,
+        type:"get",
+        success:function(data1){
+            console.log('hhihi');
+            row.child( data1 ).show();
+            tr.addClass('shown');
+        }
+      });
+
+
+      }
+
+
+
+    }
 });
 
 // Add event listener for opening and closing details

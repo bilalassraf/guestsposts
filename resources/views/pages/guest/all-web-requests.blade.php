@@ -34,19 +34,27 @@ Show Website
                                 <label for="check-all">&nbsp;&nbsp; Select All</label>
                             </th>
                             @endif
+                            @if(auth()->user()->type == 'admin' || in_array('Website Name',$user_permissions))
                             <th>Web Name</th>
-                            @if (auth()->user()->type == 'admin')
+                            @endif
+                            @if (auth()->user()->type == 'admin' || in_array('Coordinator',$user_permissions))
                                 <th>Outreach Coordinator</th>
                             @endif
+                            @if (auth()->user()->type == 'admin' || in_array('Price',$user_permissions))
                             <th>Price (Webmaster)</th>
+                            @endif
+                            @if (auth()->user()->type == 'admin' || in_array('Categories',$user_permissions))
                             <th>Category</th>
+                            @endif
                             @if (auth()->user()->type == 'admin')
                                 <th>Domain Rating</th>
                                 <th>Organic Traffic (Ahrefs)</th>
                             @endif
+                            @if (auth()->user()->type == 'admin' || in_array('Status',$user_permissions))
                             <th>Status</th>
+                            @endif
                             <th>Updated at</th>
-                            @if(auth()->user()->type == 'admin')
+                            @if(auth()->user()->type == 'admin' || in_array('updated at',$user_permissions))
                                 <th>Actions</th>
                             @endif
                         </tr>
@@ -109,14 +117,22 @@ if ('{{ auth()->user()->type }}' == 'admin') {
     ];
 }else{
     cols= [
-        @if( in_array('Check Box',$user_permissions))
-    {data: 'check_box', name:'check_box', "orderable":false,"searchable":false},
+    @if( in_array('Check Box',$user_permissions))
+        {data: 'check_box', name:'check_box', "orderable":false,"searchable":false},
     @endif
-    {data: 'web_name', name: 'web_name'},
-    {data: 'price', name: 'price'},
-    {data: 'categories', name: 'categories'},
-    {data: 'status', name: 'status'},
-    {data: 'updated_at', name: 'updated_at'},
+    @if( in_array('Website Name',$user_permissions))
+        {data: 'web_name', name: 'web_name'},
+    @endif
+    @if( in_array('Price',$user_permissions))
+        {data: 'price', name: 'price'},
+    @endif
+    @if( in_array('Categories',$user_permissions))
+        {data: 'categories', name: 'categories'},
+    @endif
+    @if( in_array('Status',$user_permissions))
+    {   data: 'status', name: 'status'},
+    @endif
+        {data: 'updated_at', name: 'updated_at'},
     ];
 }
 

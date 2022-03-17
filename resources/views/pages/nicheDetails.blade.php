@@ -7,11 +7,11 @@
                     <div class="col-sm-3">
                         <div class="your-details">
                             <h6 class="f-w-600">Website Name</h6>
+                            @if( in_array('Website Name',$user_permissions))
                             {{$niche_request->web_name}}
+                            @endif
                         </div>
                     </div>
-
-
                     <div class="col-sm-3">
                         <div class="your-details your-details-xs">
                             <h6 class="f-w-600">OutreachCoordinator </h6>
@@ -23,13 +23,17 @@
                     <div class="col-sm-3">
                         <div class="your-details">
                             <h6 class="f-w-600">Webmaster Price</h6>
+                            @if( in_array('Webmaster Price',$user_permissions))
                             {{$niche_request->price}}
+                            @endif
                         </div>
                     </div>
                     <div class="col-sm-3">
                         <div class="your-details">
                             <h6 class="f-w-600">Status</h6>
+                            @if( in_array('Status',$user_permissions))
                             {{$niche_request->status}}
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -46,9 +50,11 @@
                     <div class="col-sm-3">
                         <div class="your-details your-details-xs">
                             <h6 class="f-w-600">Category </h6>
-                            @foreach ($niche_request->categories as $c)
+                            @if( in_array('Categories',$user_permissions))
+                            @foreach ($guest_request->categories as $c)
                             {{$c->category}}
                             @endforeach
+                            @endif
                         </div>
                     </div>
                     <div class="col-sm-3">
@@ -113,7 +119,9 @@
                     <div class="col-sm-2">
                         <div class="your-details your-details-xs">
                             <h6 class="f-w-600">Email (Webmaster)</h6>
+                            @if( in_array('Email (Webmaster)',$user_permissions))
                             {{$niche_request->email_webmaster}}
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -122,7 +130,9 @@
                     <div class="col-sm-6">
                         <div class="your-details your-details-xs">
                             <h6 class="f-w-600">Website Description</h6>
+                            @if( in_array('Website Description',$user_permissions))
                             {{$niche_request->web_description}}
+                            @endif
                         </div>
                     </div>
                     <div class="col-sm-6">
