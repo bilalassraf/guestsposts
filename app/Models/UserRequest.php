@@ -20,5 +20,9 @@ class UserRequest extends Model
     {
         return $this->belongsToMany(Category::class);
     }
+    public function coodinator()
+    {
+        return $this->belongsTo(User::class, 'coordinator_id');
+    }
 
 }

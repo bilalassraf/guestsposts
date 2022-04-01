@@ -40,7 +40,8 @@ class AdminController extends Controller
     public function getUrl(Request $request)
     {
         // dd($request->all());
-        $value = Niche::where( 'web_url', $request->value)->first();
+        $url = str_replace("www.","",preg_replace( "#^[^:/.]*[:/]+#i", "",  $request->value )) ;
+        $value = Niche::where( 'web_url',$url )->first();
         if($value){
             echo " This website is already there in database. So you
             can not add it again. ";
@@ -49,7 +50,8 @@ class AdminController extends Controller
     public function getName(Request $request)
     {
         // dd($request->all());
-        $value = Niche::where( 'web_name', $request->webname)->first();
+        $url = str_replace("www.","",preg_replace( "#^[^:/.]*[:/]+#i", "",   $request->webname )) ;
+        $value = Niche::where( 'web_name', $url )->first();
         if($value){
             echo " This website name is already there in database. So you
             can not add it again. ";
@@ -98,10 +100,10 @@ class AdminController extends Controller
     }
     public function storeGuestRequest(Request $request)
     {
-
+        // dd($request->all());
         $request->validate([
             'web_name'         => 'required|unique:user_requests',
-            'coordinator'      => 'required',
+            'coordinator_id'      => 'required',
             'price'            => 'required|integer|regex:/^[-0-9\+]+$/',
             // 'company_price'    => 'required|integer|regex:/^[-0-9\+]+$/',
             'categories'         => 'required',
@@ -119,17 +121,17 @@ class AdminController extends Controller
         [
             'web_name.unique' => 'Sorry, this URL is already in Build with'
         ]);
-        $percentage = 8/100 * $request->price;
-        $company_price = ($request->price * $percentage + 50) + $request->price;
+        // $percentage = 8/100 * $request->price;
 
-        $user = User::find($request->user_id);
+
+        $user = User::find($request->coordinator_id);
         $userRequest = new UserRequest();
         $userRequest->web_name = $request->web_name;
-        $userRequest->coordinator = $request->coordinator;
-        $price = $userRequest->price = $request->price;
-        $userRequest->company_price  = $company_price;
+        $userRequest->coordinator_id = $request->coordinator_id;
+        $userRequest->price = $request->price;
+        $userRequest->company_price  = $request->company_price;
         //$userRequest->category = $request->category;
-        $userRequest->domain_authority     = $request->domain_authority;
+        $userRequest->user_id     = $request->coordinator_id;
         $userRequest->span_score     = $request->span_score;
         $userRequest->domain_rating     = $request->domain_rating;
         $userRequest->organic_trafic_ahrefs     = $request->organic_trafic_ahrefs;
@@ -203,12 +205,13 @@ class AdminController extends Controller
     public function addGuestRequestForm()
     {
         $categories = Category::all();
-        $guestCoordinator = UserRequest::pluck('Coordinator');
+        $guestCoordinator = User::whereHas('user_request')->get();
         return view('pages.guest.add-websites', compact('categories','guestCoordinator'));
     }
     public function showGuestRequests()
     {
         $user = User::find(Auth::user()->id);
+
         $user_permissions = $user->permissions()->where('type', 1)->pluck('permissions.name')->toArray();
         if($user->type == 'admin'){
             $guest_requests = UserRequest::orderBy('id', 'DESC')->get();
@@ -219,7 +222,7 @@ class AdminController extends Controller
     }
     public function getDetails($id)
     {
-        $data['guest_request']= UserRequest::where('id', $id)->first();
+        $data['guest_request']= UserRequest::where('id', $id)->with('coodinator')->first();
         $data['user_permissions'] = Auth::user()->permissions()->where('type', 1)->pluck('permissions.name')->toArray();
         $html = view('pages.guestDetails',$data)->render();
         return $html;
@@ -248,6 +251,10 @@ class AdminController extends Controller
         $permission = UserRequest::find($id);
         if ($permission->status == 'pending' || $permission->status == 'rejected') {
             $permission->status = 'approved';
+            if($permission->new_price > 0){
+                $permission->price =$permission->new_price;
+                $permission->new_price=0;
+            }
             $permission->update();
             return back()->with('success', 'Request has been approved');
         } elseif ($permission->status == 'approved') {
@@ -268,11 +275,11 @@ class AdminController extends Controller
     public function guestRequestDelete($id)
     {
         $permission = UserRequest::find($id);
-
+        if ($permission->status == 'pending' || $permission->status == 'approved' || $permission->status == 'rejected') {
             $permission->status = 'deleted';
-            $permission->update();if ($permission->status == 'pending' || $permission->status == 'approved' || $permission->status == 'rejected') {
+            $permission->update();
             $permission->delete();
-            return redirect(route('admin.show.guest.request'))->with('success', 'Request has been deleted');
+            return back()->with('success', 'UserRequest has been deleted');
         }
     }
     public function makeAdmin($id)
@@ -413,10 +420,10 @@ class AdminController extends Controller
         $niches = UserRequest::all();
         $userRequest = UserRequest::find($id);
         $userRequest->web_name = $request->web_name;
-        $userRequest->coordinator = $request->coordinator;
+        $userRequest->coordinator_id = $request->coordinator_id;
         $price = $userRequest->price = $request->price;
         $userRequest->company_price  = $request->company_price;
-        //$userRequest->category     = $request->category;
+        $userRequest->id     = $request->coordinator_id;
         $userRequest->domain_authority     = $request->domain_authority;
         $userRequest->span_score     = $request->span_score;
         $userRequest->domain_rating     = $request->domain_rating;
@@ -611,7 +618,7 @@ class AdminController extends Controller
     }
     public function permissions(Request $request, $id)
     {
-      //  dd($request->all());
+    //    dd($request->all());
         $user = User::find($id);
         $user->user_info = $request->user_info ? 'on' : 'off';
         $user->add_guest_post = $request->add_guest_post ? 'on' : 'off';
@@ -621,6 +628,7 @@ class AdminController extends Controller
         $user->view_niches = $request->view_niches ? 'on' : 'off';
         $user->deleted_niches = $request->deleted_niches ? 'on' : 'off';
         $user->add_category = $request->add_category ? 'on' : 'off';
+        $user->action = $request->actions ? 'on' : 'off';
         $user->view_all_categories = $request->view_all_categories ? 'on' : 'off';
         $user->update();
 
@@ -635,7 +643,8 @@ class AdminController extends Controller
     public function addNicheForm()
     {
         $categories = Category::all();
-        return view('pages.niche.add-niche', compact('categories'));
+        $guestCoordinator = User::whereHas('user_request')->get();
+        return view('pages.niche.add-niche', compact('categories','guestCoordinator'));
     }
     public function addStoreNiche(Request $request)
     {
@@ -646,7 +655,7 @@ class AdminController extends Controller
         $request->web_url = $host;
         $request->validate([
 
-            'coordinator'      => 'required',
+            'coordinator_id'      => 'required',
             'price'            => 'required|integer',
             // 'company_price'    => 'required|integer',
             'categories'         => 'required',
@@ -674,16 +683,15 @@ class AdminController extends Controller
         if($check){
             return redirect()->back()->with('warning', 'Website name alerady exists')->withInput($request->all());
         }
-        $percentage = 8/100 * $request->price;
-        $company_price = ($request->price * $percentage + 50) + $request->price;
 
         $user = User::find($request->user_id);
         $Niche = new Niche();
-        $Niche->web_name = $request->web_name;
-        $Niche->coordinator = $request->coordinator;
-        $price = $Niche->price = $request->price;
-        $Niche->company_price  =  $company_price;
+        $Niche->web_name = preg_replace( "#^[^:/.]*[:/]+#i", "", $request->web_name );
+        $Niche->coordinator_id = $request->coordinator_id;
+        $Niche->price = $request->price;
+        $Niche->company_price  =  $request->company_price;
         //$Niche->category     = $request->category;
+        $Niche->user_id     = $request->coordinator_id;
         $Niche->domain_authority     = $request->domain_authority;
         $Niche->span_score     = $request->span_score;
         $Niche->domain_rating     = $request->domain_rating;
@@ -694,7 +702,7 @@ class AdminController extends Controller
         $Niche->email_webmaster = $request->email;
         $Niche->web_description = $request->web_description;
         $Niche->special_note = $request->special_note;
-        $Niche->web_url = preg_replace( "#^[^:/.]*[:/]+#i", "", $request->web_url );
+        $Niche->web_url = str_replace("www.","",preg_replace( "#^[^:/.]*[:/]+#i", "", $request->web_url )) ;
         $user->niche()->save($Niche);
         $Niche->categories()->sync($request->categories);
         return redirect(route('admin.show.niches'))->with('success', 'Your request has submitted');
@@ -702,51 +710,56 @@ class AdminController extends Controller
     public function webRequests()
     {
         $user = User::find(Auth::user()->id);
-        if($user->type == 'admin'){
-            $guest_requests = UserRequest::with('categories')->orderBy('id', 'DESC')->get();
+        if( $user->type == 'admin' || $user->type == 'moderator' ){
+            $guest_requests = UserRequest::with(['categories','coodinator'])->orderBy('id', 'DESC')->get();
         }else{
 
-            $guest_requests = $user->user_request()->with('categories');
+            $guest_requests = $user->user_request()->with(['categories', 'coodinator']);
         }
+        $guestCoordinator = User::whereHas('user_request')->get();
         return DataTables::of($guest_requests)
         ->addColumn('check_box', function($row){
 
             return '<label><input type="checkbox" class="check sub_chk" value="'.$row->id.'" name="ids[]"></label>
-                    <a href="#" style="cursor: pointer; color:black; display: inline;" class="detail dropdown-toggle">
+                    <a style="cursor: pointer; color:black; display: inline;" class="detail dropdown-toggle">
                     </a>';
-        })->addColumn('actions', function($request){
-            return view('pages.guest.actions', compact('request'));
+        })->addColumn('actions', function($request)use($guestCoordinator){
+            return view('pages.guest.actions', compact('request','guestCoordinator'));
         })->editColumn('price', function($request){
             return view('pages.guest.newPrice', compact('request'));
         })->addColumn('categories', function ($request) {
             return implode(', ', $request->categories->pluck('category')->toArray());
         })->editColumn('updated_at', function($row){
            return date("Y-m-d", strtotime($row->updated_at));
-        })->rawColumns(['check_box','action','categories'])
-        ->make(true);
+        })->addColumn('coordinator', function ($request) {
+            return $request->coodinator->name;
+        })->rawColumns(['check_box','action','categories'])->make(true);
     }
     public function nicheRequests()
     {
         $user = User::find(Auth::user()->id);
-        if($user->type == 'admin'){
-            $niches = Niche::with('categories')->get();
+        if($user->type == 'admin' || $user->type == 'moderator'){
+            $niches = Niche::with(['categories', 'coodinator'])->get();
         }else{
-            $niches = $user->Niche()->with('categories')->get();
+            $niches = $user->Niche()->with(['categories', 'coodinator'])->get();
         }
+        $guestCoordinator = User::whereHas('user_request')->get();
         return DataTables::of($niches)
         ->addColumn('check_box', function($row){
 
             return '<label><input type="checkbox" class="check sub_chk" value="'.$row->id.'" name="ids[]"></label>
-                    <a href="#" style="cursor: pointer; color:black; display: inline;" class="detail dropdown-toggle">
+                    <a style="cursor: pointer; color:black; display: inline;" class="detail dropdown-toggle">
                     </a>';
-        })->addColumn('niche_actions', function($niche){
-            return view('pages.niche.niche-actions', compact('niche'));
+        })->addColumn('niche_actions', function($niche)use($guestCoordinator){
+            return view('pages.niche.niche-actions', compact('niche','guestCoordinator'));
         })->editColumn('price', function($request){
             return view('pages.niche.newPrice', compact('request'));
         })->editColumn('updated_at', function($row){
            return date("Y-m-d", strtotime($row->updated_at));
         })->addColumn('categories', function ($row) {
             return implode(', ', $row->categories->pluck('category')->toArray());
+        })->addColumn('coordinator', function ($request) {
+            return $request->coodinator->name;
         })
      ->rawColumns(['check_box','niche_actions','categories'])
         ->make(true);
@@ -758,7 +771,7 @@ class AdminController extends Controller
         ->addColumn('check_box', function($row){
 
             return '<label><input type="checkbox" class="check sub_chk" value="'.$row->id.'" name="ids[]"></label>
-                    <a href="#" style="cursor: pointer; color:black; display: inline;" class="detail dropdown-toggle">
+                    <a style="cursor: pointer; color:black; display: inline;" class="detail dropdown-toggle">
                     </a>';
         })->addColumn('categories', function ($request) {
             return implode(', ', $request->categories->pluck('category')->toArray());
@@ -766,8 +779,7 @@ class AdminController extends Controller
         ->editColumn('updated_at', function($row){
            return date("Y-m-d h:i:s", strtotime($row->updated_at));
         })
-     ->rawColumns(['check_box','actions','categories'])
-        ->make(true);
+        ->rawColumns(['check_box','actions','categories'])->make(true);
     }
     public function addShowNiches()
     {
@@ -816,6 +828,10 @@ class AdminController extends Controller
         $permission = Niche::find($id);
         if ($permission->status == 'pending' || $permission->status == 'rejected') {
             $permission->status = 'approved';
+            if($permission->niche_new_price > 0){
+                $permission->price =$permission->niche_new_price;
+                $permission->niche_new_price=0;
+            }
             $permission->update();
             return back()->with('success', 'Request has been approved');
         } elseif ($permission->status == 'approved') {

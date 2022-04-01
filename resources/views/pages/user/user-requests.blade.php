@@ -7,7 +7,7 @@
             <div class="card-header bg-green border-0">
                 <h1 class="card-title ">Users Information</h1>
                 <div class="float-right mt-3">
-                    <a href="{{ route('addWeb') }}" class="btn btn-primary bg-white p-2 border-0 " style="font-weight: 600 !important;"><i class="text-green fa fa-plus" style="font-size: 17px;"></i> &nbsp; <span>Add Website</span></a>
+                    {{-- <a href="{{ route('addWeb') }}" class="btn btn-primary bg-white p-2 border-0 " style="font-weight: 600 !important;"><i class="text-green fa fa-plus" style="font-size: 17px;"></i> &nbsp; <span>Add Website</span></a> --}}
                 </div>
             </div>
             <div class="card-body table-responsive p-3">

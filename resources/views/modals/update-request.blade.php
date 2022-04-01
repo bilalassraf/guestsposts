@@ -17,20 +17,30 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="websitename">Website Name</label>
-                                    <input class="form-control @error('websitename') is-invalid @enderror" 
+                                    <input class="form-control @error('websitename') is-invalid @enderror"
                                         type="text" placeholder="Website Name" value="{{ $request->web_name }}"
                                         name="web_name" required>
                                 </div>
                             </div>
                             <input type="hidden" value="{{ auth()->user()->id }}" name="user_id">
+                        @if (auth()->user()->type == "admin" || auth()->user()->type == "moderator")
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="outreachcoodinator">Outreach Coordinator</label>
-                                    <input class="form-control"  type="text"
-                                        placeholder="Outreach Coordinator" name="coordinator" required
-                                        value="{{ $request->Coordinator }}">
+                                    <label for="outreachcoodinator1">Outreach Coordinator</label><br>
+                                    <select class="form-control" name="coordinator_id" id="outreachcoodinator1" style="width: 100%;">
+                                        @foreach ($guestCoordinator as $guestCoordinator)
+                                            <option value="{{$guestCoordinator->id}}">{{$guestCoordinator->name}} , {{$guestCoordinator->email}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
+                        @else
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <input class="form-control" id="outreachcoodinator" type="hidden" value="{{ auth()->user()->id }}" name="coordinator_id" autocomplete="off" required>
+                                </div>
+                            </div>
+                        @endif
                         </div>
                         <div class="row">
                             <div class="col-md-6">
@@ -136,7 +146,7 @@
                             {{-- <script type="text/javascript">
                                 bkLib.onDomLoaded(nicEditors.allTextAreas);
                             </script> --}}
-                            <textarea class="form-control textarea" rows="3" cols="50" 
+                            <textarea class="form-control textarea" rows="3" cols="50"
                                 placeholder="Your Message" name="web_description"
                                 required>{{ $request->web_description }}</textarea>
                         </div>
@@ -160,21 +170,30 @@
 	</div>
 </div>
 
+<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
     $(document).ready(function() {
-    $('body .select2').select2({
+    $('.select2').select2({
         tags: true,
+    });
+    $(document).ready(function(){
+        $("#outreachcoodinator1").select2();
     });
 });
 </script>
-
 <style>
-    .select2-search__field{
-        display: none;
-    }.select2-container--default .select2-selection--multiple .select2-selection__choice__display {
-    padding-left: 17px !important;
-    }.select2-selection__choice__remove:hover {
-    color: black !important;
-    margin-left: 0px !important;
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        padding-left: 20px !important;
+        color: black;
     }
+    textarea.select2-search__field {
+        display: none;
+    }
+    .select2-container--default .select2-selection--single {
+    height: 38px !important;
+}
 </style>

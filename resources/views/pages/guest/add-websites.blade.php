@@ -25,23 +25,24 @@ Add Website
                             </div>
                         </div>
                         <input type="hidden" value="{{ auth()->user()->id }}" name="user_id">
-                        @if (auth()->user()->type == "admin")
+                        @if (auth()->user()->type == "admin" || auth()->user()->type == "moderator")
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="outreachcoodinator1">Outreach Coordinator</label>
-                                    <select class="form-control" name="coordinator[]" id="outreachcoodinator1">
-                                        @foreach ($guestCoordinator as $Coordinator)
-                                            <option>{{$Coordinator}}</option>
+                                    <select class="form-control" name="coordinator_id" id="outreachcoodinator1">
+                                        @foreach ($guestCoordinator as $guestCoordinator)
+                                            <option value="{{$guestCoordinator->id}}">{{$guestCoordinator->name}} , {{$guestCoordinator->email}}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
-                        @endif
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <input class="form-control" id="outreachcoodinator" type="hidden" value="{{ auth()->user()->email }}" name="coordinator" autocomplete="off" required>
+                        @else
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <input class="form-control" id="outreachcoodinator" type="hidden" value="{{ auth()->user()->id }}" name="coordinator_id" autocomplete="off" required>
+                                </div>
                             </div>
-                        </div>
+                        @endif
                     </div>
                     <div class="row">
                         <div class="col-md-6">
@@ -54,9 +55,11 @@ Add Website
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="companyprice">Company price</label>
-                                <input class="form-control" id="companyprice" type="text" placeholder="Company Price" autocomplete="off" readonly required>&nbsp;<span id="errmsg1"></span>
+                                <input class="form-control" name="company_price" id="companyprice" type="text" placeholder="Company Price" autocomplete="off" readonly required>&nbsp;<span id="errmsg1"></span>
                             </div>
                         </div>
+                        @else
+                            <input class="form-control" name="company_price" id="companyprice" type="hidden" placeholder="Company Price" autocomplete="off" readonly required>&nbsp;<span id="errmsg1"></span>
                         @endif
                     </div>
                     <div class="row">

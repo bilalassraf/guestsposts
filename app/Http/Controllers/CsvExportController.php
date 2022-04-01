@@ -13,7 +13,7 @@ class CsvExportController extends Controller
 
     public function exportExcel()
     {
-       
+
         $name = 'userrequest.csv';
         $headers = [
             'Content-Disposition' => 'attachment; filename='. $name,
@@ -26,10 +26,10 @@ class CsvExportController extends Controller
             $file = fopen('php://output', 'w+');
             fputcsv($file, $colom);
             $data = \App\Models\UserRequest::cursor();
-            
+
             foreach ($data as $key => $value) {
                 $data = $value->toArray();
-                
+
                 unset($data['id']);
 
                 fputcsv($file, $data);
@@ -42,6 +42,6 @@ class CsvExportController extends Controller
             fputcsv($file, $blanks);
 
             fclose($file);
-        }, 200, $headers);        
+        }, 200, $headers);
     }
 }

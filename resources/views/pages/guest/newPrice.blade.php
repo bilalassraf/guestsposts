@@ -1,5 +1,5 @@
 <a href="#newPriceModel-{{ $request->id }}" class="edit" data-toggle="modal">
-@if(auth::user()->type == 'admin' )
+@if(auth::user()->type == 'admin' || auth()->user()->type == 'outreach_coordinator')
 
    {{$request->price}} @if($request->new_price) &nbsp;&nbsp;&nbsp; <i class="material-icons fa fa-arrow-right "></i> &nbsp;&nbsp;&nbsp;{{ $request->new_price}}@endif
 @else
@@ -7,3 +7,5 @@
 @endif
 </a>
 @include('modals.newPrice')
+
+

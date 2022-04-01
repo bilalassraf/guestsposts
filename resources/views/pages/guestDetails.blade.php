@@ -18,7 +18,7 @@
                         <div class="your-details your-details-xs">
                             <h6 class="f-w-600">OutreachCoordinator </h6>
                             @if( in_array('Outreach Coordinator',$user_permissions))
-                            {{$guest_request->Coordinator}}
+                            {{$guest_request->coodinator?$guest_request->coodinator->name: "N/A"}}
                             @endif
                         </div>
                     </div>

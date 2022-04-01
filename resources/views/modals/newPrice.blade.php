@@ -1,4 +1,5 @@
-        <div class="modal" id="newPriceModel-{{ $request->id }}" tabindex="-1" data-backdrop="false" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+
+       <div class="modal" id="newPriceModel-{{ $request->id }}" tabindex="-1" data-backdrop="false" aria-labelledby="exampleModalLabel1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
               <div class="modal-content">
                 <div class="modal-header  bg-green">
@@ -8,8 +9,6 @@
                   </button>
                 </div>
                 <div class="modal-body">
-
-
                     <div class="form-group">
                         <div class="input-group">
                             <span class="input-group-text"><i class="fa fa-list-alt"></i></span>
@@ -32,7 +31,7 @@
             </div>
           </div>
 
-          <div class="modal" id="myModal-{{$request->id}}" data-backdrop="false" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+          <div class="modal myModal" id="myModal-{{$request->id}}" data-backdrop="false" aria-labelledby="exampleModalLabel1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
               <div class="modal-content">
                 <div class="modal-header">
@@ -47,7 +46,7 @@
                     </div>
                     <input type="hidden" name="new_price" id="new_price{{$request->id}}">
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancle</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="myModal">Cancle</button>
                         <button type="submit" value="" class="btn bg-lightblack text-white mybutton">Understand</button>
                       </div>
                   </form>
@@ -55,24 +54,3 @@
               </div>
             </div>
         </div>
-    <script type="text/javascript">
-    $(document).ready(function() {
-      $(".allow-numeric").bind("keypress", function (e) {
-          var keyCode = e.which ? e.which : e.keyCode
-
-          if (!(keyCode >= 48 && keyCode <= 57)) {
-            $(".error").css("display", "inline");
-            return false;
-          }else{
-            $(".error").css("display", "none");
-          }
-      });
-    });
-        function showModal(id) {
-            $('#newPriceModel-'+id).modal('hide');
-            var price = $('#update_price'+id).val();
-            console.log(price);
-            $('#new_price'+id).val(price);
-            $('#myModal-'+id).modal('show');
-        }
-    </script>

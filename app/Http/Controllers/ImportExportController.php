@@ -6,13 +6,13 @@ use Maatwebsite\Excel\Facades\Excel;
 class ImportExportController extends Controller
 {
     /**
-    * 
+    *
     */
     public function importExportView()
     {
        return view('admin.show.guest.request');
     }
-    public function export() 
+    public function export()
     {
         return Excel::download(new BulkExport, 'bulkData.xlsx');
     }

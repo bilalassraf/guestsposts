@@ -34,7 +34,7 @@
                         @endif
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <input class="form-control" id="outreachcoodinator" type="hidden" value="{{ auth()->user()->email }}" name="coordinator" autocomplete="off" required>
+                                <input class="form-control" id="outreachcoodinator" type="hidden" value="{{ auth()->user()->id }}" name="coordinator_id" autocomplete="off" required>
                             </div>
                         </div>
                     </div>

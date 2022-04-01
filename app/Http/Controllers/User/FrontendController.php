@@ -69,7 +69,7 @@ class FrontendController extends Controller
     {
         $request->validate([
             'web_name'         => 'required|unique:user_requests',
-            'coordinator'      => 'required',
+            'coordinator_id'      => 'required',
             'price'            => 'required|integer',
             //'company_price'    => 'required|integer',
             //'category'         =>'required',
@@ -92,7 +92,7 @@ class FrontendController extends Controller
          $userRequest = new UserRequest();
         //  $userRequest->user_id = $request->user_id;
          $userRequest->web_name = $request->web_name;
-         $userRequest->coordinator = $request->coordinator;
+         $userRequest->coordinator_id = $request->coordinator_id;
          $price = $userRequest->price = $request->price;
         $userRequest->company_price  = $company_price;
         // $userRequest->category     = $request->category;

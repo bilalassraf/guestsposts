@@ -66,10 +66,10 @@ $(document).ready(function() {
       });
     });
 function showModal(id) {
-    $('#newPriceModel-'+id).modal('hide');
+    $('#newPriceModel-'+id).hide('#newPriceModel');
     var price = $('#update_price'+id).val();
     console.log(price);
     $('#new_price'+id).val(price);
-    $('#myModal-'+id).modal('show');
+    $('#myModal-'+id).show('#myModal');
 }
 </script>

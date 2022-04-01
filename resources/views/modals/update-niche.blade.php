@@ -18,12 +18,24 @@
                             </div>
                         </div>
                         <input type="hidden" value="{{ auth()->user()->id }}" name="user_id">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="outreachcoodinator">Outreach Coordinator</label>
-                                <input class="form-control" id="outreachcoodinator" type="text" placeholder="Outreach Coordinator" name="coordinator" required value="{{ $niche->Coordinator }}">
+                        @if (auth()->user()->type == "admin" || auth()->user()->type == "moderator")
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="outreachcoodinator1">Outreach Coordinator</label><br>
+                                    <select class="form-control" name="coordinator_id" id="outreachcoodinator1" style="width: 100%;">
+                                        @foreach ($guestCoordinator as $guestCoordinator)
+                                            <option value="{{$guestCoordinator->id}}">{{$guestCoordinator->name}} , {{$guestCoordinator->email}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
-                        </div>
+                        @else
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <input class="form-control" id="outreachcoodinator" type="hidden" value="{{ auth()->user()->id }}" name="coordinator_id" autocomplete="off" required>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                     <div class="row">
                         <div class="col-md-6">
@@ -142,21 +154,30 @@
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
     $(document).ready(function() {
-    $('body .select2').select2({
+    $('.select2').select2({
         tags: true,
+    });
+    $(document).ready(function(){
+        $("#outreachcoodinator1").select2();
     });
 });
 </script>
-
 <style>
-    .select2-search__field{
-        display: none;
-    }.select2-container--default .select2-selection--multiple .select2-selection__choice__display {
-    padding-left: 17px !important;
-    }.select2-selection__choice__remove:hover {
-    color: black !important;
-    margin-left: 0px !important;
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        padding-left: 20px !important;
+        color: black;
     }
+    textarea.select2-search__field {
+        display: none;
+    }
+    .select2-container--default .select2-selection--single {
+    height: 38px !important;
+}
 </style>

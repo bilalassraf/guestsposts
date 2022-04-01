@@ -11,14 +11,8 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
-<script src="{{asset('plugins/jquery/jquery.min.js')}}"></script>
+
 <script src="{{asset('plugins/bootstrap-toggle/js/bootstrap-toggle.min.js')}}"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
 
 
 <style>
@@ -46,6 +40,7 @@
   <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css')}}">
   <!-- jQuery -->
 <script src="{{ asset('plugins/jquery/jquery.min.js')}}"></script>
+
 <!-- Bootstrap -->
 <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 <!-- AdminLTE -->
@@ -317,7 +312,5 @@ $(document).ready(function(){
 
 @include('sweetalert::alert')
 
-
-weetalert::alert')
 
 
