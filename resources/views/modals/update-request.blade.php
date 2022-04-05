@@ -54,7 +54,7 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="companyprice">Company price</label>
-                                        <input class="form-control" id="companyprice" type="text" placeholder="Company Price" name="company_price" required value="{{ $niche->company_price }}">
+                                        <input class="form-control" id="companyprice" type="text" placeholder="Company Price" name="company_price" required value="{{ $request->company_price }}">
                                     </div>
                                 </div>
                             @endif
