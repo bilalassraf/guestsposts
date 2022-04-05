@@ -56,7 +56,17 @@ class AdminController extends Controller
             echo " This website name is already there in database. So you
             can not add it again. ";
         }
+    } public function guestName(Request $request)
+    {
+        // dd($request->all());
+        $url = str_replace("www.","",preg_replace( "#^[^:/.]*[:/]+#i", "",   $request->webname )) ;
+        $value = UserRequest::where( 'web_name', $url )->first();
+        if($value){
+            echo " This website name is already there in database. So you
+            can not add it again. ";
+        }
     }
+
     public function newPrice(Request $request , $id)
     {
         $new_price = UserRequest::find($id);
@@ -205,7 +215,7 @@ class AdminController extends Controller
     public function addGuestRequestForm()
     {
         $categories = Category::all();
-        $guestCoordinator = User::whereHas('user_request')->get();
+        $guestCoordinator = User::where('type','moderator')->get();
         return view('pages.guest.add-websites', compact('categories','guestCoordinator'));
     }
     public function showGuestRequests()

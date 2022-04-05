@@ -44,12 +44,14 @@
                                 <input class="form-control" id="price" type="text" placeholder="Price" name="price" required value="{{ $niche->price }}">
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="companyprice">Company price</label>
-                                <input class="form-control" id="companyprice" type="text" placeholder="Company Price" name="company_price" required value="{{ $niche->company_price }}">
+                        @if (auth()->user()->type == "admin")
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="companyprice">Company price</label>
+                                    <input class="form-control" id="companyprice" type="text" placeholder="Company Price" name="company_price" required value="{{ $niche->company_price }}">
+                                </div>
                             </div>
-                        </div>
+                        @endif
                     </div>
                     <div class="row">
                         <div class="col-md-6">
@@ -166,6 +168,12 @@
     });
     $(document).ready(function(){
         $("#outreachcoodinator1").select2();
+    });
+    $("#price").keyup(function(){
+        var price = $("#price").val();
+        var percentage = price ;
+        var company = parseInt(price *8/100 + 50) + parseInt(price);
+        $("#companyprice").val(company);
     });
 });
 </script>

@@ -21,7 +21,9 @@ Add Website
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="websitename">Website Name</label>
-                                <input class="form-control @error('websitename') is-invalid @enderror" id="websitename" value="{{  old('web_name') }}" type="text" placeholder="Website Name" name="web_name" autocomplete="off" required>
+                                <input class="webname form-control @error('websitename') is-invalid @enderror" id="websitename"
+                                    type="text" placeholder="Website Name" name="web_name" value="{{  old('web_name') }}" autocomplete="off" required>
+                                    <div id="div2" class="text-danger"></div>
                             </div>
                         </div>
                         <input type="hidden" value="{{ auth()->user()->id }}" name="user_id">
@@ -31,7 +33,7 @@ Add Website
                                     <label for="outreachcoodinator1">Outreach Coordinator</label>
                                     <select class="form-control" name="coordinator_id" id="outreachcoodinator1">
                                         @foreach ($guestCoordinator as $guestCoordinator)
-                                            <option value="{{$guestCoordinator->id}}">{{$guestCoordinator->name}} , {{$guestCoordinator->email}}</option>
+                                            <option value="{{$guestCoordinator->id}}">{{$guestCoordinator->email}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -172,6 +174,15 @@ textarea.select2-search__field {
 <script type="text/javascript">
 
     $(document).ready(function() {
+        $(".webname").change(function(){
+            var webname = $(this).val();
+            console.log(webname);
+            $.ajax({url: "/guest/webname",
+            data:{'webname': webname},
+             success: function(result){
+            $("#div2").html(result);
+            }});
+        });
         //called when key is pressed in textbox
         $("#price").keypress(function(e) {
             //if the letter is not digit then display error and don't type anything
@@ -187,6 +198,7 @@ textarea.select2-search__field {
             var company = parseInt(price *8/100 + 50) + parseInt(price);
             $("#companyprice").val(company);
         });
+
     });
     $(document).ready(function() {
         //called when key is pressed in textbox

@@ -47,16 +47,17 @@
                                 <div class="mb-3">
                                     <label for="price">Price</label>
                                     <input class="form-control" type="text" placeholder="Price" name="price"
-                                        required value="{{ $request->price }}">&nbsp;<span id="errmsg"></span>
+                                        required value="{{$request->new_price >0 ? $request->new_price : $request->price}}">&nbsp;<span id="errmsg"></span>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="companyprice">Company price</label>
-                                    <input class="form-control"  type="text" placeholder="Company Price"
-                                        name="company_price" required value="{{ $request->company_price }}">&nbsp;<span id="errmsg1"></span>
+                            @if (auth()->user()->type == "admin")
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="companyprice">Company price</label>
+                                        <input class="form-control" id="companyprice" type="text" placeholder="Company Price" name="company_price" required value="{{ $niche->company_price }}">
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
                         </div>
                         <div class="row">
                             <div class="col-md-6">
@@ -182,6 +183,12 @@
     });
     $(document).ready(function(){
         $("#outreachcoodinator1").select2();
+    });
+    $("#price").keyup(function(){
+        var price = $("#price").val();
+        var percentage = price ;
+        var company = parseInt(price *8/100 + 50) + parseInt(price);
+        $("#companyprice").val(company);
     });
 });
 </script>
