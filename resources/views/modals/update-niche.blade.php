@@ -51,6 +51,8 @@
                                     <input class="form-control" id="companyprice" type="text" placeholder="Company Price" name="company_price" required value="{{ $niche->company_price }}">
                                 </div>
                             </div>
+                        @else
+                        <input class="form-control" id="companyprice" type="hidden" placeholder="Company Price" name="company_price" required value="{{ $niche->company_price }}">
                         @endif
                     </div>
                     <div class="row">
@@ -143,12 +145,12 @@
                         <label class="col-form-label" for="specialnote">Special Notes</label>
                         <script type="text/javascript">
                             bkLib.onDomLoaded(nicEditors.allTextAreas);
-
                         </script>
                         <textarea class="form-control textarea" id="specialnote" rows="3" cols="50" placeholder="Your Message" required name="special_note">{{ $niche->special_note }}</textarea>
                     </div>
-                    <div class="text-sm-end">
-                        <input type="submit" class="btn bg-dark outline-none" value="Send Request">
+                    <div class="modal-footer">
+                        <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                        <input type="submit" class="btn bg-lightblack text-white" value="Update">
                     </div>
                 </form>
             </div>

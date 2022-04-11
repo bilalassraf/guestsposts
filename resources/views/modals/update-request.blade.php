@@ -46,7 +46,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="price">Price</label>
-                                    <input class="form-control" type="text" placeholder="Price" name="price"
+                                    <input class="form-control" id="price" type="text" placeholder="Price" name="price"
                                         required value="{{$request->new_price >0 ? $request->new_price : $request->price}}">&nbsp;<span id="errmsg"></span>
                                 </div>
                             </div>
@@ -57,6 +57,8 @@
                                         <input class="form-control" id="companyprice" type="text" placeholder="Company Price" name="company_price" required value="{{ $request->company_price }}">
                                     </div>
                                 </div>
+                            @else
+                            <input class="form-control" id="companyprice" type="hidden" placeholder="Company Price" name="company_price" required value="{{ $request->company_price }}">
                             @endif
                         </div>
                         <div class="row">

@@ -141,7 +141,6 @@ class AdminController extends Controller
         $userRequest->price = $request->price;
         $userRequest->company_price  = $request->company_price;
         //$userRequest->category = $request->category;
-        $userRequest->user_id     = $request->coordinator_id;
         $userRequest->span_score     = $request->span_score;
         $userRequest->domain_rating     = $request->domain_rating;
         $userRequest->organic_trafic_ahrefs     = $request->organic_trafic_ahrefs;
@@ -215,7 +214,7 @@ class AdminController extends Controller
     public function addGuestRequestForm()
     {
         $categories = Category::all();
-        $guestCoordinator = User::where('type','moderator')->get();
+        $guestCoordinator = User::where('type','outreach_coordinator')->get();
         return view('pages.guest.add-websites', compact('categories','guestCoordinator'));
     }
     public function showGuestRequests()
@@ -433,7 +432,6 @@ class AdminController extends Controller
         $userRequest->coordinator_id = $request->coordinator_id;
         $price = $userRequest->price = $request->price;
         $userRequest->company_price  = $request->company_price;
-        $userRequest->id     = $request->coordinator_id;
         $userRequest->domain_authority     = $request->domain_authority;
         $userRequest->span_score     = $request->span_score;
         $userRequest->domain_rating     = $request->domain_rating;
@@ -653,7 +651,7 @@ class AdminController extends Controller
     public function addNicheForm()
     {
         $categories = Category::all();
-        $guestCoordinator = User::whereHas('user_request')->get();
+        $guestCoordinator = User::where('type','outreach_coordinator')->get();
         return view('pages.niche.add-niche', compact('categories','guestCoordinator'));
     }
     public function addStoreNiche(Request $request)
@@ -726,7 +724,7 @@ class AdminController extends Controller
 
             $guest_requests = $user->user_request()->with(['categories', 'coodinator']);
         }
-        $guestCoordinator = User::whereHas('user_request')->get();
+        $guestCoordinator = User::where('type','outreach_coordinator')->get();
         return DataTables::of($guest_requests)
         ->addColumn('check_box', function($row){
 
@@ -753,7 +751,7 @@ class AdminController extends Controller
         }else{
             $niches = $user->Niche()->with(['categories', 'coodinator'])->get();
         }
-        $guestCoordinator = User::whereHas('user_request')->get();
+        $guestCoordinator = User::where('type','outreach_coordinator')->get();
         return DataTables::of($niches)
         ->addColumn('check_box', function($row){
 
@@ -814,7 +812,7 @@ class AdminController extends Controller
     {
         $Niche = Niche::find($id);
         $Niche->web_name = $request->web_name;
-        $Niche->coordinator = $request->coordinator;
+        $Niche->coordinator_id = $request->coordinator_id;
         $price = $Niche->price = $request->price;
         $Niche->company_price  = $request->company_price;
         //$Niche->category     = $request->category;
