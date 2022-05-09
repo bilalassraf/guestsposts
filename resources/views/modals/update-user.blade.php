@@ -26,6 +26,8 @@
                                         </div>
                                     </div>
                                 </div>
+                            @else
+                                <input type="hidden" name="type" value="admin">
                             @endif
 	                        <div class="form-group">
 	                            <label>Your Name</label>
