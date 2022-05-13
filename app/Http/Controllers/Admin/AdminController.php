@@ -740,7 +740,7 @@ class AdminController extends Controller
         })->editColumn('updated_at', function($row){
            return date("Y-m-d", strtotime($row->updated_at));
         })->addColumn('coordinator', function ($request) {
-            return $request->coodinator->name;
+            return $request->coodinator?$request->coodinator->name:'N/A';
         })->rawColumns(['check_box','action','categories'])->make(true);
     }
     public function nicheRequests()
@@ -767,7 +767,7 @@ class AdminController extends Controller
         })->addColumn('categories', function ($row) {
             return implode(', ', $row->categories->pluck('category')->toArray());
         })->addColumn('coordinator', function ($request) {
-            return $request->coodinator->name;
+            return $request->coodinator?$request->coodinator->name:'N/A';
         })
      ->rawColumns(['check_box','niche_actions','categories'])
         ->make(true);
