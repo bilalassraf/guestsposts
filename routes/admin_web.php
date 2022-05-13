@@ -34,10 +34,8 @@ Route::get('get-niche-requests', [AdminController::class,'nicheRequests'])->name
 
 //user request datd
 Route::get('get-user-requests', [AdminController::class,'userRequestsData'])->name('get-user-requests');
-
 Route::post('user/new/price/{id}',[AdminController::class,'newPrice'])->name('user.new.price');
 Route::post('user/niche/new/price/{id}',[AdminController::class,'nicheNewPrice'])->name('user.niche.new.price');
-
 Route::get('admin/show/user/request/search',[AdminController::class,'showSearch'])->name('showSearch');
 Route::get('admin/show/user/request/{id}',[AdminController::class,'showSingleRequest'])->name('admin.show.single.request');
 Route::get('admin/show/guest/requests',[AdminController::class,'showGuestRequests'])->name('admin.show.guest.request');
@@ -54,7 +52,6 @@ Route::get('admin/clear/trash/{id}',[AdminController::class,'forceDelete'])->nam
 Route::get('admin/make/admin/{id}',[AdminController::class,'makeAdmin'])->name('make.admin');
 Route::get('admin/edit/request/{id}',[AdminController::class,'editRequest'])->name('admin.edit.request');
 Route::post('admin/change/request/{id}',[AdminController::class,'updateRequest'])->name('admin.update.request');
-
 
 //searchbar
 Route::get('admin/search/users',[AdminController::class,'search'])->name('admin.serach.user');
@@ -101,7 +98,6 @@ Route::get('admin/show/deleted/niches',[AdminController::class,'showDeleteNiches
 Route::get('admin/changing/niche/{id}',[AdminController::class,'restoreNiche'])->name('admin.restore.niche');
 Route::get('admin/clear/niche/{id}',[AdminController::class,'clearNiche'])->name('admin.delete.permanently.niche');
 Route::post('admin/delete/niches',[AdminController::class,'deleteSelectedNiches'])->name('admin.delete.selected.niches');
-
 
 });
 Route::get('/export', [App\Http\Controllers\CsvExportController::class,'exportExcel'])->name('export.xl');

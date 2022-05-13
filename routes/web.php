@@ -41,11 +41,8 @@ Route::post('user/change/requests/{id}',[FrontendController::class,'userUpdateRe
 
 Route::get('logout',[LoginController::class,'logout'])->name('logout');
 Auth::routes();
-
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
 Auth::routes();
-
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('export', [AdminController::class,'export'])->name('export.excel');
 Route::post('import/store',[AdminController::class,'importstore'])->name('import.excel');
