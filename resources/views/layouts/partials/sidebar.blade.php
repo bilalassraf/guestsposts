@@ -13,21 +13,21 @@
         <div class="user-panel mt-3 pb-3 mb-3 d-flex align-items-center justify-content-center flex-column">
           <div class="image pr-4">
             @if(auth()->user()->profile)
-            <img src="{{ asset(auth()->user()->profile) }}" class="img-circle rounded-circle" alt="User Image" height="200px" width="200px">
+              <img src="{{ asset(auth()->user()->profile) }}" class="img-circle rounded-circle" alt="User Image" height="200px" width="200px">
             @else()
-            <img src="{{ asset('./images/00000b.png') }}" class="img-circle rounded-circle" alt="User Image" height="200px" width="200px">
+              <img src="{{ asset('./images/00000b.png') }}" class="img-circle rounded-circle" alt="User Image" height="200px" width="200px">
             @endif
           </div>
           <div class="info">
-            @if(auth()->user()->type == 'admin')
+            @if(auth()->user()->type == 'Admin')
             <a href="{{ route('user.profile',auth()->user()->id) }}" class="d-block text-white pl-4">{{ auth()->user()->name }}</a>
             @else
             <a href="#" class="d-block text-white pl-4">{{ auth()->user()->name }}</a>
             @endif
-            @if(auth()->user()->type == 'admin')
-            <a href="{{ route('user.profile',auth()->user()->id) }}" class="d-block text-white">{{ auth()->user()->email }}</a>
+            @if(auth()->user()->type == 'Admin')
+            <a href="{{ route('user.profile',auth()->user()->id) }}" class="d-block text-white">{{ auth()->user()->email }} <i class="fa fa-pencil-square-o"></i></a>
             @else
-            <a href="#" class="d-block text-white">{{ auth()->user()->email }}</a>
+            <a href="{{ route('user.profile',auth()->user()->id) }}" class="d-block text-white">{{ auth()->user()->email }} <i class="fa fa-pencil-square-o"></i></a>
             @endif
           </div>
         </div>
@@ -37,7 +37,7 @@
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <!-- Add icons to the links using the .nav-icon class
                  with font-awesome or any other icon font library -->
-            @if(auth()->user()->type == 'admin')
+            @if(auth()->user()->type == 'Admin')
               <li class="nav-item">
                   <a href="{{route('dashboard')}}" class="nav-link text-white {{ (\Request::route()->getName() == 'dashboard') ? 'active' : '' }}">
                     <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -68,6 +68,36 @@
                       <p>View Categories</p>
                     </a>
                   </li>
+                </ul>
+              </li>
+              <li class="nav-item @if(Route::currentRouteName()=='admin.add.casino.request' || Route::currentRouteName()=='admin.show.casino.request' ||Route::currentRouteName()=='admin.casino.deleted.requests') menu-is-opening menu-open @endif">
+                <a href="#" class="nav-link">
+                  <i class="nav-icon fa fa-television text-white"></i>
+                  <p class="text-white">Casino Post<i class="fas fa-angle-left right text-white"></i></p>
+                </a>
+                <ul class="nav nav-treeview">
+                  
+                    <li class="nav-item active">
+                      <a href="{{ route('admin.add.casino.request') }}" class="nav-link text-white {{ (\Request::route()->getName() == 'admin.add.casino.request') ? 'active' : '' }}">
+                        <i class="far fa-menu nav-icon"></i>
+                        <p >Add Websites</p>
+                      </a>
+                    </li>
+        
+                    <li class="nav-item">
+                      <a href="{{ route('admin.show.casino.request') }}" class="nav-link text-white {{ (\Request::route()->getName() == 'admin.show.casino.request') ? 'active' : '' }}">
+                        <i class="far fa-menu nav-icon "></i>
+                        <p >View Websites</p>
+                      </a>
+                    </li>
+                 
+                    <li class="nav-item">
+                      <a href="{{route('admin.casino.deleted.requests')}}" class="nav-link text-white {{ (\Request::route()->getName() == 'admin.guest.deleted.requests') ? 'active' : '' }}">
+                        <i class="far fa-menu nav-icon "></i>
+                        <p >Deleted Websites</p>
+                      </a>
+                    </li>
+                 
                 </ul>
               </li>
               <li class="nav-item @if(Route::currentRouteName()=='admin.add.guest.request' || Route::currentRouteName()=='admin.show.guest.request' ||Route::currentRouteName()=='admin.guest.deleted.requests') menu-is-opening menu-open @endif">
@@ -123,19 +153,19 @@
                 </ul>
               </li>
             @endif
-            @if(auth()->user()->type == 'user' || auth()->user()->type == 'outreach_coordinator' || auth()->user()->type == 'moderator')
+            @if(auth()->user()->type == 'User' || auth()->user()->type == 'Outreach Coordinator' || auth()->user()->type == 'Moderator')
               <li class="nav-item active">
                 <a href="{{route('dashboard')}}" class="nav-link text-white {{ (\Request::route()->getName() == 'dashboard') ? 'active' : '' }}">
                   <i class="nav-icon fas fa-tachometer-alt"></i>
                   <p>Dashboard</p>
                 </a>
               </li>
-              <li class="nav-item active">
+              {{-- <li class="nav-item active">
                   <a href="{{route('user.requests')}}" class="nav-link text-white {{ (\Request::route()->getName() == 'user.requests') ? 'active' : '' }}">
                     <i class="nav-icon fas fa-list-alt"></i>
                     <p>Requests</p>
                   </a>
-              </li>
+              </li> --}}
               {{-- permission part --}}
               @if(auth()->user()->user_info == 'on')
                   <li class="nav-item active">
@@ -165,6 +195,40 @@
                         <a href="{{route('admin.show.categories')}}" class="nav-link text-white {{ (\Request::route()->getName() == 'admin.show.categories') ? 'active' : '' }}">
                           <i class="far fa-menu nav-icon "></i>
                           <p >view Categories</p>
+                        </a>
+                      </li>
+                    @endif
+                  </ul>
+                </li>
+              @endif
+              @if(auth()->user()->add_casino_post == 'on' || auth()->user()->view_all_casino_post == 'on' || auth()->user()->view_deleted_casino_post == 'on' )
+                <li class="nav-item @if(Route::currentRouteName()=='admin.add.casino.request' || Route::currentRouteName()=='admin.show.casino.request' ||Route::currentRouteName()=='admin.casino.deleted.requests') menu-is-opening menu-open @endif">
+                  <a href="#" class="nav-link">
+                    <i class="nav-icon fa fa-television text-white"></i>
+                    <p class="text-white">Casino Post<i class="fas fa-angle-left right text-white"></i></p>
+                  </a>
+                  <ul class="nav nav-treeview">
+                    @if(auth()->user()->add_casino_post == 'on')
+                      <li class="nav-item active">
+                        <a href="{{ route('admin.add.casino.request') }}" class="nav-link text-white {{ (\Request::route()->getName() == 'admin.add.casino.request') ? 'active' : '' }}">
+                          <i class="far fa-menu nav-icon"></i>
+                          <p >Add Websites</p>
+                        </a>
+                      </li>
+                    @endif
+                    @if(auth()->user()->view_all_casino_post == 'on')
+                      <li class="nav-item">
+                        <a href="{{ route('admin.show.casino.request') }}" class="nav-link text-white {{ (\Request::route()->getName() == 'admin.show.casino.request') ? 'active' : '' }}">
+                          <i class="far fa-menu nav-icon "></i>
+                          <p >View Websites</p>
+                        </a>
+                      </li>
+                    @endif
+                    @if(auth()->user()->view_deleted_casino_post == 'on')
+                      <li class="nav-item">
+                        <a href="{{route('admin.casino.deleted.requests')}}" class="nav-link text-white {{ (\Request::route()->getName() == 'admin.guest.deleted.requests') ? 'active' : '' }}">
+                          <i class="far fa-menu nav-icon "></i>
+                          <p >Deleted Websites</p>
                         </a>
                       </li>
                     @endif

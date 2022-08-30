@@ -20,7 +20,7 @@
                             </div>
                         </div>
                         <input type="hidden" value="{{ auth()->user()->id }}" name="user_id">
-                        @if (auth()->user()->type == "admin")
+                        @if (auth()->user()->type == "Admin")
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="outreachcoodinator1">Outreach Coordinator</label>
@@ -45,7 +45,7 @@
                                 <input class="form-control" id="price1" type="text" placeholder="Price" name="price" value="{{  old('price') }}" autocomplete="off" required>&nbsp;<span id="errmsg"></span>
                             </div>
                         </div>
-                        @if (auth()->user()->type == "admin")
+                        @if (auth()->user()->type == "Admin")
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="companyprice">Company price</label>
@@ -139,7 +139,7 @@
                         <textarea class="form-control textarea" id="specialnote" rows="3" cols="50" placeholder="Your Message" autocomplete="off" value="{{  old('special_note') }}" name="special_note"></textarea>
                     </div>
                             <div class="text-sm-end">
-                                <button type="submit" class="btn bg-lightblack text-white outline-none">Send Request</button>
+                                <button type="submit" class="btn bg-lightblack text-white outline-none">Submit for Approval</button>
                             </div>
                         </form>
                     </div>

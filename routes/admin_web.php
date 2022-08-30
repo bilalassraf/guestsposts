@@ -31,6 +31,20 @@ Route::get('user/profile/{id}',[AdminController::class,'userProfile'])->name('us
 Route::get('ajax-chart-data-user', [AdminController::class,'getDataUser'])->name('getDataUser');
 Route::get('get-web-requests', [AdminController::class,'webRequests'])->name('get-web-requests');
 Route::get('get-niche-requests', [AdminController::class,'nicheRequests'])->name('get-niche-requests');
+Route::get('get-casino-requests', [AdminController::class,'casinoRequests'])->name('get-casino-requests');
+//casino request
+Route::get('admin/ad/casino/request',[AdminController::class,'addCasinoRequestForm'])->name('admin.add.casino.request');
+Route::post('admin/store/casino/request',[AdminController::class,'storeCasinoRequest'])->name('admin.store.casino.request');
+Route::get('admin/show/casino/requests',[AdminController::class,'showCasinoRequests'])->name('admin.show.casino.request');
+Route::get('admin/casino/approved/{id}',[AdminController::class,'casinoRequestApprove'])->name('admin.casino.request.approved');
+Route::get('admin/casino/rejected/{id}',[AdminController::class,'casinoRejected'])->name('admin.casino.request.rejected');
+Route::get('admin/casino/deleted/{id}',[AdminController::class,'casinoRequestDelete'])->name('admin.casino.delete.request');
+Route::post('admin/change/casino/{id}',[AdminController::class,'updateCasino'])->name('admin.update.casino');
+Route::get('admin/show/casino/deleted/requests',[AdminController::class,'showCasinoDeleted'])->name('admin.casino.deleted.requests');
+Route::get('admin/restored/casino/{id}',[AdminController::class,'restoreCasino'])->name('admin.restore.casino');
+Route::get('admin/clear/trash/casino/{id}',[AdminController::class,'forceDeleteCasino'])->name('admin.delete.permanently.casino');
+Route::post('admin/delete/users/casino',[AdminController::class,'deleteSelectedCasino'])->name('admin.delete.selected.casino');
+Route::post('admin/approved/users/casino',[AdminController::class,'approvedSelectedCasino'])->name('admin.approved.selected.casino');
 
 //user request datd
 Route::get('get-user-requests', [AdminController::class,'userRequestsData'])->name('get-user-requests');
@@ -43,6 +57,7 @@ Route::get('admin/show/all/guest/requests',[AdminController::class,'allGuestRequ
 Route::get('admin/ad/guest/request',[AdminController::class,'addGuestRequestForm'])->name('admin.add.guest.request');
 Route::post('admin/store/guest/request',[AdminController::class,'storeGuestRequest'])->name('admin.store.guest.request');
 Route::post('admin/delete/users/requests',[AdminController::class,'deleteSelectedREquest'])->name('admin.delete.selected.request');
+Route::post('admin/approved/users/requests',[AdminController::class,'approvedSelectedREquest'])->name('admin.approved.selected.request');
 Route::get('admin/guest/approved/{id}',[AdminController::class,'guestRequestApprove'])->name('admin.guest.request.approved');
 Route::get('admin/guest/rejected/{id}',[AdminController::class,'nicheRejected'])->name('admin.guest.request.rejected');
 Route::get('admin/guest/deleted/{id}',[AdminController::class,'guestRequestDelete'])->name('admin.guest.delete.request');
@@ -79,6 +94,7 @@ Route::get('specific/chart',[AdminController::class,'specific_chart'])->name('sp
 Route::post('admin/allow/user/{id}',[AdminController::class,'permissions'])->name('admin.user.permissions');
 Route::get('get/details/{id}',[AdminController::class,'getDetails'])->name('getDetails');
 Route::get('get/niche/details/{id}',[AdminController::class,'getNicheDetails'])->name('getNicheDetails');
+Route::get('details/casino/{id}',[AdminController::class,'getCasinoDetails'])->name('getCasinoDetails');
 //ajex route
 Route::get('get/url',[AdminController::class,'getUrl'])->name('getUrl');
 Route::get('get/webname',[AdminController::class,'getName'])->name('getName');

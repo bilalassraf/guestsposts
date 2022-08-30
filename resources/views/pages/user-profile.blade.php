@@ -65,7 +65,7 @@ Profile
 
                         <p class="text-muted text-center">{{ $user->email }}</p>
                         <div class="text-center mb-2">
-                            @if ($user->type == 'user')
+                            @if ($user->type == 'User')
                             <a href="{{ route('make.admin', $user->id) }}" class="btn btn-dark text-white">Make Admin</a>
                             @endif
                         </div>
@@ -96,7 +96,9 @@ Profile
                             <li class="nav-item"><a class="nav-link site" href="#niche" data-toggle="tab">Niche Post</a></li>
                             <li class="nav-item"><a class="nav-link site" href="#about" data-toggle="tab">About</a></li>
                             <li class="nav-item"><a class="nav-link site" href="#update-profile" data-toggle="tab"> Update Profile</a></li>
-                            <li class="nav-item"><a class="nav-link site" href="#permissions" data-toggle="tab">Permissions</a></li>
+                            @if(auth()->user()->type == 'Admin' || auth()->user()->type == 'Moderator')
+                                <li class="nav-item"><a class="nav-link site" href="#permissions" data-toggle="tab">Permissions</a></li>
+                            @endif
                         </ul>
                     </div><!-- /.card-header -->
                     <div class="card-body">
@@ -117,7 +119,9 @@ Profile
                                                                 <th>Description</th>
                                                                 <th>Special Note</th>
                                                                 <th>Status</th>
-                                                                <th>Action</th>
+                                                                @if(auth()->user()->type == 'Admin' || auth()->user()->type == 'Moderator')
+                                                                    <th>Action</th>
+                                                                @endif
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -142,11 +146,13 @@ Profile
                                                                 <td>
                                                                     <p>{{ $user_request->status }}</p>
                                                                 </td>
-                                                                <td>
-                                                                    <a href="{{ route('admin.guest.request.approved', $user_request->id) }}" class="tick"><i class="text-green fa fa-check" title=""></i></a>
-                                                                    <a href="{{ route('admin.guest.request.rejected', $user_request->id) }}" class="edit"><i class="text-green fa fa-close"></i></a>
-                                                                    <a href="{{ route('admin.guest.delete.request', $user_request->id) }}" class="delete"><i class="text-green fa fa-trash" title="Delete"></i></a>
-                                                                </td>
+                                                                @if(auth()->user()->type == 'Admin' || auth()->user()->type == 'Moderator')
+                                                                    <td>
+                                                                        <a href="{{ route('admin.guest.request.approved', $user_request->id) }}" class="tick"><i class="text-green fa fa-check" title=""></i></a>
+                                                                        <a href="{{ route('admin.guest.request.rejected', $user_request->id) }}" class="edit"><i class="text-green fa fa-close"></i></a>
+                                                                        <a href="{{ route('admin.guest.delete.request', $user_request->id) }}" class="delete"><i class="text-green fa fa-trash" title="Delete"></i></a>
+                                                                    </td>
+                                                                @endif
                                                             </tr>
                                                             @endforeach
                                                         </tbody>
@@ -175,7 +181,9 @@ Profile
                                                                 <th>Description</th>
                                                                 <th>Special Note</th>
                                                                 <th>Status</th>
-                                                                <th>Action</th>
+                                                                @if(auth()->user()->type == 'Admin' || auth()->user()->type == 'Moderator')
+                                                                    <th>Action</th>
+                                                                @endif
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -200,11 +208,13 @@ Profile
                                                                 <td>
                                                                     <p>{{ $user_niche->status }}</p>
                                                                 </td>
-                                                                <td>
-                                                                    <a href="{{ route('admin.guest.request.approved', $user_niche->id) }}" class="tick"><i class="text-green fa fa-check" title=""></i></a>
-                                                                    <a href="{{ route('admin.guest.request.rejected', $user_niche->id) }}" class="edit"><i class="text-green fa fa-close"></i></a>
-                                                                    <a href="{{ route('admin.guest.delete.request', $user_niche->id) }}" class="delete"><i class="text-green fa fa-trash" title="Delete"></i></a>
-                                                                </td>
+                                                                @if(auth()->user()->type == 'Admin' || auth()->user()->type == 'Moderator')
+                                                                    <td>
+                                                                        <a href="{{ route('admin.guest.request.approved', $user_niche->id) }}" class="tick"><i class="text-green fa fa-check" title=""></i></a>
+                                                                        <a href="{{ route('admin.guest.request.rejected', $user_niche->id) }}" class="edit"><i class="text-green fa fa-close"></i></a>
+                                                                        <a href="{{ route('admin.guest.delete.request', $user_niche->id) }}" class="delete"><i class="text-green fa fa-trash" title="Delete"></i></a>
+                                                                    </td>
+                                                                @endif    
                                                             </tr>
                                                             @endforeach
                                                         </tbody>
@@ -504,6 +514,59 @@ Profile
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="card-header bg-dark">Casino Post</div>
+                                        <div class="card-body">
+                                            <div class="form-row ">
+                                                <div class="wrapper col-md-4">
+                                                    <div class="switch_box box_1">
+                                                        <label for="addfund" class="pr-3">Add Websites</label>
+                                                      <input type="checkbox" class="switch_1" id="guest_info" name="add_casino_post" value="1" data-style="slow" data-on="Allow" data-off="Deny" data-onstyle="dark" @if ($user->add_casino_post == 'on') checked @endif >
+                                                    </div>
+                                                </div>
+                                                <div class="wrapper col-md-4">
+                                                    <div class="switch_box box_1">
+                                                        <label for="addfund" class="pr-3">View Websites</label>
+                                                      <input type="checkbox" class="switch_1" id="view_casino_info" name="view_all_casino_post" value="1" data-style="slow" data-on="Allow" data-off="Deny" data-onstyle="dark" @if ($user->view_all_casino_post == 'on') checked @endif>
+                                                    </div>
+                                                </div>
+                                                <div class="modal" id="casinoModel" tabindex="-1" data-backdrop="false" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered">
+                                                      <div class="modal-content">
+                                                        <div class="modal-header  bg-green">
+                                                          <h5 class="modal-title" id="exampleModalLabel1">Change Permissions Setting</h5>
+                                                          <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                          </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-group row">
+                                                                @csrf
+                                                                @foreach ($permissionCasino as $permissions)
+                                                                    <div class="wrapper col-md-6 mb-3">
+                                                                        <div class="switch_box box_1 row">
+                                                                            <label for="input-{{$permissions->id}}" class="col-md-8">{{$permissions->name}}</label>
+                                                                        <input type="checkbox" class="switch_1 col-md-3" id="input-{{$permissions->id}}" name="ids[]" value="{{$permissions->id}}" data-style="slow" data-on="Allow" data-off="Deny" data-onstyle="dark" @if (in_array($permissions->id, $user_permissions)) checked @endif>
+                                                                        {{-- @if ($user->add_guest_post == 'on') checked @endif --}}
+                                                                        </div>
+                                                                    </div>
+                                                                @endforeach
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancle</button>
+                                                                <input type="submit" value="Save" class="btn bg-lightblack text-white mybutton">
+                                                            </div>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                <div class="wrapper col-md-4">
+                                                    <div class="switch_box box_1">
+                                                        <label for="addfund" class="pr-3">View Deleted Websites</label>
+                                                      <input type="checkbox" class="switch_1" id="deleted_info" name="view_deleted_casino_post" value="1" data-style="slow" data-on="Allow" data-off="Deny" data-onstyle="dark" @if ($user->view_deleted_casino_post == 'on') checked @endif>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="card-header bg-dark">Guest Post</div>
                                         <div class="card-body">
                                             <div class="form-row ">
@@ -666,6 +729,15 @@ Profile
             }
             else {
                 $("#nichePriceModel").modal('hide');
+            }
+        });
+
+        $('#view_casino_info').click(function(){
+            if($(this).is(":checked")){
+                $("#casinoModel").modal('show');
+            }
+            else {
+                $("#casinoModel").modal('hide');
             }
         });
 

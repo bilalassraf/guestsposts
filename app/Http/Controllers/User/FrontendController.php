@@ -24,10 +24,10 @@ class FrontendController extends Controller
             $date = Carbon::parse($p)->format('Y-m-d 00:00:00');
             $enddate = Carbon::parse($p)->format('Y-m-d 23:59:59');
             $count = UserRequest::whereBetween('created_at',[$date,$enddate])->get();
-            $app = $count->where('status','approved')->count();
-            $rej = $count->where('status','rejected')->count();
-            $del = $count->where('status','deleted')->count();
-            $pend = $count->where('status','pending')->count();
+            $app = $count->where('status','Approved')->count();
+            $rej = $count->where('status','Rejected')->count();
+            $del = $count->where('status','Deleted')->count();
+            $pend = $count->where('status','Pending')->count();
             if($count){
                 $totalCount++;
             }
@@ -39,10 +39,10 @@ class FrontendController extends Controller
         $data['totalCount'] = $totalCount;
         $categories = Category::all();
         $users = User::all();
-        $approved = UserRequest::where('status','approved')->count();
-        $rejected = UserRequest::where('status','rejected')->count();
-        $deleted = UserRequest::where('status','deleted')->count();
-        $pending = UserRequest::where('status','pending')->count();
+        $approved = UserRequest::where('status','Approved')->count();
+        $rejected = UserRequest::where('status','Rejected')->count();
+        $deleted = UserRequest::where('status','Deleted')->count();
+        $pending = UserRequest::where('status','Pending')->count();
         $to = Carbon::tomorrow();
         $from = Carbon::now()->subDays(28);
         $days_array = [];
@@ -155,7 +155,7 @@ class FrontendController extends Controller
     {
         $user = User::find(Auth::user()->id);
         $user_permissions = $user->permissions()->where('type', 1)->pluck('permissions.name')->toArray();
-        if($user->type == 'admin'){
+        if($user->type == 'Admin'){
             $guest_requests = UserRequest::orderBy('id', 'DESC')->get();
         }else{
             $guest_requests = $user->user_request;

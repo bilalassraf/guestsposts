@@ -10,7 +10,7 @@ Dashboard
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous">
 </script>
 
-@if (auth()->user()->type == 'admin')
+@if (auth()->user()->type == 'Admin')
 <div class="content-wrapper">
 
     @include('filter')
@@ -60,7 +60,7 @@ Dashboard
                                         <!-- <img src="{{ asset('assets/images/dashboard/check.png') }}" style="width: 60%; height: 60%;"> -->
                                         <i class="fa fa-users" style="font-size: 30px; padding: 10px;"></i>
                                     </div>
-                                    <h5>{{ $users->where('type', 'user')->count() }}</h5>
+                                    <h5>{{ $users->where('type', 'User')->count() }}</h5>
                                     <p>Outreach Coordinator</p>
                                     <div class="parrten">
                                     </div>

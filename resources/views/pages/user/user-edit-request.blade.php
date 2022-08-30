@@ -118,7 +118,7 @@
                                     <textarea class="form-control textarea" id="specialnote" rows="3" cols="50" placeholder="Your Message" required name="special_note">{{ $request->special_note }}</textarea>
                                 </div>
                                 <div class="text-sm-end">
-                                    <button type="submit" class="btn bg-green">Send Request</button>
+                                    <button type="submit" class="btn bg-green">Submit for Approval</button>
                                 </div>
                             </form>
   </div>

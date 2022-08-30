@@ -24,7 +24,7 @@
                                 </div>
                             </div>
                             <input type="hidden" value="{{ auth()->user()->id }}" name="user_id">
-                            @if (auth()->user()->type == "admin" || auth()->user()->type == "moderator")
+                            @if (auth()->user()->type == "Admin" || auth()->user()->type == "Moderator")
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="outreachcoodinator1">Outreach Coordinator</label>
@@ -51,7 +51,7 @@
                                         required>&nbsp;<span id="errmsg"></span>
                                 </div>
                             </div>
-                            @if (auth()->user()->type == "admin")
+                            @if (auth()->user()->type == "Admin")
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="companyprice">Company price</label>
@@ -163,7 +163,7 @@
                                 placeholder="Your Message" name="special_note"  autocomplete="off">{{  old('special_note') }}</textarea>
                         </div>
                         <div class="text-sm-end">
-                            <button type="submit" class="btn btn-primary bg-green outline-none">Send Request</button>
+                            <button type="submit" class="btn btn-primary bg-green outline-none">Submit for Approval</button>
                         </div>
                     </form>
                 </div>
@@ -176,7 +176,7 @@
         padding-left: 20px !important;
     }
     textarea.select2-search__field {
-        display: none;
+        border: none !important;
     }
     </style>
 
@@ -187,18 +187,17 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script type="text/javascript">
     $(document).ready(function() {
-        $(".ent").change(function(){
+        $(".ent").on('change', function(ev){
             var value = $(this).val();
-            $.ajax({url: "/get/url",
+            $.ajax({url: "{{route('getUrl')}}",
             data:{'value': value},
              success: function(result){
             $("#div1").html(result);
             }});
         });
-        $(".webname").change(function(){
+        $(".webname").on('change', function(ev){
             var webname = $(this).val();
-            console.log(webname);
-            $.ajax({url: "/get/webname",
+            $.ajax({url: "{{ route('getName') }}",
             data:{'webname': webname},
              success: function(result){
             $("#div2").html(result);

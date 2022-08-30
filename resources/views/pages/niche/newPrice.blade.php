@@ -1,5 +1,5 @@
 <a href="#newPriceModel-{{ $request->id }}" class="edit" data-toggle="modal">
-@if(auth::user()->type == 'admin' || auth()->user()->type == 'outreach_coordinator' || auth::user()->type == 'moderator')
+@if(auth::user()->type == 'Admin' || auth()->user()->type == 'Outreach Coordinator' || auth::user()->type == 'Moderator')
 
    {{$request->price}} @if($request->niche_new_price) &nbsp;&nbsp;&nbsp; <i class="material-icons fa fa-arrow-right "></i> &nbsp;&nbsp;&nbsp;{{ $request->niche_new_price}}@endif
 @else

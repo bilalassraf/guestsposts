@@ -12,8 +12,6 @@
                             @endif
                         </div>
                     </div>
-
-
                     <div class="col-sm-3">
                         <div class="your-details your-details-xs">
                             <h6 class="f-w-600">OutreachCoordinator </h6>

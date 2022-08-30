@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Category;
 use App\Models\Niche;
 use App\Models\UserRequest;
+use App\Models\CasinoRequest;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
@@ -30,12 +31,207 @@ class AdminController extends Controller
     public function index()
     {
         $users = User::all();
-        $approved = UserRequest::where('status', 'approved')->count();
-        $rejected = UserRequest::where('status', 'rejected')->count();
-        $deleted = UserRequest::where('status', 'deleted')->count();
-        $pending = UserRequest::where('status', 'pending')->count();
+        $approved = UserRequest::where('status', 'Approved')->count();
+        $rejected = UserRequest::where('status', 'Rejected')->count();
+        $deleted = UserRequest::where('status', 'Deleted')->count();
+        $pending = UserRequest::where('status', 'Pending')->count();
 
         return view('admin.dashboard.admin-dashboard', compact('users', 'approved', 'pending', 'deleted', 'rejected'));
+    }
+    public function addCasinoRequestForm()
+    {
+        $categories = Category::all();
+        $guestCoordinator = User::where('type','Outreach Coordinator')->get();
+        return view('pages.casino.add-websites', compact('categories','guestCoordinator'));
+    }
+    public function storeCasinoRequest(Request $request)
+    {
+        $request->validate([
+            'web_name'         => 'required|unique:user_requests',
+            'coordinator_id'      => 'required',
+            'price'            => 'required|integer|regex:/^[-0-9\+]+$/',
+            // 'company_price'    => 'required|integer|regex:/^[-0-9\+]+$/',
+            'categories'         => 'required',
+            'domain_authority' => 'required',
+            'span_score'       => 'required',
+            'domain_rating'    => 'required',
+            'organic_trafic_ahrefs' => 'required',
+            'organic_trafic_sem'    => 'required',
+            'trust_flow'        => 'required',
+            'citation_flow'     => 'required',
+            'email'             => 'required',
+            'web_description'   => 'required',
+            // 'special_note'      => 'required',
+        ],
+        [
+            'web_name.unique' => 'Sorry, this URL is already in Build with'
+        ]);
+        // $percentage = 8/100 * $request->price;
+
+
+        $user = User::find($request->coordinator_id);
+        $userRequest = new CasinoRequest();
+        $userRequest->web_name = $request->web_name;
+        $userRequest->Coordinator = $request->coordinator_id;
+        $userRequest->price = $request->price;
+        $userRequest->company_price  = $request->company_price;
+        $userRequest->span_score     = $request->span_score;
+        $userRequest->domain_rating     = $request->domain_rating;
+        $userRequest->domain_authority     = $request->domain_authority;
+        $userRequest->organic_trafic_ahrefs     = $request->organic_trafic_ahrefs;
+        $userRequest->organic_trafic_sem     = $request->organic_trafic_sem;
+        $userRequest->trust_flow     = $request->trust_flow;
+        $userRequest->citation_flow = $request->citation_flow;
+        $userRequest->email_webmaster = $request->email;
+        $userRequest->web_description = $request->web_description;
+        $userRequest->special_note = $request->special_note;
+        $user->user_request()->save($userRequest);
+        $userRequest->categories()->sync($request->categories);
+        return redirect(route('admin.add.casino.request'))->with('success', 'Your request has submitted');
+    }
+    public function showCasinoRequests()
+    {
+        $user = User::find(Auth::user()->id);
+
+        $user_permissions = $user->permissions()->where('type', 3)->pluck('permissions.name')->toArray();
+        if($user->type == 'Admin'){
+            $guest_requests = CasinoRequest::orderBy('id', 'DESC')->get();
+        }else{
+            $guest_requests = $user->user_request;
+        }
+        return view('pages.casino.all-web-requests', compact("guest_requests","user_permissions"));
+    }
+    public function casinoRequests()
+    {
+        $user = User::find(Auth::user()->id);
+        if( $user->type == 'Admin' || $user->type == 'Moderator' ){
+            $guest_requests = CasinoRequest::with(['categories','coodinator'])->orderBy('id', 'DESC')->get();
+        }else{
+
+            $guest_requests = $user->casino_request()->with(['categories', 'coodinator']);
+        }
+        $guestCoordinator = User::where('type','Outreach Coordinator')->get();
+        return DataTables::of($guest_requests)
+        ->addColumn('check_box', function($row){
+
+            return '<label><input type="checkbox" class="check sub_chk" value="'.$row->id.'" name="ids[]"></label>
+                    <a style="cursor: pointer; color:black; display: inline;" class="detail dropdown-toggle">
+                    </a>';
+        })->addColumn('actions', function($request)use($guestCoordinator){
+            return view('pages.casino.actions', compact('request','guestCoordinator'));
+        })->editColumn('price', function($request){
+            return view('pages.casino.newPrice', compact('request'));
+        })->addColumn('categories', function ($request) {
+            return implode(', ', $request->categories->pluck('category')->toArray());
+        })->editColumn('updated_at', function($row){
+           return date("Y-m-d", strtotime($row->updated_at));
+        })->addColumn('coordinator', function ($request) {
+            return $request->coodinator?$request->coodinator->name:'N/A';
+        })->rawColumns(['check_box','action','categories'])->make(true);
+    }
+    public function casinoRequestApprove($id)
+    {
+        $permission = CasinoRequest::find($id);
+        if ($permission->status == 'Pending' || $permission->status == 'Rejected') {
+            $permission->status = 'Approved';
+            if($permission->new_price > 0){
+                $permission->price =$permission->new_price;
+                $permission->new_price=0;
+            }
+            $permission->update();
+            return back()->with('success', 'Request has been approved');
+        } elseif ($permission->status == 'Approved') {
+            return back()->with('info', 'Request is already approved');
+        }
+    }
+    public function casinoRejected($id)
+    {
+        $permission = CasinoRequest::find($id);
+        if ($permission->status == 'Pending' || $permission->status == 'Approved') {
+            $permission->status = 'Rejected';
+            $permission->update();
+            return back()->with('success', 'Request has been Rejected');
+        } elseif ($permission->status == 'rejected') {
+            return back()->with('info', 'Request is already Rejected');
+        }
+    }
+    public function casinoRequestDelete($id)
+    {
+        $permission = CasinoRequest::find($id);
+        if ($permission->status == 'Pending' || $permission->status == 'Approved' || $permission->status == 'Rejected') {
+            $permission->status = 'Deleted';
+            $permission->update();
+            $permission->delete();
+            return back()->with('success', 'CasinoRequest has been deleted');
+        }
+    }
+    public function updateCasino(Request $request, $id)
+    {
+        $niches = CasinoRequest::all();
+        $userRequest = CasinoRequest::find($id);
+        $userRequest->web_name = $request->web_name;
+        $userRequest->Coordinator = $request->coordinator_id;
+        $price = $userRequest->price = $request->price;
+        $userRequest->company_price  = $request->company_price;
+        $userRequest->domain_authority     = $request->domain_authority;
+        $userRequest->span_score     = $request->span_score;
+        $userRequest->domain_rating     = $request->domain_rating;
+        $userRequest->organic_trafic_ahrefs     = $request->organic_trafic_ahrefs;
+        $userRequest->organic_trafic_sem     = $request->organic_trafic_sem;
+        $userRequest->trust_flow     = $request->trust_flow;
+        $userRequest->citation_flow = $request->citation_flow;
+        $userRequest->email_webmaster = $request->email;
+        $userRequest->web_description = $request->web_description;
+        $userRequest->special_note = $request->special_note;
+        $userRequest->update();
+        $userRequest->categories()->sync($request->categories);
+        return back()->with('success', 'Request updated successfully');
+    }
+    public function showCasinoDeleted()
+    {
+        $trashed = CasinoRequest::onlyTrashed()->get();
+        $empty_message = "There is no deleted Request";
+        return view('pages.casino.deleted-requests', compact('trashed', 'empty_message'));
+    }
+    public function restoreCasino($id)
+    {
+        $restored = CasinoRequest::onlyTrashed()->find($id)->restore();
+        $restored_request = CasinoRequest::find($id);
+        $restored_request->status = 'Pending';
+        $restored_request->update();
+        return back()->with('success', 'Request has been restored ');
+    }
+    public function forceDeleteCasino($id)
+    {
+        $permanent_delete = CasinoRequest::onlyTrashed()->find($id);
+        $permanent_delete->forceDelete();
+        return back()->with('success', 'Request has been deleted permanently');
+    }
+    public function getCasinoDetails($id)
+    {
+        $data['guest_request']= CasinoRequest::where('id', $id)->with('coodinator')->first();
+        $data['user_permissions'] = Auth::user()->permissions()->where('type', 3)->pluck('permissions.name')->toArray();
+        $html = view('pages.guestDetails',$data)->render();
+        return $html;
+    }
+    public function approvedSelectedCasino(Request $request)
+    {
+        $ids = explode(',', $request->ids);
+       
+        if (!empty($ids)) {
+            $data = CasinoRequest::whereIn('id', $ids)->update([
+                'status' => 'Approved'
+            ]);
+            return response()->json(['success'=>"Selected Requests Approved successfully."]);
+        } else {
+            return response()->json(['info'=>"Select a user before this opreation"]);
+        }
+    }
+    public function deleteSelectedCasino(Request $request)
+    {
+        $ids = $request->ids;
+        DB::table("casino_requests")->whereIn('id',explode(",",$ids))->delete();
+        return response()->json(['success'=>"Selected Requests Deleted successfully."]);
     }
     public function getUrl(Request $request)
     {
@@ -49,7 +245,7 @@ class AdminController extends Controller
     }
     public function getName(Request $request)
     {
-        // dd($request->all());
+        //dd($request->all());
         $url = str_replace("www.","",preg_replace( "#^[^:/.]*[:/]+#i", "",   $request->webname )) ;
         $value = Niche::where( 'web_name', $url )->first();
         if($value){
@@ -71,7 +267,7 @@ class AdminController extends Controller
     {
         $new_price = UserRequest::find($id);
         $new_price->new_price = $request->new_price;
-        $new_price->status = 'pending';
+        $new_price->status = 'Pending';
         $new_price->update();
         return back()->with('success', 'New Price Updated Successfully');
     }
@@ -79,12 +275,15 @@ class AdminController extends Controller
     {
         $niche_new_price = Niche::find($id);
         $niche_new_price->niche_new_price = $request->niche_new_price;
-        $niche_new_price->status = 'pending';
+        $niche_new_price->status = 'Pending';
         $niche_new_price->update();
         return back()->with('success', 'New Price Updated Successfully');
     }
     public function addCategory(Request $request)
     {
+        $validated = $request->validate([
+            'category' => 'required|unique:categories|max:255',
+        ]);
         Category::create([
             'category' => $request->category,
         ]);
@@ -142,6 +341,7 @@ class AdminController extends Controller
         $userRequest->company_price  = $request->company_price;
         //$userRequest->category = $request->category;
         $userRequest->span_score     = $request->span_score;
+        $userRequest->domain_authority     = $request->domain_authority;
         $userRequest->domain_rating     = $request->domain_rating;
         $userRequest->organic_trafic_ahrefs     = $request->organic_trafic_ahrefs;
         $userRequest->organic_trafic_sem     = $request->organic_trafic_sem;
@@ -152,7 +352,7 @@ class AdminController extends Controller
         $userRequest->special_note = $request->special_note;
         $user->user_request()->save($userRequest);
         $userRequest->categories()->sync($request->categories);
-        return redirect(route('admin.show.guest.request'))->with('success', 'Your request has submitted');
+        return redirect(route('admin.add.guest.request'))->with('success', 'Your request has submitted');
     }
     public function showSingleRequest($id)
     {
@@ -204,17 +404,19 @@ class AdminController extends Controller
     {
         $user = User::find($id);
         $user_permissions = $user->permissions()->pluck('permissions.id')->toArray();
+        
         $request = UserRequest::where('user_id', $user->id)->get();
         $user_niche = User::find($id);
         $request_niche = Niche::where('user_id', $user->id)->get();
+        $permissionCasino = Permission::where('type',3)->get();
         $permission = Permission::where('type',1)->get();
         $permissionNiche = Permission::where('type',2)->get();
-        return view('pages.user-profile', compact('user', 'request','user_niche' , 'request_niche','permission','user_permissions','permissionNiche'));
+        return view('pages.user-profile', compact('permissionCasino','user', 'request','user_niche' , 'request_niche','permission','user_permissions','permissionNiche'));
     }
     public function addGuestRequestForm()
     {
         $categories = Category::all();
-        $guestCoordinator = User::where('type','outreach_coordinator')->get();
+        $guestCoordinator = User::where('type','Outreach Coordinator')->get();
         return view('pages.guest.add-websites', compact('categories','guestCoordinator'));
     }
     public function showGuestRequests()
@@ -222,7 +424,7 @@ class AdminController extends Controller
         $user = User::find(Auth::user()->id);
 
         $user_permissions = $user->permissions()->where('type', 1)->pluck('permissions.name')->toArray();
-        if($user->type == 'admin'){
+        if($user->type == 'Admin'){
             $guest_requests = UserRequest::orderBy('id', 'DESC')->get();
         }else{
             $guest_requests = $user->user_request;
@@ -258,23 +460,23 @@ class AdminController extends Controller
     public function guestRequestApprove($id)
     {
         $permission = UserRequest::find($id);
-        if ($permission->status == 'pending' || $permission->status == 'rejected') {
-            $permission->status = 'approved';
+        if ($permission->status == 'Pending' || $permission->status == 'Rejected') {
+            $permission->status = 'Approved';
             if($permission->new_price > 0){
                 $permission->price =$permission->new_price;
                 $permission->new_price=0;
             }
             $permission->update();
             return back()->with('success', 'Request has been approved');
-        } elseif ($permission->status == 'approved') {
+        } elseif ($permission->status == 'Approved') {
             return back()->with('info', 'Request is already approved');
         }
     }
     public function nicheRejected($id)
     {
         $permission = UserRequest::find($id);
-        if ($permission->status == 'pending' || $permission->status == 'approved') {
-            $permission->status = 'rejected';
+        if ($permission->status == 'Pending' || $permission->status == 'Approved') {
+            $permission->status = 'Rejected';
             $permission->update();
             return back()->with('success', 'Request has been Rejected');
         } elseif ($permission->status == 'rejected') {
@@ -284,8 +486,8 @@ class AdminController extends Controller
     public function guestRequestDelete($id)
     {
         $permission = UserRequest::find($id);
-        if ($permission->status == 'pending' || $permission->status == 'approved' || $permission->status == 'rejected') {
-            $permission->status = 'deleted';
+        if ($permission->status == 'Pending' || $permission->status == 'Approved' || $permission->status == 'Rejected') {
+            $permission->status = 'Deleted';
             $permission->update();
             $permission->delete();
             return back()->with('success', 'UserRequest has been deleted');
@@ -294,7 +496,7 @@ class AdminController extends Controller
     public function makeAdmin($id)
     {
         $user = User::find($id);
-        $user->type = 'admin';
+        $user->type = 'Admin';
         $user->update();
         return back()->with('success', 'Admin created successfully');
     }
@@ -313,7 +515,7 @@ class AdminController extends Controller
 
         $restored = UserRequest::onlyTrashed()->find($id)->restore();
         $restored_request = UserRequest::find($id);
-        $restored_request->status = 'pending';
+        $restored_request->status = 'Pending';
         $restored_request->update();
         return back()->with('success', 'Request has been restored ');
     }
@@ -338,6 +540,21 @@ class AdminController extends Controller
         // }
         return response()->json(['success'=>"Selected Requests Deleted successfully."]);
     }
+
+    public function approvedSelectedREquest(Request $request)
+    {
+        $ids = explode(',', $request->ids);
+       
+        if (!empty($ids)) {
+            $data = UserRequest::whereIn('id', $ids)->update([
+                'status' => 'Approved'
+            ]);
+            return response()->json(['success'=>"Selected Requests Approved successfully."]);
+        } else {
+            return response()->json(['info'=>"Select a user before this opreation"]);
+        }
+    }
+
     public function deleteSelected(Request $request)
     {
         $ids = $request->ids;
@@ -347,7 +564,7 @@ class AdminController extends Controller
             }
             return back()->with('success', 'Selected users has been removed');
         } else {
-            return back()->with('info', 'Selecte a user before this opreation');
+            return back()->with('info', 'Select a user before this opreation');
         }
     }
     public function getData(Request $request)
@@ -369,10 +586,10 @@ class AdminController extends Controller
             $enddate = Carbon::parse($date)->format('Y-m-d 23:59:59');
             array_push($days_array, Carbon::parse($date)->isoFormat('Do'));
 
-            $app_req = UserRequest::whereBetween('created_at', [$date, $enddate])->where('status', 'approved')->count();
-            $pend_req = UserRequest::whereBetween('created_at', [$date, $enddate])->where('status', 'pending')->count();
-            $rej_req = UserRequest::whereBetween('created_at', [$date, $enddate])->where('status', 'rejected')->count();
-            $del_req = UserRequest::whereBetween('created_at', [$date, $enddate])->where('status', 'deleted')->count();
+            $app_req = UserRequest::whereBetween('created_at', [$date, $enddate])->where('status', 'Approved')->count();
+            $pend_req = UserRequest::whereBetween('created_at', [$date, $enddate])->where('status', 'Pending')->count();
+            $rej_req = UserRequest::whereBetween('created_at', [$date, $enddate])->where('status', 'Rejected')->count();
+            $del_req = UserRequest::whereBetween('created_at', [$date, $enddate])->where('status', 'Deleted')->count();
             array_push($app_request, $app_req);
             array_push($pend_request, $pend_req);
             array_push($rej_request, $rej_req);
@@ -485,13 +702,13 @@ class AdminController extends Controller
     public function requestChart(Request $request, $requestName)
     {
         $users = User::all();
-        $approved = UserRequest::where('status', 'approved')->count();
-        $rejected = UserRequest::where('status', 'rejected')->count();
-        $deleted = UserRequest::where('status', 'deleted')->count();
-        $pending = UserRequest::where('status', 'pending')->count();
+        $approved = UserRequest::where('status', 'Approved')->count();
+        $rejected = UserRequest::where('status', 'Rejected')->count();
+        $deleted = UserRequest::where('status', 'Deleted')->count();
+        $pending = UserRequest::where('status', 'Pending')->count();
         switch ($requestName) {
-            case ('approved'):
-                $status = 'approved';
+            case ('Approved'):
+                $status = 'Approved';
                 $to = Carbon::now();
                 $from = Carbon::now()->subDays(15);
                 $days_array = [];
@@ -514,8 +731,8 @@ class AdminController extends Controller
                 return view('graphs.single-request', $chart_data_array, compact('users', 'approved', 'pending', 'deleted', 'rejected', 'status'));
                 break;
 
-            case ('pending'):
-                $status = 'pending';
+            case ('Pending'):
+                $status = 'Pending';
                 $to = Carbon::now();
                 $from = Carbon::now()->subDays(15);
                 $days_array = [];
@@ -538,8 +755,8 @@ class AdminController extends Controller
                 return view('graphs.single-request', $chart_data_array, compact('users', 'approved', 'pending', 'deleted', 'rejected', 'status'));
 
                 break;
-            case ('rejected'):
-                $status = 'rejected';
+            case ('Rejected'):
+                $status = 'Rejected';
                 $to = Carbon::now();
                 $from = Carbon::now()->subDays(15);
                 $days_array = [];
@@ -561,8 +778,8 @@ class AdminController extends Controller
                 );
                 return view('graphs.single-request', $chart_data_array, compact('users', 'approved', 'pending', 'deleted', 'rejected', 'status'));
                 break;
-            case ('deleted'):
-                $status = 'deleted';
+            case ('Deleted'):
+                $status = 'Deleted';
                 $to = Carbon::now();
                 $from = Carbon::now()->subDays(15);
                 $days_array = [];
@@ -629,6 +846,9 @@ class AdminController extends Controller
     //    dd($request->all());
         $user = User::find($id);
         $user->user_info = $request->user_info ? 'on' : 'off';
+        $user->add_casino_post = $request->add_casino_post ? 'on' : 'off';
+        $user->view_all_casino_post = $request->view_all_casino_post ? 'on' : 'off';
+        $user->view_deleted_casino_post = $request->view_deleted_casino_post ? 'on' : 'off';
         $user->add_guest_post = $request->add_guest_post ? 'on' : 'off';
         $user->view_all_guest_post = $request->view_all_guest_post ? 'on' : 'off';
         $user->view_deleted_guest_post = $request->view_deleted_guest_post ? 'on' : 'off';
@@ -651,7 +871,7 @@ class AdminController extends Controller
     public function addNicheForm()
     {
         $categories = Category::all();
-        $guestCoordinator = User::where('type','outreach_coordinator')->get();
+        $guestCoordinator = User::where('type','Outreach Coordinator')->get();
         return view('pages.niche.add-niche', compact('categories','guestCoordinator'));
     }
     public function addStoreNiche(Request $request)
@@ -718,13 +938,13 @@ class AdminController extends Controller
     public function webRequests()
     {
         $user = User::find(Auth::user()->id);
-        if( $user->type == 'admin' || $user->type == 'moderator' ){
+        if( $user->type == 'Admin' || $user->type == 'Moderator' ){
             $guest_requests = UserRequest::with(['categories','coodinator'])->orderBy('id', 'DESC')->get();
         }else{
 
             $guest_requests = $user->user_request()->with(['categories', 'coodinator']);
         }
-        $guestCoordinator = User::where('type','outreach_coordinator')->get();
+        $guestCoordinator = User::where('type','Outreach Coordinator')->get();
         return DataTables::of($guest_requests)
         ->addColumn('check_box', function($row){
 
@@ -746,12 +966,12 @@ class AdminController extends Controller
     public function nicheRequests()
     {
         $user = User::find(Auth::user()->id);
-        if($user->type == 'admin' || $user->type == 'moderator'){
+        if($user->type == 'Admin' || $user->type == 'Moderator'){
             $niches = Niche::with(['categories', 'coodinator'])->get();
         }else{
             $niches = $user->Niche()->with(['categories', 'coodinator'])->get();
         }
-        $guestCoordinator = User::where('type','outreach_coordinator')->get();
+        $guestCoordinator = User::where('type','Outreach Coordinator')->get();
         return DataTables::of($niches)
         ->addColumn('check_box', function($row){
 
@@ -792,7 +1012,7 @@ class AdminController extends Controller
     public function addShowNiches()
     {
         $user = User::find(Auth::user()->id);
-        if($user->type == 'admin'){
+        if($user->type == 'Admin'){
             $niches = Niche::all();
         }else{
             $niches = $user->Niche;
@@ -834,34 +1054,34 @@ class AdminController extends Controller
     public function nicheApprove(Request $request, $id)
     {
         $permission = Niche::find($id);
-        if ($permission->status == 'pending' || $permission->status == 'rejected') {
-            $permission->status = 'approved';
+        if ($permission->status == 'Pending' || $permission->status == 'Rejected') {
+            $permission->status = 'Approved';
             if($permission->niche_new_price > 0){
                 $permission->price =$permission->niche_new_price;
                 $permission->niche_new_price=0;
             }
             $permission->update();
             return back()->with('success', 'Request has been approved');
-        } elseif ($permission->status == 'approved') {
+        } elseif ($permission->status == 'Approved') {
             return back()->with('info', 'Request is already approved');
         }
     }
     public function nicheReject(Request $request, $id)
     {
         $permission = Niche::find($id);
-        if ($permission->status == 'pending' || $permission->status == 'approved') {
-            $permission->status = 'rejected';
+        if ($permission->status == 'Pending' || $permission->status == 'Approved') {
+            $permission->status = 'Rejected';
             $permission->update();
             return back()->with('success', 'Niche has been Rejected');
-        } elseif ($permission->status == 'rejected') {
+        } elseif ($permission->status == 'Rejected') {
             return back()->with('info', 'Niche is already Rejected');
         }
     }
     public function nicheDelete(Request $request, $id)
     {
         $permission = Niche::find($id);
-        if ($permission->status == 'pending' || $permission->status == 'approved' || $permission->status == 'rejected') {
-            $permission->status = 'deleted';
+        if ($permission->status == 'Pending' || $permission->status == 'Approved' || $permission->status == 'Rejected') {
+            $permission->status = 'Deleted';
             $permission->update();
             $permission->delete();
             return back()->with('success', 'Niche has been deleted');
@@ -883,7 +1103,7 @@ class AdminController extends Controller
     {
         $restored = Niche::onlyTrashed()->find($id)->restore();
         $restored_request = Niche::find($id);
-        $restored_request->status = 'pending';
+        $restored_request->status = 'Pending';
         $restored_request->update();
         return back()->with('success', 'Request has been restored ');
     }
@@ -909,10 +1129,10 @@ class AdminController extends Controller
     {
         $status = $status;
         $users = User::all();
-        $approved = UserRequest::where('status', 'approved')->count();
-        $rejected = UserRequest::where('status', 'rejected')->count();
-        $deleted = UserRequest::where('status', 'deleted')->count();
-        $pending = UserRequest::where('status', 'pending')->count();
+        $approved = UserRequest::where('status', 'Approved')->count();
+        $rejected = UserRequest::where('status', 'Rejected')->count();
+        $deleted = UserRequest::where('status', 'Deleted')->count();
+        $pending = UserRequest::where('status', 'Pending')->count();
         $to = Carbon::today();
         $from = Carbon::today();
         $days_array = [];
@@ -938,10 +1158,10 @@ class AdminController extends Controller
     {
         $status = $status;
         $users = User::all();
-        $approved = UserRequest::where('status', 'approved')->count();
-        $rejected = UserRequest::where('status', 'rejected')->count();
-        $deleted = UserRequest::where('status', 'deleted')->count();
-        $pending = UserRequest::where('status', 'pending')->count();
+        $approved = UserRequest::where('status', 'Approved')->count();
+        $rejected = UserRequest::where('status', 'Rejected')->count();
+        $deleted = UserRequest::where('status', 'Deleted')->count();
+        $pending = UserRequest::where('status', 'Pending')->count();
 
 
         $to = Carbon::yesterday();
@@ -969,10 +1189,10 @@ class AdminController extends Controller
     {
         $status = $status;
         $users = User::all();
-        $approved = UserRequest::where('status', 'approved')->count();
-        $rejected = UserRequest::where('status', 'rejected')->count();
-        $deleted = UserRequest::where('status', 'deleted')->count();
-        $pending = UserRequest::where('status', 'pending')->count();
+        $approved = UserRequest::where('status', 'Approved')->count();
+        $rejected = UserRequest::where('status', 'Rejected')->count();
+        $deleted = UserRequest::where('status', 'Deleted')->count();
+        $pending = UserRequest::where('status', 'Pending')->count();
 
 
         $to = Carbon::today();
@@ -1000,10 +1220,10 @@ class AdminController extends Controller
     {
         $status = $status;
         $users = User::all();
-        $approved = UserRequest::where('status', 'approved')->count();
-        $rejected = UserRequest::where('status', 'rejected')->count();
-        $deleted = UserRequest::where('status', 'deleted')->count();
-        $pending = UserRequest::where('status', 'pending')->count();
+        $approved = UserRequest::where('status', 'Approved')->count();
+        $rejected = UserRequest::where('status', 'Rejected')->count();
+        $deleted = UserRequest::where('status', 'Deleted')->count();
+        $pending = UserRequest::where('status', 'Pending')->count();
         $to = Carbon::today();
         $from = Carbon::today()->subDays(30);
         $days_array = [];
@@ -1029,10 +1249,10 @@ class AdminController extends Controller
     {
         $status = $status;
         $users = User::all();
-        $approved = UserRequest::where('status', 'approved')->count();
-        $rejected = UserRequest::where('status', 'rejected')->count();
-        $deleted = UserRequest::where('status', 'deleted')->count();
-        $pending = UserRequest::where('status', 'pending')->count();
+        $approved = UserRequest::where('status', 'Approved')->count();
+        $rejected = UserRequest::where('status', 'Rejected')->count();
+        $deleted = UserRequest::where('status', 'Deleted')->count();
+        $pending = UserRequest::where('status', 'Pending')->count();
         $to = Carbon::today();
         $from = Carbon::today()->startOfMonth();
         $days_array = [];
@@ -1058,10 +1278,10 @@ class AdminController extends Controller
     {
         $status = $status;
         $users = User::all();
-        $approved = UserRequest::where('status', 'approved')->count();
-        $rejected = UserRequest::where('status', 'rejected')->count();
-        $deleted = UserRequest::where('status', 'deleted')->count();
-        $pending = UserRequest::where('status', 'pending')->count();
+        $approved = UserRequest::where('status', 'Approved')->count();
+        $rejected = UserRequest::where('status', 'Rejected')->count();
+        $deleted = UserRequest::where('status', 'Deleted')->count();
+        $pending = UserRequest::where('status', 'Pending')->count();
         $to = Carbon::today()->subMonth(1)->endOfMonth();
         $from = Carbon::today()->subMonth(1)->startOfMonth();
         $days_array = [];
@@ -1092,10 +1312,10 @@ class AdminController extends Controller
             'from' => 'required'
         ]);
         $users = User::all();
-        $approved = UserRequest::where('status', 'approved')->count();
-        $rejected = UserRequest::where('status', 'rejected')->count();
-        $deleted = UserRequest::where('status', 'deleted')->count();
-        $pending = UserRequest::where('status', 'pending')->count();
+        $approved = UserRequest::where('status', 'Approved')->count();
+        $rejected = UserRequest::where('status', 'Rejected')->count();
+        $deleted = UserRequest::where('status', 'Deleted')->count();
+        $pending = UserRequest::where('status', 'Pending')->count();
         $to = $request->to;
         $from = $request->from;
         $days_array = [];
@@ -1144,19 +1364,19 @@ class AdminController extends Controller
             array_push($days_array, Carbon::parse($date)->isoFormat('Do'));
 
             if ($request->approved == 'true') {
-                $app_req = UserRequest::whereBetween('created_at', [$date, $enddate])->where('status', 'approved')->count();
+                $app_req = UserRequest::whereBetween('created_at', [$date, $enddate])->where('status', 'Approved')->count();
                 array_push($app_request, $app_req);
             }
             if ($request->pending == 'true') {
-                $pend_req = UserRequest::whereBetween('created_at', [$date, $enddate])->where('status', 'pending')->count();
+                $pend_req = UserRequest::whereBetween('created_at', [$date, $enddate])->where('status', 'Pending')->count();
                 array_push($pend_request, $pend_req);
             }
             if ($request->rejected == 'true') {
-                $rej_req = UserRequest::whereBetween('created_at', [$date, $enddate])->where('status', 'rejected')->count();
+                $rej_req = UserRequest::whereBetween('created_at', [$date, $enddate])->where('status', 'Rejected')->count();
                 array_push($rej_request, $rej_req);
             }
             if ($request->deleted == 'true') {
-                $del_req = UserRequest::whereBetween('created_at', [$date, $enddate])->where('status', 'deleted')->count();
+                $del_req = UserRequest::whereBetween('created_at', [$date, $enddate])->where('status', 'Deleted')->count();
                 array_push($del_request, $del_req);
             }
         }

@@ -19,7 +19,7 @@
                 <table class="table table-bordernone">
                     <thead>
                         <tr>
-                            <th>#id</th>
+                            {{-- <th>#id</th> --}}
                             <th> Category Name</th>
                             <th>Added at</th>
                             <th>Actions</th>
@@ -28,7 +28,6 @@
                     <tbody>
                         @foreach ($categories as $category)
                             <tr>
-                                <td>{{ $category->id }}</td>
                                 <td>{{ $category->category }}</td>
                                 <td>{{ $category->created_at->format('d-y-m') }}</td>
                                 <td>

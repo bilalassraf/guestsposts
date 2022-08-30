@@ -82,6 +82,7 @@
                                     <input class="form-control"  type="text"
                                         placeholder="Domain Authority" name="domain_authority" required
                                         value="{{ $request->domain_authority }}">
+                                        <p class="text-danger d-none" id="domainAuth">Minimum Domain Authority(Moz) should be allowed atleast 25+</p>    
                                 </div>
                             </div>
                         </div>
@@ -98,6 +99,7 @@
                                     <label for="domainrating">Domain Rating(Ahrefs)</label>
                                     <input class="form-control"  type="text" placeholder="Domain Rating"
                                         name="domain_rating" required value="{{ $request->domain_rating }}">
+                                    <p class="text-danger d-none" id="domainRate">Minimum Domain Rating(Ahrefs) should be allowed atleast 25+</p>
                                 </div>
                             </div>
                         </div>
@@ -108,6 +110,7 @@
                                     <input class="form-control"  type="text"
                                         placeholder="Organic Tranfic" name="organic_trafic_ahrefs" required
                                         value="{{ $request->organic_trafic_ahrefs }}">
+                                        <p class="text-danger d-none" id="organicTra">Minimum Organic Traffic (Ahrefs) should be allowed atleast 1000+</p>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -191,6 +194,28 @@
         var percentage = price ;
         var company = parseInt(price *8/100 + 50) + parseInt(price);
         $("#companyprice").val(company);
+    });
+    $('#domainauthority').on('change', function(ev) {  
+        $('#domainAuth').addClass('d-none'); 
+        var value = $(this).val();
+        if(value < 25){
+            $('#domainAuth').removeClass('d-none');
+        }
+    });
+    $('#domainrating').on('change', function(ev) {  
+        $('#domainRate').addClass('d-none'); 
+        var value = $(this).val();
+        if(value < 25){
+            $('#domainRate').removeClass('d-none');
+        }
+    });
+
+    $('#organictrafic').on('change', function(ev) {  
+        $('#organicTra').addClass('d-none'); 
+        var value = $(this).val();
+        if(value < 1000){
+            $('#organicTra').removeClass('d-none');
+        }
     });
 });
 </script>

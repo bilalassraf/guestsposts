@@ -271,10 +271,10 @@ input[type=range]::-webkit-slider-thumb::before {
 @include('layouts.partials.sidebar')
 
   <!-- Content Wrapper. Contains page content -->
-@if(auth()->user()->type == 'admin' |auth()->user()->user_info == 'on'|auth()->user()->add_category == 'on' | auth()->user()->view_all_categories == 'on' |auth()->user()->add_guest_post == 'on' |auth()->user()->view_all_guest_post == 'on' |auth()->user()->view_deleted_guest_post == 'on' |auth()->user()->add_niche == 'on' |auth()->user()->view_niches == 'on'| auth()->user()->deleted_niches == 'on')
+@if(auth()->user()->type == 'Admin' |auth()->user()->user_info == 'on'|auth()->user()->add_category == 'on' | auth()->user()->view_all_categories == 'on' |auth()->user()->add_guest_post == 'on' |auth()->user()->view_all_guest_post == 'on' |auth()->user()->view_deleted_guest_post == 'on' |auth()->user()->add_niche == 'on' |auth()->user()->view_niches == 'on'| auth()->user()->deleted_niches == 'on' |auth()->user()->add_casino_post == 'on' |auth()->user()->view_all_casino_post == 'on' |auth()->user()->view_deleted_casino_post == 'on' )
   @yield('content')
 @endif
-@if(auth()->user()->type == 'user' || auth()->user()->type == 'outreach_coordinator' || auth()->user()->type == 'moderator')
+@if(auth()->user()->type == 'User' || auth()->user()->type == 'Outreach Coordinator' || auth()->user()->type == 'Moderator')
     @yield('user')
 @endif
   <!-- /.content-wrapper -->

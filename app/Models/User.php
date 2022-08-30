@@ -58,4 +58,8 @@ class User extends Authenticatable
     {
         return $this->hasmany(Niche::class);
     }
+    public function casino_request()
+    {
+        return $this->hasMany(CasinoRequest::class);
+    }
 }

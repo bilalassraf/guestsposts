@@ -46,12 +46,13 @@ Show Website
                             </thead>
                             <tbody>
                                 @foreach ($guest_requests as $request)
+            
                                 <tr data-widget="expandable-table" aria-expanded="false">
                                     <td><input type="checkbox" class="check" value="{{ $request->id }}" name="ids[]"><i
                                             class="expandable-table-caret fas fa-caret-right fa-fw"></i></td>
                                     <td>{{ $request->web_name }}</td>
                                     <td>{{ $request->email_webmaster }}</td>
-                                    <td>{{ $request->Coordinator }}</td>
+                                    <td>{{ $request->coordinator }}</td>
                                     <td>{{ Str::limit($request->web_description, 50, ' (...)') }}</td>
                                     <td>
                                         <a href="#editRequestModal-{{ $request->id }}" class="edit"

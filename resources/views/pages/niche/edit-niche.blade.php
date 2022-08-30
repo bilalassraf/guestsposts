@@ -156,7 +156,7 @@
                                 name="special_note">{{ $niche_request->special_note }}</textarea>
                         </div>
                         <div class="text-sm-end">
-                            <button type="submit" class="btn btn-primary bg-green outline-none">Send Request</button>
+                            <button type="submit" class="btn btn-primary bg-green outline-none">Submit for Approval</button>
                         </div>
                     </form>
                 </div>

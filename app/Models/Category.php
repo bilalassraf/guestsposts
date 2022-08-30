@@ -9,6 +9,11 @@ class Category extends Model
 {
     use HasFactory;
     protected $guarded = []; 
+    public function casinoRequest()
+    {
+        return $this->belongsToMany(CasinoRequest::class);
+    }
+
     public function userRequest()
     {
         return $this->belongsToMany(UserRequest::class);

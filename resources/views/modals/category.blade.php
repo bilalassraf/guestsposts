@@ -1,5 +1,4 @@
 
-
         <div class="modal" id="addCategory" tabindex="-1" data-backdrop="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
               <div class="modal-content">

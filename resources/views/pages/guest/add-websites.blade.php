@@ -27,7 +27,7 @@ Add Website
                             </div>
                         </div>
                         <input type="hidden" value="{{ auth()->user()->id }}" name="user_id">
-                        @if (auth()->user()->type == "admin" || auth()->user()->type == "moderator")
+                        @if (auth()->user()->type == "Admin" || auth()->user()->type == "Moderator")
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="outreachcoodinator1">Outreach Coordinator</label>
@@ -53,7 +53,7 @@ Add Website
                                 <input class="form-control" id="price" type="text" placeholder="Price" name="price" value="{{  old('price') }}" autocomplete="off" required>&nbsp;<span id="errmsg"></span>
                             </div>
                         </div>
-                        @if (auth()->user()->type == "admin")
+                        @if (auth()->user()->type == "Admin")
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="companyprice">Company price</label>
@@ -68,31 +68,34 @@ Add Website
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="category">Category</label>
-                                    <select name="categories[]" id="category" multiple="multiple" class="select2 form-control" type="button" required>
+                                <select name="categories[]" id="category" multiple="multiple" class="select2 form-control" type="button" required>
                                     @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->category }}</option>
+                                        <option value="{{ $category->id }}">{{ $category->category }}</option>
                                     @endforeach
-                                    </select>
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="domainauthority">Domain Authority(Moz)</label>
-                                <input class="form-control" id="domainauthority" type="text" value="{{  old('domain_authority') }}" placeholder="Domain Authority" name="domain_authority" autocomplete="off" required>
+                                <label for="spanscore">Spam Score</label>
+                                <input class="form-control" id="spanscore" type="text" autocomplete="off" placeholder="Spam Score"
+                                    name="span_score" value="{{  old('span_score') }}" required>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="spanscore">Spam Score</label>
-                                <input class="form-control" id="spanscore" type="text" placeholder="Spam Score" value="{{  old('span_score') }}" name="span_score" autocomplete="off" required>
+                                <label for="domainauthority">Domain Authority(Moz)</label>
+                                <input class="form-control" id="domainauthority" minlength="25" min="25" type="number" value="{{  old('domain_authority') }}" placeholder="Domain Authority" name="domain_authority" autocomplete="off" required>
+                                <p class="text-danger d-none" id="domainAuth">Minimum Domain Authority(Moz) should be allowed atleast 25+</p>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="domainrating">Domain Rating(Ahrefs)</label>
-                                <input class="form-control" id="domainrating" type="text" placeholder="Domain Rating" value="{{  old('domain_rating') }}" name="domain_rating" autocomplete="off" required>
+                                <input class="form-control" id="domainrating" type="number" placeholder="Domain Rating" value="{{  old('domain_rating') }}" name="domain_rating" autocomplete="off" required>
+                                <p class="text-danger d-none" id="domainRate">Minimum Domain Rating(Ahrefs) should be allowed atleast 25+</p>
                             </div>
                         </div>
                     </div>
@@ -101,6 +104,7 @@ Add Website
                             <div class="mb-3">
                                 <label for="organictraficahrefs">Organic Traffic (Ahrefs)</label>
                                 <input class="form-control" id="organictrafic" type="text" placeholder="Organic Traffic" value="{{  old('organic_trafic_ahrefs') }}" name="organic_trafic_ahrefs" autocomplete="off" required>
+                                <p class="text-danger d-none" id="organicTra">Minimum Organic Traffic (Ahrefs) should be allowed atleast 1000+</p>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -149,7 +153,7 @@ Add Website
                         <textarea class="form-control textarea" id="specialnote" rows="3" cols="50" placeholder="Your Message" autocomplete="off" value="{{  old('special_note') }}" name="special_note"></textarea>
                     </div>
                     <div class="text-sm-end">
-                        <button type="submit" class="btn text-white bg-lightblack outline-none">Send Request</button>
+                        <button type="submit" class="btn text-white bg-lightblack outline-none">Submit for Approval</button>
                     </div>
                 </form>
             </div>
@@ -162,7 +166,7 @@ Add Website
     padding-left: 20px !important;
 }
 textarea.select2-search__field {
-    display: none;
+    border: none !important;
 }
 </style>
 
@@ -198,7 +202,29 @@ textarea.select2-search__field {
             var company = parseInt(price *8/100 + 50) + parseInt(price);
             $("#companyprice").val(company);
         });
+        $('#domainauthority').on('change', function(ev) {  
+            $('#domainAuth').addClass('d-none'); 
+            var value = $(this).val();
+            if(value < 25){
+                $('#domainAuth').removeClass('d-none');
+            }
+        });
+        $('#domainrating').on('change', function(ev) {  
+            $('#domainRate').addClass('d-none'); 
+            var value = $(this).val();
+            if(value < 25){
+                $('#domainRate').removeClass('d-none');
+            }
+        });
 
+        $('#organictrafic').on('change', function(ev) {  
+            $('#organicTra').addClass('d-none'); 
+            var value = $(this).val();
+            if(value < 1000){
+                $('#organicTra').removeClass('d-none');
+            }
+        });
+    
     });
     $(document).ready(function() {
         //called when key is pressed in textbox
