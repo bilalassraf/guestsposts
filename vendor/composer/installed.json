@@ -221,6 +221,7 @@
                 "issues": "https://github.com/box/spout/issues",
                 "source": "https://github.com/box/spout/tree/v3.3.0"
             },
+            "abandoned": true,
             "install-path": "../box/spout"
         },
         {
@@ -836,12 +837,12 @@
             "type": "library",
             "installation-source": "dist",
             "autoload": {
-                "psr-0": {
-                    "HTMLPurifier": "library/"
-                },
                 "files": [
                     "library/HTMLPurifier.composer.php"
                 ],
+                "psr-0": {
+                    "HTMLPurifier": "library/"
+                },
                 "exclude-from-classmap": [
                     "/library/HTMLPurifier/Language/"
                 ]
@@ -3834,12 +3835,12 @@
             },
             "installation-source": "dist",
             "autoload": {
-                "psr-4": {
-                    "Opis\\Closure\\": "src/"
-                },
                 "files": [
                     "functions.php"
-                ]
+                ],
+                "psr-4": {
+                    "Opis\\Closure\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -5263,12 +5264,12 @@
             },
             "installation-source": "dist",
             "autoload": {
-                "psr-4": {
-                    "Ramsey\\Uuid\\": "src/"
-                },
                 "files": [
                     "src/functions.php"
-                ]
+                ],
+                "psr-4": {
+                    "Ramsey\\Uuid\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
