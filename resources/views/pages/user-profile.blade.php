@@ -92,8 +92,15 @@ Profile
                 <div class="card">
                     <div class="card-header p-2">
                         <ul class="nav nav-pills request">
-                            <li class="nav-item"><a class="nav-link site active" href="#requests" data-toggle="tab">Guest Post</a></li>
-                            <li class="nav-item"><a class="nav-link site" href="#niche" data-toggle="tab">Niche Post</a></li>
+                            @if (auth()->user()->view_all_guest_post == "on")
+                                <li class="nav-item"><a class="nav-link site active" href="#requests" data-toggle="tab">Guest Post</a></li>
+                            @endif
+                            @if (auth()->user()->view_niches == "on")
+                                <li class="nav-item"><a class="nav-link site" href="#niche" data-toggle="tab">Niche Post</a></li>
+                            @endif
+                            @if (auth()->user()->view_all_casino_post == "on")
+                                <li class="nav-item"><a class="nav-link site" href="#casino" data-toggle="tab">Casino Post</a></li>
+                            @endif
                             <li class="nav-item"><a class="nav-link site" href="#about" data-toggle="tab">About</a></li>
                             <li class="nav-item"><a class="nav-link site" href="#update-profile" data-toggle="tab"> Update Profile</a></li>
                             @if(auth()->user()->type == 'Admin' || auth()->user()->type == 'Moderator')
@@ -103,128 +110,194 @@ Profile
                     </div><!-- /.card-header -->
                     <div class="card-body">
                         <div class="tab-content">
-                            <div class="tab-pane active" id="requests">
-                                <div class="tab-pane fade show active" id="timeline" role="tabpanel" aria-labelledby="timeline">
-                                    <div class="col-xl-12 recent-order-sec">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <div class="table-responsive">
-                                                    <h5>Guest Post</h5>
-                                                    <table class="table table-bordernone">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>#id</th>
-                                                                <th>Website Name</th>
-                                                                <th>Company Price</th>
-                                                                <th>Description</th>
-                                                                <th>Special Note</th>
-                                                                <th>Status</th>
-                                                                @if(auth()->user()->type == 'Admin' || auth()->user()->type == 'Moderator')
-                                                                    <th>Action</th>
-                                                                @endif
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
+                            @if (auth()->user()->view_all_guest_post == "on")
+                                <div class="tab-pane active" id="requests">
+                                    <div class="tab-pane fade show active" id="timeline" role="tabpanel" aria-labelledby="timeline">
+                                        <div class="col-xl-12 recent-order-sec">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="table-responsive">
+                                                        <h5>Guest Post</h5>
+                                                        <table class="table table-bordernone">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>#id</th>
+                                                                    <th>Website Name</th>
+                                                                    <th>Company Price</th>
+                                                                    <th>Description</th>
+                                                                    <th>Special Note</th>
+                                                                    <th>Status</th>
+                                                                    @if(auth()->user()->type == 'Admin' || auth()->user()->type == 'Moderator')
+                                                                        <th>Action</th>
+                                                                    @endif
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
 
-                                                            @foreach ($request as $user_request)
-                                                            <tr>
-                                                                <td>{{ $user_request->id }}</td>
-                                                                <td>
-                                                                    <p>{{ $user_request->web_name }}</p>
-                                                                </td>
-                                                                <td>
-                                                                    <p>{{ $user_request->company_price }}</p>
-                                                                </td>
-                                                                <td>
-                                                                    <p>{{ Str::limit($user_request->web_description, 20, '...') }}
-                                                                    </p>
-                                                                </td>
-                                                                <td>
-                                                                    <p>{{ Str::limit($user_request->special_note, 20, '...') }}
-                                                                    </p>
-                                                                </td>
-                                                                <td>
-                                                                    <p>{{ $user_request->status }}</p>
-                                                                </td>
-                                                                @if(auth()->user()->type == 'Admin' || auth()->user()->type == 'Moderator')
+                                                                @foreach ($request as $user_request)
+                                                                <tr>
+                                                                    <td>{{ $user_request->id }}</td>
                                                                     <td>
-                                                                        <a href="{{ route('admin.guest.request.approved', $user_request->id) }}" class="tick"><i class="text-green fa fa-check" title=""></i></a>
-                                                                        <a href="{{ route('admin.guest.request.rejected', $user_request->id) }}" class="edit"><i class="text-green fa fa-close"></i></a>
-                                                                        <a href="{{ route('admin.guest.delete.request', $user_request->id) }}" class="delete"><i class="text-green fa fa-trash" title="Delete"></i></a>
+                                                                        <p>{{ $user_request->web_name }}</p>
                                                                     </td>
-                                                                @endif
-                                                            </tr>
-                                                            @endforeach
-                                                        </tbody>
-                                                    </table>
+                                                                    <td>
+                                                                        <p>{{ $user_request->company_price }}</p>
+                                                                    </td>
+                                                                    <td>
+                                                                        <p>{{ Str::limit($user_request->web_description, 20, '...') }}
+                                                                        </p>
+                                                                    </td>
+                                                                    <td>
+                                                                        <p>{{ Str::limit($user_request->special_note, 20, '...') }}
+                                                                        </p>
+                                                                    </td>
+                                                                    <td>
+                                                                        <p>{{ $user_request->status }}</p>
+                                                                    </td>
+                                                                    @if(auth()->user()->type == 'Admin' || auth()->user()->type == 'Moderator')
+                                                                        <td>
+                                                                            <a href="{{ route('admin.guest.request.approved', $user_request->id) }}" class="tick"><i class="text-green fa fa-check" title=""></i></a>
+                                                                            <a href="{{ route('admin.guest.request.rejected', $user_request->id) }}" class="edit"><i class="text-green fa fa-close"></i></a>
+                                                                            <a href="{{ route('admin.guest.delete.request', $user_request->id) }}" class="delete"><i class="text-green fa fa-trash" title="Delete"></i></a>
+                                                                        </td>
+                                                                    @endif
+                                                                </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            @endif
                             <!-- /.tab-pane -->
                             {{-- niche post --}}
-                            <div class="tab-pane" id="niche">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <div class="table-responsive">
-                                                    <h5>Niche Post</h5>
-                                                    <table class="table table-bordernone">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>#id</th>
-                                                                <th>Website Name</th>
-                                                                <th>Company Price</th>
-                                                                <th>Description</th>
-                                                                <th>Special Note</th>
-                                                                <th>Status</th>
-                                                                @if(auth()->user()->type == 'Admin' || auth()->user()->type == 'Moderator')
-                                                                    <th>Action</th>
-                                                                @endif
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
+                            @if (auth()->user()->view_niches == "on")
+                                <div class="tab-pane" id="niche">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="table-responsive">
+                                                        <h5>Niche Post</h5>
+                                                        <table class="table table-bordernone">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>#id</th>
+                                                                    <th>Website Name</th>
+                                                                    <th>Company Price</th>
+                                                                    <th>Description</th>
+                                                                    <th>Special Note</th>
+                                                                    <th>Status</th>
+                                                                    @if(auth()->user()->type == 'Admin' || auth()->user()->type == 'Moderator')
+                                                                        <th>Action</th>
+                                                                    @endif
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
 
-                                                            @foreach ($request_niche as $user_niche)
-                                                            <tr>
-                                                                <td>{{ $user_niche->id }}</td>
-                                                                <td>
-                                                                    <p>{{ $user_niche->web_name }}</p>
-                                                                </td>
-                                                                <td>
-                                                                    <p>{{ $user_niche->company_price }}</p>
-                                                                </td>
-                                                                <td>
-                                                                    <p>{{ Str::limit($user_niche->web_description, 20, '...') }}
-                                                                    </p>
-                                                                </td>
-                                                                <td>
-                                                                    <p>{{ Str::limit($user_niche->special_note, 20, '...') }}
-                                                                    </p>
-                                                                </td>
-                                                                <td>
-                                                                    <p>{{ $user_niche->status }}</p>
-                                                                </td>
-                                                                @if(auth()->user()->type == 'Admin' || auth()->user()->type == 'Moderator')
+                                                                @foreach ($request_niche as $user_niche)
+                                                                <tr>
+                                                                    <td>{{ $user_niche->id }}</td>
                                                                     <td>
-                                                                        <a href="{{ route('admin.guest.request.approved', $user_niche->id) }}" class="tick"><i class="text-green fa fa-check" title=""></i></a>
-                                                                        <a href="{{ route('admin.guest.request.rejected', $user_niche->id) }}" class="edit"><i class="text-green fa fa-close"></i></a>
-                                                                        <a href="{{ route('admin.guest.delete.request', $user_niche->id) }}" class="delete"><i class="text-green fa fa-trash" title="Delete"></i></a>
+                                                                        <p>{{ $user_niche->web_name }}</p>
                                                                     </td>
-                                                                @endif    
-                                                            </tr>
-                                                            @endforeach
-                                                        </tbody>
-                                                    </table>
+                                                                    <td>
+                                                                        <p>{{ $user_niche->company_price }}</p>
+                                                                    </td>
+                                                                    <td>
+                                                                        <p>{{ Str::limit($user_niche->web_description, 20, '...') }}
+                                                                        </p>
+                                                                    </td>
+                                                                    <td>
+                                                                        <p>{{ Str::limit($user_niche->special_note, 20, '...') }}
+                                                                        </p>
+                                                                    </td>
+                                                                    <td>
+                                                                        <p>{{ $user_niche->status }}</p>
+                                                                    </td>
+                                                                    @if(auth()->user()->type == 'Admin' || auth()->user()->type == 'Moderator')
+                                                                        <td>
+                                                                            <a href="{{ route('admin.guest.request.approved', $user_niche->id) }}" class="tick"><i class="text-green fa fa-check" title=""></i></a>
+                                                                            <a href="{{ route('admin.guest.request.rejected', $user_niche->id) }}" class="edit"><i class="text-green fa fa-close"></i></a>
+                                                                            <a href="{{ route('admin.guest.delete.request', $user_niche->id) }}" class="delete"><i class="text-green fa fa-trash" title="Delete"></i></a>
+                                                                        </td>
+                                                                    @endif    
+                                                                </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            @endif
+                            @if (auth()->user()->view_all_casino_post == "on")
+                                <div class="tab-pane" id="casino">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="table-responsive">
+                                                        <h5>Casino Post</h5>
+                                                        <table class="table table-bordernone">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>#id</th>
+                                                                    <th>Website Name</th>
+                                                                    <th>Company Price</th>
+                                                                    <th>Description</th>
+                                                                    <th>Special Note</th>
+                                                                    <th>Status</th>
+                                                                    @if(auth()->user()->type == 'Admin' || auth()->user()->type == 'Moderator')
+                                                                        <th>Action</th>
+                                                                    @endif
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+
+                                                                @foreach ($request_casino as $user_niche)
+                                                                <tr>
+                                                                    <td>{{ $user_niche->id }}</td>
+                                                                    <td>
+                                                                        <p>{{ $user_niche->web_name }}</p>
+                                                                    </td>
+                                                                    <td>
+                                                                        <p>{{ $user_niche->company_price }}</p>
+                                                                    </td>
+                                                                    <td>
+                                                                        <p>{{ Str::limit($user_niche->web_description, 20, '...') }}
+                                                                        </p>
+                                                                    </td>
+                                                                    <td>
+                                                                        <p>{{ Str::limit($user_niche->special_note, 20, '...') }}
+                                                                        </p>
+                                                                    </td>
+                                                                    <td>
+                                                                        <p>{{ $user_niche->status }}</p>
+                                                                    </td>
+                                                                    @if(auth()->user()->type == 'Admin' || auth()->user()->type == 'Moderator')
+                                                                        <td>
+                                                                            <a href="{{ route('admin.guest.request.approved', $user_niche->id) }}" class="tick"><i class="text-green fa fa-check" title=""></i></a>
+                                                                            <a href="{{ route('admin.guest.request.rejected', $user_niche->id) }}" class="edit"><i class="text-green fa fa-close"></i></a>
+                                                                            <a href="{{ route('admin.guest.delete.request', $user_niche->id) }}" class="delete"><i class="text-green fa fa-trash" title="Delete"></i></a>
+                                                                        </td>
+                                                                    @endif    
+                                                                </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                             {{-- end niche --}}
                             <div class="tab-pane" id="about">
                                 <div class="row">

@@ -3,6 +3,9 @@
     {
       position: fixed !important;
     }
+    .user-panel img {
+      height: 11.5vh !important;
+    }
   </style>
   <aside class="main-sidebar bg-green elevation-4">
       <h4 class="brand-text font-weight-light" style="text-align: center; margin-top: 10px;">Guest Panel </h4>
@@ -20,9 +23,9 @@
           </div>
           <div class="info">
             @if(auth()->user()->type == 'Admin')
-            <a href="{{ route('user.profile',auth()->user()->id) }}" class="d-block text-white pl-4">{{ auth()->user()->name }}</a>
+            <a href="{{ route('user.profile',auth()->user()->id) }}" class="d-block text-white text-center">{{ auth()->user()->name }}</a>
             @else
-            <a href="#" class="d-block text-white pl-4">{{ auth()->user()->name }}</a>
+            <a href="#" class="d-block text-white text-center">{{ auth()->user()->name }}</a>
             @endif
             @if(auth()->user()->type == 'Admin')
             <a href="{{ route('user.profile',auth()->user()->id) }}" class="d-block text-white">{{ auth()->user()->email }} <i class="fa fa-pencil-square-o"></i></a>
