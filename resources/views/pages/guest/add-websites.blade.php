@@ -181,9 +181,10 @@ textarea.select2-search__field {
         $(".webname").change(function(){
             var webname = $(this).val();
             console.log(webname);
-            $.ajax({url: "/guest/webname",
+            $.ajax({
+            url: "{{route('guestName')}}",
             data:{'webname': webname},
-             success: function(result){
+            success: function(result){
             $("#div2").html(result);
             }});
         });

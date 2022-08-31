@@ -51,7 +51,7 @@
                         <div class="your-details your-details-xs">
                             <h6 class="f-w-600">Category </h6>
                             @if( in_array('Categories',$user_permissions))
-                            @foreach ($guest_request->categories as $c)
+                            @foreach ($niche_request->categories as $c)
                             {{$c->category}}
                             @endforeach
                             @endif

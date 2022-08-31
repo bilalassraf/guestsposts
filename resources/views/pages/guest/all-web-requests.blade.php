@@ -193,7 +193,6 @@ $('#users-table tbody').on('click', '.detail', function () {
         url: detailUrl+'/'+data.id,
         type:"get",
         success:function(data1){
-            console.log('hhihi');
             row.child( data1 ).show();
             tr.addClass('shown');
         }
@@ -247,7 +246,7 @@ $('.delete-selected').on('click', function(e) {
     $(".sub_chk:checked").each(function() {
        allVals.push($(this).val());
     });
-    alert(allVals);
+    
     if(allVals.length <=0){
        alert("Please select row.");
     }  else {
