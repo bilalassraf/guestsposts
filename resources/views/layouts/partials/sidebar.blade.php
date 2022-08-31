@@ -314,6 +314,12 @@
                 </li>
                 @endif
                 @endif
+                <li class="nav-item">
+                  <a href="{{ route('user.profile',auth()->user()->id) }}" class="nav-link text-white {{ (\Request::route()->getName() == 'dashboard') ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-tachometer-alt"></i>
+                    <p>View Profile</p>
+                  </a>
+                </li>
                 <li class="nav-item active" style="list-style:none;">
                   <a href="{{ route('logout') }}" class="nav-link text-white">
                       <i class="nav-icon fas fa-sign-out-alt"></i>
