@@ -6,6 +6,9 @@
     .user-panel img {
       height: 11.5vh !important;
     }
+    .user-panel .image {
+      padding-left: 0% !important;
+    }
   </style>
   <aside class="main-sidebar bg-green elevation-4">
       <h4 class="brand-text font-weight-light" style="text-align: center; margin-top: 10px;">Guest Panel </h4>
@@ -14,7 +17,7 @@
       <div class="sidebar">
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex align-items-center justify-content-center flex-column">
-          <div class="image pr-4">
+          <div class="image">
             @if(auth()->user()->profile)
               <img src="{{ asset(auth()->user()->profile) }}" class="img-circle rounded-circle" alt="User Image" height="200px" width="200px">
             @else()
