@@ -236,8 +236,10 @@ class AdminController extends Controller
     public function getUrl(Request $request)
     {
         // dd($request->all());
-        $url = str_replace("www.","",preg_replace( "#^[^:/.]*[:/]+#i", "",  $request->value )) ;
-        $value = Niche::where( 'web_url',$url )->first();
+        $url =  str_replace("www.","",preg_replace("/^https?\:\/\//i", "" , $request->webname));
+        $value = Niche::orWhere('web_name', 'like', '%' . $url . '%')->first();
+        // $url = str_replace("www.","",preg_replace( "#^[^:/.]*[:/]+#i", "",  $request->value )) ;
+        // $value = Niche::where( 'web_url',$url )->first();
         if($value){
             echo " This website is already there in database. So you
             can not add it again. ";
@@ -246,8 +248,10 @@ class AdminController extends Controller
     public function getName(Request $request)
     {
         //dd($request->all());
-        $url = str_replace("www.","",preg_replace( "#^[^:/.]*[:/]+#i", "",   $request->webname )) ;
-        $value = Niche::where( 'web_name', $url )->first();
+        $url =  str_replace("www.","",preg_replace("/^https?\:\/\//i", "" , $request->webname));
+        $value = Niche::orWhere('web_name', 'like', '%' . $url . '%')->first();
+        // $url = str_replace("www.","",preg_replace( "#^[^:/.]*[:/]+#i", "",   $request->webname )) ;
+        // $value = Niche::where( 'web_name', $url )->first();
         if($value){
             echo " This website name is already there in database. So you
             can not add it again. ";
@@ -256,8 +260,8 @@ class AdminController extends Controller
     public function guestName(Request $request)
     {
         // dd($request->all());
-        $url = str_replace("www.","",preg_replace( "#^[^:/.]*[:/]+#i", "",   $request->webname )) ;
-        $value = UserRequest::where( 'web_name', $url )->first();
+        $url =  str_replace("www.","",preg_replace("/^https?\:\/\//i", "" , $request->webname));
+        $value = UserRequest::orWhere('web_name', 'like', '%' . $url . '%')->first();
         if($value){
             echo " This website name is already there in database. So you
             can not add it again. ";
@@ -265,9 +269,9 @@ class AdminController extends Controller
     }
     public function casinoName(Request $request)
     {
-        // dd($request->all());
-        $url = str_replace("www.","",preg_replace( "#^[^:/.]*[:/]+#i", "",   $request->webname )) ;
-        $value = CasinoRequest::where( 'web_name', $url )->first();
+        
+        $url =  str_replace("www.","",preg_replace("/^https?\:\/\//i", "" , $request->webname));
+        $value = CasinoRequest::orWhere('web_name', 'like', '%' . $url . '%')->first();
         if($value){
             echo " This website name is already there in database. So you
             can not add it again. ";
