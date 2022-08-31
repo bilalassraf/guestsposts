@@ -45,7 +45,7 @@ Route::get('admin/restored/casino/{id}',[AdminController::class,'restoreCasino']
 Route::get('admin/clear/trash/casino/{id}',[AdminController::class,'forceDeleteCasino'])->name('admin.delete.permanently.casino');
 Route::post('admin/delete/users/casino',[AdminController::class,'deleteSelectedCasino'])->name('admin.delete.selected.casino');
 Route::post('admin/approved/users/casino',[AdminController::class,'approvedSelectedCasino'])->name('admin.approved.selected.casino');
-
+Route::post('user/casino/new/price/{id}',[AdminController::class,'casinoNewPrice'])->name('user.casino.new.price');
 //user request datd
 Route::get('get-user-requests', [AdminController::class,'userRequestsData'])->name('get-user-requests');
 Route::post('user/new/price/{id}',[AdminController::class,'newPrice'])->name('user.new.price');

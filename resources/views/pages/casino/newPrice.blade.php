@@ -6,6 +6,6 @@
 {{$request->new_price >0 ? $request->new_price : $request->price}}
 @endif
 </a>
-@include('modals.newPrice')
+@include('modals.casinoNewPrice')
 
 
