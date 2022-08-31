@@ -422,7 +422,6 @@ class AdminController extends Controller
     {
         $user = User::find($id);
         $user_permissions = $user->permissions()->pluck('permissions.id')->toArray();
-        
         $request = UserRequest::where('user_id', $user->id)->get();
         $user_niche = User::find($id);
         $request_niche = Niche::where('user_id', $user->id)->get();
@@ -430,6 +429,7 @@ class AdminController extends Controller
         $permissionCasino = Permission::where('type',3)->get();
         $permission = Permission::where('type',1)->get();
         $permissionNiche = Permission::where('type',2)->get();
+
         return view('pages.user-profile', compact('permissionCasino','user', 'request','user_niche' , 'request_niche','permission','user_permissions','permissionNiche','request_casino'));
     }
     public function addGuestRequestForm()
