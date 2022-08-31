@@ -99,6 +99,7 @@ Route::get('details/casino/{id}',[AdminController::class,'getCasinoDetails'])->n
 Route::get('get/url',[AdminController::class,'getUrl'])->name('getUrl');
 Route::get('get/webname',[AdminController::class,'getName'])->name('getName');
 Route::get('guest/webname',[AdminController::class,'guestName'])->name('guestName');
+Route::get('casino/webname',[AdminController::class,'casinoName'])->name('casinoName');
 //niche
 Route::get('admin/add/niche',[AdminController::class,'addNicheForm'])->name('admin.add.niche');
 Route::post('admin/store/niche',[AdminController::class,'addStoreNiche'])->name('admin.store.niche');

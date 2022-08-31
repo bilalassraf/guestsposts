@@ -180,8 +180,8 @@ textarea.select2-search__field {
     $(document).ready(function() {
         $(".webname").change(function(){
             var webname = $(this).val();
-            console.log(webname);
-            $.ajax({url: "/guest/webname",
+            $.ajax({
+            url: "{{ route('casinoName') }}",
             data:{'webname': webname},
              success: function(result){
             $("#div2").html(result);

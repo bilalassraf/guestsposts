@@ -252,7 +252,8 @@ class AdminController extends Controller
             echo " This website name is already there in database. So you
             can not add it again. ";
         }
-    } public function guestName(Request $request)
+    } 
+    public function guestName(Request $request)
     {
         // dd($request->all());
         $url = str_replace("www.","",preg_replace( "#^[^:/.]*[:/]+#i", "",   $request->webname )) ;
@@ -262,7 +263,16 @@ class AdminController extends Controller
             can not add it again. ";
         }
     }
-
+    public function casinoName(Request $request)
+    {
+        // dd($request->all());
+        $url = str_replace("www.","",preg_replace( "#^[^:/.]*[:/]+#i", "",   $request->webname )) ;
+        $value = CasinoRequest::where( 'web_name', $url )->first();
+        if($value){
+            echo " This website name is already there in database. So you
+            can not add it again. ";
+        }
+    }
     public function newPrice(Request $request , $id)
     {
         $new_price = UserRequest::find($id);
