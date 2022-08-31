@@ -114,7 +114,7 @@ Add Website
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    {{-- <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="trustflow">Trust Flow (Majestic)</label>
@@ -127,7 +127,7 @@ Add Website
                                 <input class="form-control" id="citationflow" type="text" placeholder="Citation Flow" value="{{  old('citation_flow') }}" name="citation_flow" autocomplete="off" required>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="row">
                         <div class="col-md-12">
                             <div class="mb-3">
@@ -200,7 +200,6 @@ textarea.select2-search__field {
             var price = $("#price").val();
             var percentage = price ;
             var company = parseInt(price *8/100 + 50) + parseInt(price);
-            alert(company);
             $("#companyprice").val(company);
         });
         $('#domainauthority').on('change', function(ev) {  

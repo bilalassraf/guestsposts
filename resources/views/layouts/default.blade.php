@@ -257,7 +257,9 @@ input[type=range]::-webkit-slider-thumb::before {
 .multi-range input[type=range]:nth-child(2)::-webkit-slider-thumb::before {
   background-color: grey;
 }
-
+span.select2-selection.select2-selection--single {
+    display: none !important;
+}
 </style>
 </head>
 <body class="hold-transition sidebar-mini">

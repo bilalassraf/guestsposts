@@ -57,8 +57,8 @@ class AdminController extends Controller
             'domain_rating'    => 'required',
             'organic_trafic_ahrefs' => 'required',
             'organic_trafic_sem'    => 'required',
-            'trust_flow'        => 'required',
-            'citation_flow'     => 'required',
+            // 'trust_flow'        => 'required',
+            // 'citation_flow'     => 'required',
             'email'             => 'required',
             'web_description'   => 'required',
             // 'special_note'      => 'required',
@@ -80,8 +80,8 @@ class AdminController extends Controller
         $userRequest->domain_authority     = $request->domain_authority;
         $userRequest->organic_trafic_ahrefs     = $request->organic_trafic_ahrefs;
         $userRequest->organic_trafic_sem     = $request->organic_trafic_sem;
-        $userRequest->trust_flow     = $request->trust_flow;
-        $userRequest->citation_flow = $request->citation_flow;
+        $userRequest->trust_flow     = "0";
+        $userRequest->citation_flow = "0";
         $userRequest->email_webmaster = $request->email;
         $userRequest->web_description = $request->web_description;
         $userRequest->special_note = $request->special_note;
@@ -178,8 +178,8 @@ class AdminController extends Controller
         $userRequest->domain_rating     = $request->domain_rating;
         $userRequest->organic_trafic_ahrefs     = $request->organic_trafic_ahrefs;
         $userRequest->organic_trafic_sem     = $request->organic_trafic_sem;
-        $userRequest->trust_flow     = $request->trust_flow;
-        $userRequest->citation_flow = $request->citation_flow;
+        $userRequest->trust_flow     = "0";
+        $userRequest->citation_flow = "0";
         $userRequest->email_webmaster = $request->email;
         $userRequest->web_description = $request->web_description;
         $userRequest->special_note = $request->special_note;
@@ -339,8 +339,8 @@ class AdminController extends Controller
             'domain_rating'    => 'required',
             'organic_trafic_ahrefs' => 'required',
             'organic_trafic_sem'    => 'required',
-            'trust_flow'        => 'required',
-            'citation_flow'     => 'required',
+            // 'trust_flow'        => 'required',
+            // 'citation_flow'     => 'required',
             'email'             => 'required',
             'web_description'   => 'required',
             // 'special_note'      => 'required',
@@ -363,8 +363,8 @@ class AdminController extends Controller
         $userRequest->domain_rating     = $request->domain_rating;
         $userRequest->organic_trafic_ahrefs     = $request->organic_trafic_ahrefs;
         $userRequest->organic_trafic_sem     = $request->organic_trafic_sem;
-        $userRequest->trust_flow     = $request->trust_flow;
-        $userRequest->citation_flow = $request->citation_flow;
+        $userRequest->trust_flow     = "0";
+        $userRequest->citation_flow = "0";
         $userRequest->email_webmaster = $request->email;
         $userRequest->web_description = $request->web_description;
         $userRequest->special_note = $request->special_note;
@@ -673,8 +673,8 @@ class AdminController extends Controller
         $userRequest->domain_rating     = $request->domain_rating;
         $userRequest->organic_trafic_ahrefs     = $request->organic_trafic_ahrefs;
         $userRequest->organic_trafic_sem     = $request->organic_trafic_sem;
-        $userRequest->trust_flow     = $request->trust_flow;
-        $userRequest->citation_flow = $request->citation_flow;
+        $userRequest->trust_flow     = "0";
+        $userRequest->citation_flow = "0";
         $userRequest->email_webmaster = $request->email;
         $userRequest->web_description = $request->web_description;
         $userRequest->special_note = $request->special_note;
@@ -842,8 +842,8 @@ class AdminController extends Controller
         $userRequest->domain_rating     = $request->domain_rating;
         $userRequest->organic_trafic_ahrefs     = $request->organic_trafic_ahrefs;
         $userRequest->organic_trafic_sem     = $request->organic_trafic_sem;
-        $userRequest->trust_flow     = $request->trust_flow;
-        $userRequest->citation_flow = $request->citation_flow;
+        $userRequest->trust_flow     = "0";
+        $userRequest->citation_flow = "0";
         $userRequest->email_webmaster = $request->email;
         $userRequest->web_description = $request->web_description;
         $userRequest->special_note = $request->special_note;
@@ -911,8 +911,8 @@ class AdminController extends Controller
             'domain_rating'    => 'required',
             'organic_trafic_ahrefs' => 'required',
             'organic_trafic_sem'    => 'required',
-            'trust_flow'        => 'required',
-            'citation_flow'     => 'required',
+            // 'trust_flow'        => 'required',
+            // 'citation_flow'     => 'required',
             'email'             => 'required',
             'web_description'   => 'required',
 
@@ -944,8 +944,8 @@ class AdminController extends Controller
         $Niche->domain_rating     = $request->domain_rating;
         $Niche->organic_trafic_ahrefs     = $request->organic_trafic_ahrefs;
         $Niche->organic_trafic_sem     = $request->organic_trafic_sem;
-        $Niche->trust_flow     = $request->trust_flow;
-        $Niche->citation_flow = $request->citation_flow;
+        $Niche->trust_flow     = "0";
+        $Niche->citation_flow = "0";
         $Niche->email_webmaster = $request->email;
         $Niche->web_description = $request->web_description;
         $Niche->special_note = $request->special_note;
@@ -1060,8 +1060,8 @@ class AdminController extends Controller
         $Niche->domain_rating     = $request->domain_rating;
         $Niche->organic_trafic_ahrefs     = $request->organic_trafic_ahrefs;
         $Niche->organic_trafic_sem     = $request->organic_trafic_sem;
-        $Niche->trust_flow     = $request->trust_flow;
-        $Niche->citation_flow = $request->citation_flow;
+        $Niche->trust_flow     = "0";
+        $Niche->citation_flow = "0";
         $Niche->email_webmaster = $request->email;
         $Niche->web_description = $request->web_description;
         $Niche->special_note = $request->special_note;
@@ -1422,8 +1422,6 @@ class AdminController extends Controller
             ->wherebetween('price', [$request->web_lower, $request->web_upper])
             ->wherebetween('span_score', [$request->span_lower, $request->span_upper])
             ->wherebetween('company_price', [$request->company_lower, $request->company_upper])
-            ->wherebetween('trust_flow', [$request->trust_lower, $request->trust_upper])
-            ->wherebetween('citation_flow', [$request->citation_lower, $request->citation_upper])
             ->wherebetween('organic_trafic_ahrefs', [$request->traffic_lower, $request->traffic_upper])
             ->wherebetween('organic_trafic_ahrefs', [$request->organic_lower, $request->organic_upper])->with('categories')->get();
         return view('pages.advance-filter', compact('guest_requests'));

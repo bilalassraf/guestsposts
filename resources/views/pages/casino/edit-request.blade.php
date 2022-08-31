@@ -105,7 +105,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        {{-- <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="trustflow">Trust Flow (Majestic)</label>
@@ -120,7 +120,7 @@
                                         name="citation_flow" required value="{{ $web_request->citation_flow }}">
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-3">

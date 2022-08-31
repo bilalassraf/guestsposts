@@ -114,20 +114,7 @@ Add Website
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="trustflow">Trust Flow (Majestic)</label>
-                                <input class="form-control" id="trustflow" type="text" placeholder="Trust Flow" name="trust_flow" value="{{  old('trust_flow') }}" autocomplete="off" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="citationflow">Citation Flow (Majestic)</label>
-                                <input class="form-control" id="citationflow" type="text" placeholder="Citation Flow" value="{{  old('citation_flow') }}" name="citation_flow" autocomplete="off" required>
-                            </div>
-                        </div>
-                    </div>
+                   
                     <div class="row">
                         <div class="col-md-12">
                             <div class="mb-3">

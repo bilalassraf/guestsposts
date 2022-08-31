@@ -105,22 +105,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="trustflow">Trust Flow (Majestic)</label>
-                                    <input class="form-control" id="trustflow" type="text" placeholder="Trust Flow"
-                                        name="trust_flow" required value="{{ $web_request->trust_flow }}">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="citationflow">Citation Flow (Majestic)</label>
-                                    <input class="form-control" id="citationflow" type="text" placeholder="Citation Flow"
-                                        name="citation_flow" required value="{{ $web_request->citation_flow }}">
-                                </div>
-                            </div>
-                        </div>
+                        
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-3">

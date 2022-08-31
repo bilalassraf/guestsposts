@@ -108,20 +108,6 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="trustflow">Trust Flow (Majestic)</label>
-                                <input class="form-control" id="trustflow" type="text" placeholder="Trust Flow" name="trust_flow" required value="{{ $niche->trust_flow }}">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="citationflow">Citation Flow (Majestic)</label>
-                                <input class="form-control" id="citationflow" type="text" placeholder="Citation Flow" name="citation_flow" required value="{{ $niche->citation_flow }}">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
                                 <label for="emailwebmaster">Email (Webmaster)</label>
                                 <input class="form-control" id="emailwebmaster" type="email" placeholder="Email" name="email" required value="{{ $niche->email_webmaster }}">
                             </div>
@@ -185,7 +171,7 @@
         color: black;
     }
     textarea.select2-search__field {
-        display: none;
+        border: none !important;
     }
     .select2-container--default .select2-selection--single {
     height: 38px !important;

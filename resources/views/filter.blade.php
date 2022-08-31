@@ -96,60 +96,7 @@
                                     </div>
                                     {{-- <input type="range" id="raiting_input" name="raitings" class="range_input" value="{{ $filter->raitings }}}" min="0" max="100" oninput="document.getElementById('domain_Raitings').innerHTML = '0/'+this.value" /> --}}
                                 </div>
-                                <div class="col-lg-12 col-md-6">
-                                    <div>
-                                        <div class="row">
-                                            <div class="col-lg-1">
-                                                <span class="multi-range-heading d-block">
-                                                    TF
-                                                <span class="multi-range d-block">    
-                                            </div>
-                                            <div class="col-lg-2">
-                                                <div class="multi-range d-block">
-                                                    <input type="input" min="0" max="{{ $filter->trust  }}" name="trust_upper" class="range_input mt-2 form-control" value="0">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-7 margintop">
-                                                <span class="multi-range d-block">
-                                                    <input type="range" min="0" max="{{ $filter->trust }}" class="range_input" name="trust_upper"  value="0">
-                                                    <input type="range" min="0" max="{{ $filter->trust }}" class="range_input" name="trust_lower"  value="{{ $filter->trust }}">
-                                                </span>
-                                            </div>    
-                                            <div class="col-lg-2">    
-                                                <div class="multi-range d-block">
-                                                    <input type="input" min="0" max="{{ $filter->trust  }}" name="trust_lower" class="range_input mt-2 form-control" value="{{ $filter->trust  }}">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-12 col-md-6">
-                                    <div>
-                                        <div class="row">
-                                            <div class="col-lg-1">
-                                                <span class="multi-range-heading d-block">
-                                                    CF
-                                                <span class="multi-range d-block">    
-                                            </div>
-                                            <div class="col-lg-2">
-                                                <div class="multi-range d-block">
-                                                    <input type="input" min="0" max="{{ $filter->citation  }}" name="citation_upper" class="range_input mt-2 form-control" value="0">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-7 margintop">
-                                                <span class="multi-range d-block">
-                                                    <input type="range" min="0" max="{{ $filter->citation }}" class="range_input" name="citation_upper"  value="0">
-                                                    <input type="range" min="0" max="{{ $filter->citation }}" class="range_input" name="citation_lower"  value="{{ $filter->citation }}">
-                                                </span>
-                                            </div>    
-                                            <div class="col-lg-2">    
-                                                <div class="multi-range d-block">
-                                                    <input type="input" min="0" max="{{ $filter->citation  }}" name="citation_lower" class="range_input mt-2 form-control" value="{{ $filter->citation  }}">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                
                                 <div class="col-lg-12 col-md-6">
                                     <div>
                                         <div class="row">

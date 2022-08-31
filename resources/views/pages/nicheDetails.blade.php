@@ -76,7 +76,7 @@
                 </div>
                 <hr>
                 <div class="row">
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <div class="your-details">
                             <h6 class="f-w-600">Domain Rating</h6>
                             @if( in_array('Domain Rating',$user_permissions))
@@ -84,7 +84,7 @@
                             @endif
                         </div>
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <div class="your-details your-details-xs">
                             <h6 class="f-w-600">Organic Traffic  (Ahrefs)</h6>
                             @if( in_array('Orgainic Traffic (Sem)',$user_permissions))
@@ -92,7 +92,7 @@
                             @endif
                         </div>
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <div class="your-details">
                             <h6 class="f-w-600">Orgainic Traffic (Sem)</h6>
                             @if( in_array('Orgainic Traffic (Sem)',$user_permissions))
@@ -100,23 +100,7 @@
                             @endif
                         </div>
                     </div>
-                    <div class="col-sm-2">
-                        <div class="your-details">
-                            <h6 class="f-w-600">Trust Flow</h6>
-                            @if( in_array('Citation Flow',$user_permissions))
-                            {{$niche_request->trust_flow}}
-                            @endif
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <div class="your-details">
-                            <h6 class="f-w-600">Citation Flow</h6>
-                            @if( in_array('Citation Flow',$user_permissions))
-                            {{$niche_request->citation_flow}}
-                            @endif
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <div class="your-details your-details-xs">
                             <h6 class="f-w-600">Email (Webmaster)</h6>
                             @if( in_array('Email (Webmaster)',$user_permissions))
