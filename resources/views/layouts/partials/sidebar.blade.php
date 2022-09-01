@@ -315,8 +315,8 @@
                 @endif
                 @endif
                 <li class="nav-item">
-                  <a href="{{ route('user.profile',auth()->user()->id) }}" class="nav-link text-white {{ (\Request::route()->getName() == 'dashboard') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-tachometer-alt"></i>
+                  <a href="{{ route('user.profile',auth()->user()->id) }}" class="nav-link text-white {{ (\Request::route()->getName() == 'user.profile') ? 'active' : '' }}">
+                    <i class="nav-icon fa fa-user"></i>
                     <p>View Profile</p>
                   </a>
                 </li>

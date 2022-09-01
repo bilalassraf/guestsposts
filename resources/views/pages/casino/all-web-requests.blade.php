@@ -246,7 +246,6 @@ $('.delete-selected').on('click', function(e) {
     $(".sub_chk:checked").each(function() {
        allVals.push($(this).val());
     });
-    alert(allVals);
     if(allVals.length <=0){
        alert("Please select row.");
     }  else {
@@ -256,7 +255,7 @@ $('.delete-selected').on('click', function(e) {
         var join_selected_values = allVals.join(",");
 
         $.ajax({
-            url: "{{ route('admin.delete.selected.request') }}",
+            url: "{{ route('admin.delete.selected.casino') }}",
             type: 'POST',
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
             data: 'ids='+join_selected_values,

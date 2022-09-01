@@ -212,6 +212,9 @@
         border: none !important;
     }
     .select2-container--default .select2-selection--single {
-    height: 38px !important;
-}
+        height: 38px !important;
+    }
+    span.select2-selection.select2-selection--single {
+        display: none !important;
+    }
 </style>

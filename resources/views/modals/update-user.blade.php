@@ -89,3 +89,8 @@
 	</div>
 </div>
 @endforeach
+<style>
+    span.select2-selection.select2-selection--single {
+        display: none !important;
+    }
+</style>

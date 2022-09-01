@@ -1427,7 +1427,7 @@ class AdminController extends Controller
             ->wherebetween('span_score', [$request->span_lower, $request->span_upper])
             ->wherebetween('company_price', [$request->company_lower, $request->company_upper])
             ->wherebetween('organic_trafic_ahrefs', [$request->traffic_lower, $request->traffic_upper])
-            ->wherebetween('organic_trafic_ahrefs', [$request->organic_lower, $request->organic_upper])->with('categories')->get();
+            ->wherebetween('organic_trafic_ahrefs', [$request->organic_lower, $request->organic_upper])->with('categories','coodinator')->get();
         return view('pages.advance-filter', compact('guest_requests'));
     }
     public function showSearch()

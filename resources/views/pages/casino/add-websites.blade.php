@@ -88,14 +88,14 @@ Add Website
                             <div class="mb-3">
                                 <label for="domainauthority">Domain Authority(Moz)</label>
                                 <input class="form-control" id="domainauthority" minlength="25" min="25" type="number" value="{{  old('domain_authority') }}" placeholder="Domain Authority" name="domain_authority" autocomplete="off" required>
-                                <p class="text-danger d-none" id="domainAuth">Minimum Domain Authority(Moz) should be allowed atleast 25+</p>
+                                <p class="text-danger d-none" id="domainAuths">Minimum Domain Authority(Moz) should be allowed atleast 25+</p>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="domainrating">Domain Rating(Ahrefs)</label>
                                 <input class="form-control" id="domainrating" type="number" placeholder="Domain Rating" value="{{  old('domain_rating') }}" name="domain_rating" autocomplete="off" required>
-                                <p class="text-danger d-none" id="domainRate">Minimum Domain Rating(Ahrefs) should be allowed atleast 25+</p>
+                                <p class="text-danger d-none" id="domainRates">Minimum Domain Rating(Ahrefs) should be allowed atleast 25+</p>
                             </div>
                         </div>
                     </div>
@@ -203,17 +203,17 @@ textarea.select2-search__field {
             $("#companyprice").val(company);
         });
         $('#domainauthority').on('change', function(ev) {  
-            $('#domainAuth').addClass('d-none'); 
+            $('#domainAuths').addClass('d-none'); 
             var value = $(this).val();
             if(value < 25){
-                $('#domainAuth').removeClass('d-none');
+                $('#domainAuths').removeClass('d-none');
             }
         });
         $('#domainrating').on('change', function(ev) {  
-            $('#domainRate').addClass('d-none'); 
+            $('#domainRates').addClass('d-none'); 
             var value = $(this).val();
             if(value < 25){
-                $('#domainRate').removeClass('d-none');
+                $('#domainRates').removeClass('d-none');
             }
         });
 
