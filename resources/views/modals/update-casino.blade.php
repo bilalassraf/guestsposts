@@ -78,8 +78,9 @@
                                     <label for="domainauthority">Domain Authority(Moz)</label>
                                     <input class="form-control"  type="text"
                                         placeholder="Domain Authority" name="domain_authority" required
-                                        value="{{ $request->domain_authority }}">
+                                        value="{{ $request->domain_authority }}" id="domainauthorityCasino">
                                 </div>
+                                <p class="text-danger d-none" id="domainAuthCasino">Minimum Domain Authority(Moz) should be allowed atleast 25+</p>    
                             </div>
                         </div>
                         <div class="row">
@@ -94,8 +95,9 @@
                                 <div class="mb-3">
                                     <label for="domainrating">Domain Rating(Ahrefs)</label>
                                     <input class="form-control"  type="text" placeholder="Domain Rating"
-                                        name="domain_rating" required value="{{ $request->domain_rating }}">
+                                        name="domain_rating" required value="{{ $request->domain_rating }}" id="domainratingCasino">
                                 </div>
+                                <p class="text-danger d-none" id="domainRateCasino">Minimum Domain Rating(Ahrefs) should be allowed atleast 25+</p>
                             </div>
                         </div>
                         <div class="row">
@@ -104,8 +106,9 @@
                                     <label for="organictraficahrefs">Organic Trafic (Ahrefs)</label>
                                     <input class="form-control"  type="text"
                                         placeholder="Organic Tranfic" name="organic_trafic_ahrefs" required
-                                        value="{{ $request->organic_trafic_ahrefs }}">
+                                        value="{{ $request->organic_trafic_ahrefs }}" id="organictraficCasino">
                                 </div>
+                                <p class="text-danger d-none" id="organicTrasCasino">Minimum Organic Traffic (Ahrefs) should be allowed atleast 1000+</p>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
@@ -160,6 +163,7 @@
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
+
     $(document).ready(function() {
     $('.select2').select2({
         tags: true,
@@ -167,11 +171,33 @@
     $(document).ready(function(){
         $("#outreachcoodinator1").select2();
     });
-    $("#price").on('change', function(ev){
+    $("#price").keyup(function(){
         var price = $("#price").val();
         var percentage = price ;
         var company = parseInt(price *8/100 + 50) + parseInt(price);
         $("#companyprice").val(company);
+    });
+    $('#domainauthorityCasino').on('change', function(ev) {  
+        $('#domainAuthCasino').addClass('d-none'); 
+        var value = $(this).val();
+        if(value < 25){
+            $('#domainAuthCasino').removeClass('d-none');
+        }
+    });
+    $('#domainratingCasino').on('change', function(ev) {  
+        $('#domainRateCasino').addClass('d-none'); 
+        var value = $(this).val();
+        if(value < 25){
+            $('#domainRateCasino').removeClass('d-none');
+        }
+    });
+
+    $('#organictraficCasino').on('change', function(ev) {  
+        $('#organicTrasCasino').addClass('d-none'); 
+        var value = $(this).val();
+        if(value < 1000){
+            $('#organicTrasCasino').removeClass('d-none');
+        }
     });
 });
 </script>

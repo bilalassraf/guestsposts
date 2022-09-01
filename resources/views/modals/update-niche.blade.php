@@ -73,8 +73,9 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="domainauthority">Domain Authority(Moz)</label>
-                                <input class="form-control" id="domainauthority" type="text" placeholder="Domain Authority" name="domain_authority" required value="{{ $niche->domain_authority }}">
+                                <input class="form-control" id="domainauthorityNiche" type="text" placeholder="Domain Authority" name="domain_authority" required value="{{ $niche->domain_authority }}">
                             </div>
+                            <p class="text-danger d-none" id="domainAuthNiche">Minimum Domain Authority(Moz) should be allowed atleast 25+</p>    
                         </div>
                     </div>
                     <div class="row">
@@ -87,16 +88,18 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="domainrating">Domain Rating(Ahrefs)</label>
-                                <input class="form-control" id="domainrating" type="text" placeholder="Domain Rating" name="domain_rating" required value="{{ $niche->domain_rating }}">
+                                <input class="form-control" id="domainratingNiche" type="text" placeholder="Domain Rating" name="domain_rating" required value="{{ $niche->domain_rating }}">
                             </div>
+                            <p class="text-danger d-none" id="domainRateNiche">Minimum Domain Rating(Ahrefs) should be allowed atleast 25+</p>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="organictraficahrefs">Organic Traffic (Ahrefs)</label>
-                                <input class="form-control" id="organictrafic" type="text" placeholder="Organic Traffic" name="organic_trafic_ahrefs" required value="{{ $niche->organic_trafic_ahrefs }}">
+                                <input class="form-control" id="organictraficNiche" type="text" placeholder="Organic Traffic" name="organic_trafic_ahrefs" required value="{{ $niche->organic_trafic_ahrefs }}">
                             </div>
+                            <p class="text-danger d-none" id="organicTrasNiche">Minimum Organic Traffic (Ahrefs) should be allowed atleast 1000+</p>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
@@ -162,6 +165,28 @@
         var percentage = price ;
         var company = parseInt(price *8/100 + 50) + parseInt(price);
         $("#companyprice").val(company);
+    });
+    $('#domainauthorityNiche').on('change', function(ev) {  
+        $('#domainAuthNiche').addClass('d-none'); 
+        var value = $(this).val();
+        if(value < 25){
+            $('#domainAuthNiche').removeClass('d-none');
+        }
+    });
+    $('#domainratingNiche').on('change', function(ev) {  
+        $('#domainRateNiche').addClass('d-none'); 
+        var value = $(this).val();
+        if(value < 25){
+            $('#domainRateNiche').removeClass('d-none');
+        }
+    });
+
+    $('#organictraficNiche').on('change', function(ev) {  
+        $('#organicTrasNiche').addClass('d-none'); 
+        var value = $(this).val();
+        if(value < 1000){
+            $('#organicTrasNiche').removeClass('d-none');
+        }
     });
 });
 </script>

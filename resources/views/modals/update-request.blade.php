@@ -81,8 +81,8 @@
                                     <label for="domainauthority">Domain Authority(Moz)</label>
                                     <input class="form-control"  type="text"
                                         placeholder="Domain Authority" name="domain_authority" required
-                                        value="{{ $request->domain_authority }}">
-                                        <p class="text-danger d-none" id="domainAuth">Minimum Domain Authority(Moz) should be allowed atleast 25+</p>    
+                                        value="{{ $request->domain_authority }}" id="domainauthoritys">
+                                        <p class="text-danger d-none" id="domainAuthss">Minimum Domain Authority(Moz) should be allowed atleast 25+</p>    
                                 </div>
                             </div>
                         </div>
@@ -98,8 +98,8 @@
                                 <div class="mb-3">
                                     <label for="domainrating">Domain Rating(Ahrefs)</label>
                                     <input class="form-control"  type="text" placeholder="Domain Rating"
-                                        name="domain_rating" required value="{{ $request->domain_rating }}">
-                                    <p class="text-danger d-none" id="domainRate">Minimum Domain Rating(Ahrefs) should be allowed atleast 25+</p>
+                                        name="domain_rating" required value="{{ $request->domain_rating }}" id="domainratings">
+                                    <p class="text-danger d-none" id="domainRatess">Minimum Domain Rating(Ahrefs) should be allowed atleast 25+</p>
                                 </div>
                             </div>
                         </div>
@@ -109,8 +109,8 @@
                                     <label for="organictraficahrefs">Organic Trafic (Ahrefs)</label>
                                     <input class="form-control"  type="text"
                                         placeholder="Organic Tranfic" name="organic_trafic_ahrefs" required
-                                        value="{{ $request->organic_trafic_ahrefs }}">
-                                        <p class="text-danger d-none" id="organicTra">Minimum Organic Traffic (Ahrefs) should be allowed atleast 1000+</p>
+                                        value="{{ $request->organic_trafic_ahrefs }}" id="organictraficss">
+                                        <p class="text-danger d-none" id="organicTras">Minimum Organic Traffic (Ahrefs) should be allowed atleast 1000+</p>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -118,7 +118,7 @@
                                     <label for="organictraficsemrush">Organic Trafic (SEMrush)</label>
                                     <input class="form-control"  type="text"
                                         placeholder="Organic Trafic" name="organic_trafic_sem" required
-                                        value="{{ $request->organic_trafic_sem }}">
+                                        value="{{ $request->organic_trafic_sem }}" >
                                 </div>
                             </div>
                         </div>
@@ -179,26 +179,26 @@
         var company = parseInt(price *8/100 + 50) + parseInt(price);
         $("#companyprice").val(company);
     });
-    $('#domainauthority').on('change', function(ev) {  
-        $('#domainAuth').addClass('d-none'); 
+    $('#domainauthoritys').on('change', function(ev) {  
+        $('#domainAuthss').addClass('d-none'); 
         var value = $(this).val();
         if(value < 25){
-            $('#domainAuth').removeClass('d-none');
+            $('#domainAuthss').removeClass('d-none');
         }
     });
-    $('#domainrating').on('change', function(ev) {  
-        $('#domainRate').addClass('d-none'); 
+    $('#domainratings').on('change', function(ev) {  
+        $('#domainRatess').addClass('d-none'); 
         var value = $(this).val();
         if(value < 25){
-            $('#domainRate').removeClass('d-none');
+            $('#domainRatess').removeClass('d-none');
         }
     });
 
-    $('#organictrafic').on('change', function(ev) {  
-        $('#organicTra').addClass('d-none'); 
+    $('#organictraficss').on('change', function(ev) {  
+        $('#organicTras').addClass('d-none'); 
         var value = $(this).val();
         if(value < 1000){
-            $('#organicTra').removeClass('d-none');
+            $('#organicTras').removeClass('d-none');
         }
     });
 });
