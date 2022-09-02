@@ -1417,17 +1417,37 @@ class AdminController extends Controller
     public function filter(Request $request)
     {
         $category = $request->category;
-        $guest_requests = UserRequest::where([
-            ['status', $request->status]
-        ])->whereHas('categories', function($q) use ($category){
+        $guest_requests = UserRequest::where(['status'=> $request->status]
+        )->whereHas('categories', function($q) use ($category){
             return $q->where('categories.id', $category);
-        })->orwherebetween('created_at', array($request->to, $request->from))
-            ->orwherebetween('domain_rating', [$request->raitings_lower, $request->raitings_upper])
-            ->wherebetween('price', [$request->web_lower, $request->web_upper])
-            ->wherebetween('span_score', [$request->span_lower, $request->span_upper])
-            ->wherebetween('company_price', [$request->company_lower, $request->company_upper])
-            ->wherebetween('organic_trafic_ahrefs', [$request->traffic_lower, $request->traffic_upper])
-            ->wherebetween('organic_trafic_ahrefs', [$request->organic_lower, $request->organic_upper])->with('categories','coodinator')->get();
+        });
+        if($request->to && $request->from){
+            $guest_requests->wherebetween('created_at', array($request->to, $request->from));
+        }
+        if($request->domain_upper && $request->domain_lower){
+            $guest_requests->wherebetween('domain_authority', [$request->domain_upper , $request->domain_lower]);
+        }
+        if($request->raitings_upper && $request->raitings_lower){
+            $guest_requests->wherebetween('domain_rating',  [$request->raitings_upper, $request->raitings_lower]);
+        }
+        if($request->web_upper && $request->web_lower){
+            $guest_requests->wherebetween('price',  [$request->web_upper, $request->web_lower]);
+        }
+        if($request->span_upper && $request->span_lower){
+            $guest_requests->wherebetween('span_score',  [$request->span_upper ,$request->span_lower]);
+        }
+        if($request->company_upper && $request->company_lower){
+            $guest_requests->wherebetween('company_price',  [$request->company_upper , $request->company_lower]);
+        }  
+        if($request->traffic_upper && $request->traffic_lower){
+            $guest_requests->wherebetween('organic_trafic_ahrefs',[$request->traffic_upper , $request->traffic_lower]);
+        }  
+        if($request->organic_upper && $request->traffic_lower){
+            $guest_requests->wherebetween('organic_trafic_sem',[$request->organic_upper , $request->traffic_lower]);
+        }   
+         
+        $guest_requests = $guest_requests->with(['categories','coodinator'])->get();
+            
         return view('pages.advance-filter', compact('guest_requests'));
     }
     public function showSearch()
