@@ -227,41 +227,81 @@
                                     <div class="col-md-12">
                                         <label>Categories</label><br>
                                         {{-- <input type="text" name="category" class="mb-2" style="width:100%"> --}}
-                                            <select name="category" id="" class="form-control mb-2">
-                                            @foreach ($categories as $category)
-                                            <option value="{{ $category->id }}">{{ $category->category }}</option>
-                                            @endforeach
-                                        </select>
+                                            <select name="category" class="form-control mb-2" id="categoryOpt">
+                                                <option value="" hidden>Select Category</option>    
+                                                @foreach ($categories as $category)
+                                                <option value="{{ $category->id }}">{{ $category->category }}</option>
+                                                @endforeach
+                                            </select>
+                                            <p class="text-danger d-none" id="categoryP">Please select an Category!</p>
                                     </div>
                                     <div class="col-md-12">
                                         <label for="cars">Status:</label><br>
-                                        <select name="status" class="form-control mb-2">
+                                        <select name="status" class="form-control mb-2" required id="ddlFruits"> 
+                                            <option value="" hidden>Select Status</option>
                                             <option value="Approved">Approved</option>
                                             <option value="Pending">Pending</option>
                                             <option value="Rejected">Rejected</option>
                                             <option value="Deleted">Deleted</option>
                                         </select>
+                                        <p class="text-danger d-none" id="statusOpt">Please select an Status!</p>
                                     </div>
                                     <div class="col-md-12">
                                         <label for="cars">Date Of the last Update:</label><br>
                                         <div class="input-group">
                                             <input type="date" class="form-control" name="to">
-                                            <div class="input-group-append">
-                                                <span class="input-group-text"><i class="fa fa-ellipsis-h"></i></span>
-                                            </div>
+                                            
                                             <input type="date" class="form-control datepicker hasDatepicker" name="from">
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <input class=" float-right mt-3 bg-dark border-0 p-2 mx-auto" type="submit" value="Search For Site">
+                            <input class=" float-right mt-3 bg-dark border-0 p-2 mx-auto" type="submit" id="btnSubmit" value="Search For Site">
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $("#btnSubmit").click(function () {
+           
+            var category = $("#categoryOpt").val();
+            if(category == ""){
+                $('#categoryP').removeClass('d-none');
+            }
+            var ddlFruits = $("#ddlFruits").val();
+            if (ddlFruits === "") {
+                //If the "Please Select" option is selected display error.
+                $('#statusOpt').removeClass('d-none');
+                return false;
+            }
+            return true;
+        });
+
+        $('#ddlFruits').on('change', function(ev) {  
+            $('#statusOpt').addClass('d-none'); 
+            var ddlFruits = $("#ddlFruits").val();
+            if(ddlFruits === ""){
+                $('#statusOpt').removeClass('d-none');
+            }
+        });
+    });
+
+    $(function () {
+        $('#categoryOpt').on('change', function(ev) {  
+            $('#categoryP').addClass('d-none'); 
+            var category = $("#categoryOpt").val();
+            if(!this.value){
+                $('#categoryP').removeClass('d-none');
+            }
+        });
+    });
+</script>
 <script>
+    
     $('.domain_input').on('change', function(ev) {  
         $('#domainAuth').addClass('d-none'); 
         var value = $(this).val();

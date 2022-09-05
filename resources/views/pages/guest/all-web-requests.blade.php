@@ -165,7 +165,7 @@ if ('{{ auth()->user()->type }}' == 'Admin') {
     ];
 }
 var table = $('#users-table').DataTable({
-    serverSide: true,
+    pagingType: 'full_numbers',
     ajax: "{{ route('get-web-requests') }}",
     columns:cols,
 });
