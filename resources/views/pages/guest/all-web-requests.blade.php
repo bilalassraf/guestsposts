@@ -165,7 +165,9 @@ if ('{{ auth()->user()->type }}' == 'Admin') {
     ];
 }
 var table = $('#users-table').DataTable({
-    pagingType: 'full_numbers',
+    deferRender: true,
+    serverSide: false,
+    stateSave: true,
     ajax: "{{ route('get-web-requests') }}",
     columns:cols,
 });
@@ -192,7 +194,7 @@ $('#users-table tbody').on('click', '.detail', function () {
         $.ajax({
         url: detailUrl+'/'+data.id,
         type:"get",
-        "deferRender": true,
+        deferRender: true,
         success:function(data1){
             row.child( data1 ).show();
             tr.addClass('shown');
