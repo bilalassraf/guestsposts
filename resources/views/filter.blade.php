@@ -227,7 +227,7 @@
                                     <div class="col-md-12">
                                         <label>Categories</label><br>
                                         {{-- <input type="text" name="category" class="mb-2" style="width:100%"> --}}
-                                            <select name="category" class="form-control mb-2" id="categoryOpt">
+                                            <select name="category" class="form-control mb-2">
                                                 <option value="" hidden>Select Category</option>    
                                                 @foreach ($categories as $category)
                                                 <option value="{{ $category->id }}">{{ $category->category }}</option>
@@ -237,7 +237,7 @@
                                     </div>
                                     <div class="col-md-12">
                                         <label for="cars">Status:</label><br>
-                                        <select name="status" class="form-control mb-2" required id="ddlFruits"> 
+                                        <select name="status" class="form-control mb-2"> 
                                             <option value="" hidden>Select Status</option>
                                             <option value="Approved">Approved</option>
                                             <option value="Pending">Pending</option>
@@ -263,43 +263,7 @@
             </div>
         </div>
     </div>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-<script type="text/javascript">
-    $(function () {
-        $("#btnSubmit").click(function () {
-           
-            var category = $("#categoryOpt").val();
-            if(category == ""){
-                $('#categoryP').removeClass('d-none');
-            }
-            var ddlFruits = $("#ddlFruits").val();
-            if (ddlFruits === "") {
-                //If the "Please Select" option is selected display error.
-                $('#statusOpt').removeClass('d-none');
-                return false;
-            }
-            return true;
-        });
 
-        $('#ddlFruits').on('change', function(ev) {  
-            $('#statusOpt').addClass('d-none'); 
-            var ddlFruits = $("#ddlFruits").val();
-            if(ddlFruits === ""){
-                $('#statusOpt').removeClass('d-none');
-            }
-        });
-    });
-
-    $(function () {
-        $('#categoryOpt').on('change', function(ev) {  
-            $('#categoryP').addClass('d-none'); 
-            var category = $("#categoryOpt").val();
-            if(!this.value){
-                $('#categoryP').removeClass('d-none');
-            }
-        });
-    });
-</script>
 <script>
     
     $('.domain_input').on('change', function(ev) {  
