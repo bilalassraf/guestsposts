@@ -192,6 +192,7 @@ $('#users-table tbody').on('click', '.detail', function () {
         $.ajax({
         url: detailUrl+'/'+data.id,
         type:"get",
+        "deferRender": true,
         success:function(data1){
             row.child( data1 ).show();
             tr.addClass('shown');
