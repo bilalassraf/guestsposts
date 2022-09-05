@@ -1416,11 +1416,18 @@ class AdminController extends Controller
     }
     public function filter(Request $request)
     {
-        $category = $request->category;
-        $guest_requests = UserRequest::where(['status'=> $request->status]
-        )->whereHas('categories', function($q) use ($category){
-            return $q->where('categories.id', $category);
-        });
+        
+        $guest_requests = UserRequest::with(['categories','coodinator']);
+        if($request->status ){
+            $guest_requests->where(['status'=> $request->status]);
+        
+        }
+        if($request->category){
+            $category = $request->category;
+            $guest_requests->whereHas('categories', function($q) use ($category){
+                return $q->where('categories.id', $category);
+            });
+        }
         if($request->to && $request->from){
             $guest_requests->wherebetween('created_at', array($request->to, $request->from));
         }
@@ -1446,7 +1453,7 @@ class AdminController extends Controller
             $guest_requests->wherebetween('organic_trafic_sem',[$request->organic_upper , $request->traffic_lower]);
         }   
          
-        $guest_requests = $guest_requests->with(['categories','coodinator'])->get();
+        $guest_requests = $guest_requests->get();
             
         return view('pages.advance-filter', compact('guest_requests'));
     }
