@@ -3,9 +3,17 @@
 Show Website
 @endsection
 @section('content')
-@include('filter')
+
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+    @media screen and (max-width:425px){
+        .filterBtn{
+            margin-top: 12px;
+        }
+    }
+</style>
 <div class="content-wrapper p-5">
+    @include('filter')
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -26,7 +34,7 @@ Show Website
                             <button type="submit" class="btn btn-primary bg-white border-0 delete-selected" style="font-weight: 600 !important; padding:8px;"><i class="text-green fa fa-trash" style="font-size: 17px;"></i><span>Delete</span></button>
                         @endif
                         @if(auth()->user()->type == 'Admin' || in_array('Advance Filter',$user_permissions))
-                            <a href="#advanceFilter" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample" class="btn btn-primary bg-white p-2 border-0" style="font-weight: 600 !important;"><i class="text-green fa fa-plus" style="font-size: 17px;"></i> &nbsp; <span>Advance Filter </span></a>
+                            <a href="#advanceFilter" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample" class="btn btn-primary bg-white p-2 border-0 filterBtn" style="font-weight: 600 !important;"><i class="text-green fa fa-plus" style="font-size: 17px;"></i> &nbsp; <span>Advance Filter </span></a>
                         @endif
                     </div>
                 </div>
@@ -164,13 +172,99 @@ if ('{{ auth()->user()->type }}' == 'Admin') {
     @endif
     ];
 }
+var category = status = dateTo = dateFrom = '';
+var raitings_upper = domain_upper = span_upper =  traffic_upper = company_upper  = organic_upper  = web_upper =  1;
+var raitings_lower  = domain_lower = span_lower = 100;
+var traffic_lower = organic_lower = 10000000;
+var company_lower = 8000;
+var web_lower = 5000; 
 var table = $('#users-table').DataTable({
     deferRender: true,
-    serverSide: false,
-    stateSave: true,
-    ajax: "{{ route('get-web-requests') }}",
+    serverSide: true,
+    ajax: {
+        'type': 'get',
+        'url': '{{ route('get-web-requests') }}',
+    },
     columns:cols,
 });
+$('.web_upper_bar').on('change', function(ev) {  
+    web_upper = $(this).val();
+     changeDataTableUrl();
+});
+$('.web_lower_bar').on('change', function(ev) {  
+    web_lower = $(this).val();
+     changeDataTableUrl();
+});
+
+$('.organic_upper_bar').on('change', function(ev) {  
+    organic_upper = $(this).val();
+     changeDataTableUrl();
+});
+$('.organic_lower_bar').on('change', function(ev) {  
+    organic_lower = $(this).val();
+     changeDataTableUrl();
+});
+$('.company_upper_bar').on('change', function(ev) {  
+    company_upper = $(this).val();
+     changeDataTableUrl();
+});
+$('.company_lower_bar').on('change', function(ev) {  
+    company_lower = $(this).val();
+     changeDataTableUrl();
+});
+$('.traffic_upper_bar').on('change', function(ev) {  
+    traffic_upper = $(this).val();
+     changeDataTableUrl();
+});
+$('.traffic_lower_bar').on('change', function(ev) {  
+    traffic_lower = $(this).val();
+     changeDataTableUrl();
+});
+$('.span_upper_bar').on('change', function(ev) {  
+    span_upper = $(this).val();
+     changeDataTableUrl();
+});
+$('.span_lower_bar').on('change', function(ev) {  
+    span_lower = $(this).val();
+     changeDataTableUrl();
+});
+$('.authority_upper_bar').on('change', function(ev) {  
+    domain_upper = $(this).val();
+     changeDataTableUrl();
+});
+$('.authority_lower_bar').on('change', function(ev) {  
+    domain_lower = $(this).val();
+     changeDataTableUrl();
+});
+$('.raitings_upper_bar').on('change', function(ev) {  
+    raitings_upper = $(this).val();
+     changeDataTableUrl();
+});
+$('.raitings_lower_bar').on('change', function(ev) {  
+    raitings_lower = $(this).val();
+     changeDataTableUrl();
+});
+
+$('#dateFrom').on('change', function(ev) {  
+    dateFrom = $(this).val();
+     changeDataTableUrl();
+});
+$('#dateTo').on('change', function(ev) {  
+     dateTo = $(this).val();
+     changeDataTableUrl();
+});
+$('#categoryOpt').on('change', function(ev) {  
+     category = $(this).val();
+     changeDataTableUrl();
+});
+$('#status').on('change', function(ev) { 
+    console.log($(this).val()) ;
+     status = $(this).val();
+     changeDataTableUrl();
+});
+function changeDataTableUrl(){
+    table.ajax.url('{{ route('get-web-requests') }}?category='+category+'&status='+status+'&to='+dateTo+'&from='+dateFrom+'&raitings_upper='+raitings_upper+'&raitings_lower='+raitings_lower+'&domain_upper='+domain_upper+'&domain_lower='+domain_lower+'&span_upper='+span_upper+'&span_lower='+span_lower+'&traffic_upper='+traffic_upper+'&traffic_lower='+traffic_lower+'&company_upper='+company_upper+'&company_lower='+company_lower+'&organic_upper='+organic_upper+'&organic_lower='+organic_lower+'&web_lower='+web_lower+'&web_upper='+web_upper).load(); 
+}
 // Add event listener for opening and closing details
 $('#users-table tbody').on('click', '.detail', function () {
 

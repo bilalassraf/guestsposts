@@ -958,15 +958,60 @@ class AdminController extends Controller
         $Niche->categories()->sync($request->categories);
         return redirect(route('admin.show.niches'))->with('success', 'Your request has submitted');
     }
-    public function webRequests()
+    public function webRequests(Request $request)
     {
+        //dd($request->all());
         $user = User::find(Auth::user()->id);
-        if( $user->type == 'Admin' || $user->type == 'Moderator' ){
-            $guest_requests = UserRequest::with(['categories','coodinator'])->orderBy('id', 'DESC')->get();
-        }else{
+        // if( $user->type == 'Admin' || $user->type == 'Moderator' ){
 
-            $guest_requests = $user->user_request()->with(['categories', 'coodinator']);
+        //     $guest_requests = UserRequest::with(['categories','coodinator'])->orderBy('id', 'DESC')->get();
+        // }else{
+
+        //     $guest_requests = $user->user_request()->with(['categories', 'coodinator']);
+        // }
+        $guest_requests = UserRequest::with(['categories','coodinator']);
+        if($request->status ){
+            $guest_requests->where(['status'=> $request->status]);
+        
         }
+        if($request->category){
+            $category = $request->category;
+            $guest_requests->whereHas('categories', function($q) use ($category){
+                return $q->where('categories.id', $category);
+            });
+        }
+        if($request->to && $request->from){
+            $guest_requests->wherebetween('created_at', array($request->from, $request->to));
+        }elseif($request->to){
+            $guest_requests->where('created_at', '<=', $request->to);
+        }
+        elseif($request->from){
+            $guest_requests->where('created_at', '>=', $request->from);
+        }
+        if($request->domain_upper && $request->domain_lower){
+            $guest_requests->wherebetween('domain_authority', [$request->domain_upper , $request->domain_lower]);
+        }
+        if($request->raitings_upper && $request->raitings_lower){
+            $guest_requests->wherebetween('domain_rating',  [$request->raitings_upper, $request->raitings_lower]);
+        }
+        if($request->web_upper && $request->web_lower){
+            $guest_requests->wherebetween('price',  [$request->web_upper, $request->web_lower]);
+        }
+        if($request->span_upper && $request->span_lower){
+            $guest_requests->wherebetween('span_score',  [$request->span_upper ,$request->span_lower]);
+        }
+        if($request->company_upper && $request->company_lower){
+            $guest_requests->wherebetween('company_price',  [$request->company_upper , $request->company_lower]);
+        }  
+        if($request->traffic_upper && $request->traffic_lower){
+            $guest_requests->wherebetween('organic_trafic_ahrefs',[$request->traffic_upper , $request->traffic_lower]);
+        }  
+        if($request->organic_upper && $request->traffic_lower){
+            $guest_requests->wherebetween('organic_trafic_sem',[$request->organic_upper , $request->traffic_lower]);
+        }   
+         
+        $guest_requests = $guest_requests->get();
+
         $guestCoordinator = User::where('type','Outreach Coordinator')->get();
         return DataTables::of($guest_requests)
         ->addColumn('check_box', function($row){
