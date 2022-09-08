@@ -179,7 +179,6 @@ var traffic_lower = organic_lower = 10000000;
 var company_lower = 8000;
 var web_lower = 5000; 
 var table = $('#users-table').DataTable({
-    serverSide: true,
     ajax: {
         'type': 'get',
         'url': '{{ route('get-web-requests') }}',
