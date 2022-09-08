@@ -23,7 +23,7 @@
                                 </div>
                             </div>
                             <input type="hidden" value="{{ auth()->user()->id }}" name="user_id">
-                        @if (auth()->user()->type == "admin" || auth()->user()->type == "moderator")
+                        @if (auth()->user()->type == "Admin" || auth()->user()->type == "Moderator")
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="outreachcoodinator1">Outreach Coordinator</label><br>
@@ -50,7 +50,7 @@
                                         required value="{{$request->new_price >0 ? $request->new_price : $request->price}}">&nbsp;<span id="errmsg"></span>
                                 </div>
                             </div>
-                            @if (auth()->user()->type == "admin")
+                            @if (auth()->user()->type == "Admin")
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="companyprice">Company price</label>

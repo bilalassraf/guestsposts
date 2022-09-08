@@ -18,7 +18,7 @@
                             </div>
                         </div>
                         <input type="hidden" value="{{ auth()->user()->id }}" name="user_id">
-                        @if (auth()->user()->type == "admin" || auth()->user()->type == "moderator")
+                        @if (auth()->user()->type == "Admin" || auth()->user()->type == "Moderator")
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="outreachcoodinator1">Outreach Coordinator</label><br>
@@ -44,7 +44,7 @@
                                 <input class="form-control" id="price" type="text" placeholder="Price" name="price" required value="{{ $niche->price }}">
                             </div>
                         </div>
-                        @if (auth()->user()->type == "admin")
+                        @if (auth()->user()->type == "Admin")
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="companyprice">Company price</label>
