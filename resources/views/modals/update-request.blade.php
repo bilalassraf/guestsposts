@@ -62,7 +62,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="category">Catoegory</label>
-                                    <select name="categories[]" multiple class="select2 form-control" type="button"
+                                    <select name="categories[]" multiple class="select2 form-control selectCategory" type="button"
                                         data-toggle="dropdown" required style="width: 100%">
                                         @php
                                             $request_cats = $request->categories->pluck('id')->toArray();
@@ -176,7 +176,7 @@
         var company = parseInt(price *8/100 + 50) + parseInt(price);
         $("#companyprice").val(company);
     });
-    $('#domainauthoritys').on('change', function(ev) {  
+    $('#domainauthoritys').on('change', function(ev) { 
         $('#domainAuthss').addClass('d-none'); 
         var value = $(this).val();
         if(value < 25){
@@ -211,7 +211,7 @@
     .select2-container--default .select2-selection--single {
         height: 38px !important;
     }
-    span.select2-selection.select2-selection--single {
+    .selectCategory span.select2-selection.select2-selection--single {
         display: none !important;
     }
 </style>
