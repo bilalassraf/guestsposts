@@ -9,9 +9,6 @@
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				</div>
 				<div class="modal-body">
-	                <!--   <form class="theme-form" action="{{ route('admin.update.request', $request->id) }}"
-                        method="post"> -->
-                        @csrf
                         <div class="form-icon"><i class="icofont icofont-envelope-open"></i></div>
                         <div class="row">
                             <div class="col-md-6">
