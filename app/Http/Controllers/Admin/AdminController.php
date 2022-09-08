@@ -1461,11 +1461,10 @@ class AdminController extends Controller
     }
     public function filter(Request $request)
     {
-        
         $guest_requests = UserRequest::with(['categories','coodinator']);
+
         if($request->status ){
             $guest_requests->where(['status'=> $request->status]);
-        
         }
         if($request->category){
             $category = $request->category;
