@@ -59,7 +59,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="category">Catoegory</label>
-                                <select name="categories[]" multiple class="select2 form-control" type="button"
+                                <select name="categories[]" multiple class="select2 form-control selectCategory" type="button"
                                     data-toggle="dropdown" required style="width: 100%">
                                     @php
                                         $request_cats = $niche->categories->pluck('id')->toArray();
@@ -201,7 +201,7 @@
     .select2-container--default .select2-selection--single {
         height: 38px !important;
     }
-    span.select2-selection.select2-selection--single {
-        display: none !important;
+    .selectCategory span.select2-selection.select2-selection--single {
+        display: none;
     }
 </style>
