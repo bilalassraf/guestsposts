@@ -21,7 +21,7 @@ Add Website
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="websitename">Website Name</label>
-                                <input class="webname form-control @error('websitename') is-invalid @enderror" id="websitename"
+                                <input class="websitename webname form-control @error('websitename') is-invalid @enderror" id="websitename"
                                     type="text" placeholder="Website Name" name="web_name" value="{{  old('web_name') }}" autocomplete="off" required>
                                     <div id="div2" class="text-danger"></div>
                             </div>
@@ -87,15 +87,15 @@ Add Website
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="domainauthority">Domain Authority(Moz)</label>
-                                <input class="form-control" id="domainauthority" minlength="25" min="25" type="number" value="{{  old('domain_authority') }}" placeholder="Domain Authority" name="domain_authority" autocomplete="off" required>
-                                <p class="text-danger d-none" id="domainAuth">Minimum Domain Authority(Moz) should be allowed atleast 25+</p>
+                                <input class="form-control" id="domainauths" minlength="25" min="25" type="number" value="{{  old('domain_authority') }}" placeholder="Domain Authority" name="domain_authority" autocomplete="off" required>
+                                <p class="text-danger d-none domainAuth" id="domainAuth">Minimum Domain Authority(Moz) should be allowed atleast 25+</p>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="domainrating">Domain Rating(Ahrefs)</label>
                                 <input class="form-control" id="domainrating" type="number" placeholder="Domain Rating" value="{{  old('domain_rating') }}" name="domain_rating" autocomplete="off" required>
-                                <p class="text-danger d-none" id="domainRate">Minimum Domain Rating(Ahrefs) should be allowed atleast 25+</p>
+                                <p class="text-danger d-none domainRate" id="domainRate">Minimum Domain Rating(Ahrefs) should be allowed atleast 25+</p>
                             </div>
                         </div>
                     </div>
@@ -190,18 +190,18 @@ textarea.select2-search__field {
             var company = parseInt(price *8/100 + 50) + parseInt(price);
             $("#companyprice").val(company);
         });
-        $('#domainauthority').on('change', function(ev) {  
-            $('#domainAuth').addClass('d-none'); 
-            var value = $(this).val();
-            if(value < 25){
-                $('#domainAuth').removeClass('d-none');
+        $('#domainauths').on('change', function() {
+            $('.domainAuth').addClass('d-none');  
+            var vals = $(this).val();
+            if(vals < 25){
+                $('.domainAuth').removeClass('d-none');
             }
         });
         $('#domainrating').on('change', function(ev) {  
-            $('#domainRate').addClass('d-none'); 
+            $('.domainRate').addClass('d-none'); 
             var value = $(this).val();
             if(value < 25){
-                $('#domainRate').removeClass('d-none');
+                $('.domainRate').removeClass('d-none');
             }
         });
 

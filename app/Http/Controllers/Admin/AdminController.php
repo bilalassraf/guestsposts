@@ -354,14 +354,12 @@ class AdminController extends Controller
         ]);
         // $percentage = 8/100 * $request->price;
 
-
         $user = User::find($request->coordinator_id);
         $userRequest = new UserRequest();
         $userRequest->web_name = $request->web_name;
         $userRequest->coordinator_id = $request->coordinator_id;
         $userRequest->price = $request->price;
         $userRequest->company_price  = $request->company_price;
-        //$userRequest->category = $request->category;
         $userRequest->span_score     = $request->span_score;
         $userRequest->domain_authority     = $request->domain_authority;
         $userRequest->domain_rating     = $request->domain_rating;
@@ -374,6 +372,7 @@ class AdminController extends Controller
         $userRequest->special_note = $request->special_note;
         $user->user_request()->save($userRequest);
         $userRequest->categories()->sync($request->categories);
+        
         return redirect(route('admin.add.guest.request'))->with('success', 'Your request has submitted');
     }
     public function showSingleRequest($id)
