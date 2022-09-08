@@ -76,7 +76,6 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="domainauthority">Domain Authority(Moz)</label>
-                                    @dd($request->all())
                                     <input class="form-control"  type="text"
                                         placeholder="Domain Authority" name="domain_authority" required
                                         value="{{ $request->domain_authority }}" id="domainauthoritys">
