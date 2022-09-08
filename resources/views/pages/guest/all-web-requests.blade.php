@@ -179,6 +179,8 @@ var traffic_lower = organic_lower = 10000000;
 var company_lower = 8000;
 var web_lower = 5000; 
 var table = $('#users-table').DataTable({
+    deferRender: true,
+    serverSide: true,
     ajax: {
         'type': 'get',
         'url': '{{ route('get-web-requests') }}',
@@ -257,8 +259,8 @@ $('#categoryOpt').on('change', function(ev) {
 });
 $('#status').on('change', function(ev) { 
     console.log($(this).val()) ;
-     status = $(this).val();
-     changeDataTableUrl();
+    status = $(this).val();
+    changeDataTableUrl();
 });
 function changeDataTableUrl(){
     table.ajax.url('{{ route('get-web-requests') }}?category='+category+'&status='+status+'&to='+dateTo+'&from='+dateFrom+'&raitings_upper='+raitings_upper+'&raitings_lower='+raitings_lower+'&domain_upper='+domain_upper+'&domain_lower='+domain_lower+'&span_upper='+span_upper+'&span_lower='+span_lower+'&traffic_upper='+traffic_upper+'&traffic_lower='+traffic_lower+'&company_upper='+company_upper+'&company_lower='+company_lower+'&organic_upper='+organic_upper+'&organic_lower='+organic_lower+'&web_lower='+web_lower+'&web_upper='+web_upper).load(); 
