@@ -15,10 +15,10 @@
                                     <div class="input-group">
                                         <span class="input-group-text text-green"><i class="fa fa-user"></i></span>
                                         <select class="form-control" placeholder="Enter Your Name" name="type">
-                                            <option value="admin">Admin</option>
-                                            <option value="user">User</option>
-                                            <option value="moderator">Moderator</option>
-                                            <option value="outreach_coordinator">Outreach Coordinator</option>
+                                            <option value="Admin">Admin</option>
+                                            <option value="User">User</option>
+                                            <option value="Moderator">Moderator</option>
+                                            <option value="Outreach Coordinator">Outreach Coordinator</option>
                                         </select>
                                     </div>
                                 </div>

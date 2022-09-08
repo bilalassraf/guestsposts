@@ -962,13 +962,13 @@ class AdminController extends Controller
     {
         //dd($request->all());
         $user = User::find(Auth::user()->id);
-        // if( $user->type == 'Admin' || $user->type == 'Moderator' ){
+        if( $user->type == 'Admin' || $user->type == 'Moderator' ){
 
-        //     $guest_requests = UserRequest::with(['categories','coodinator'])->orderBy('id', 'DESC')->get();
-        // }else{
+            $guest_requests = UserRequest::with(['categories','coodinator'])->orderBy('id', 'DESC')->get();
+        }else{
 
-        //     $guest_requests = $user->user_request()->with(['categories', 'coodinator']);
-        // }
+            $guest_requests = $user->user_request()->with(['categories', 'coodinator']);
+        }
         $guest_requests = UserRequest::with(['categories','coodinator']);
         if($request->status ){
             $guest_requests->where(['status'=> $request->status]);
