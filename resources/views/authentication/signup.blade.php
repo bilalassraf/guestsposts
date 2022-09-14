@@ -66,8 +66,8 @@
                 @enderror
               </div>
               <div class="form-group last mb-3">
-                <label for="password">Confirm Password</label>
-                <input type="password" class="form-control " placeholder="Confirm Password" id="password" name=""password_confirmation" required>
+                <label for="passwordss">Confirm Password</label>
+                <input type="password" class="form-control " placeholder="Confirm Password" id="passwordss" name="password_confirmation" required>
               </div>
 
               <div class="mb-3 align-items-center">

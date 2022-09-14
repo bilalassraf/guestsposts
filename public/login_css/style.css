@@ -57,7 +57,9 @@ h2 {
 
 .half a {
   color: #888;
-  text-decoration: underline; }
+  text-decoration: underline;
+  font-size: 12px;
+ }
 
 .half .btn {
   height: 54px;
@@ -67,7 +69,7 @@ h2 {
 .half .forgot-pass {
   position: relative;
   top: 2px;
-  font-size: 14px; }
+}
 
 .control {
   display: block;
