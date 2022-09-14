@@ -42,7 +42,7 @@
                                     <tr>
                                         @if(auth()->user()->type == 'Admin')
                                             <td>
-                                                <input type="checkbox" name="check_box" class="sub_chk" value="{{ $guest->id }}">
+                                                <input type="checkbox" name="check_box" class="sub_chk" value="{{ $niche->id }}">
                                             </td>
                                         @endif
                                         <td>{{ $niche->id }}</td>
