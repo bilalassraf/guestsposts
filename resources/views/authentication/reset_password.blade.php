@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -25,7 +24,7 @@
       }
     </style>
 
-    <title>Reset Password</title>
+    <title>Login</title>
   </head>
   <body>
   
@@ -37,11 +36,10 @@
       <div class="container">
         <div class="row align-items-center justify-content-center">
           <div class="col-md-9">
-            <h3>Reset Password to <strong style="color: #fb771a;">Outreach Freaks</strong> Account</h3>
-            <p class="mb-4">Welcome back! Reset Password to your account.</p>
-            <form method="POST" action="{{ route('password.update') }}">
-                @csrf
-                <input type="hidden" name="token" value="{{ $token }}">
+            <h3>Login to <strong style="color: #fb771a;">Outreach Freaks</strong></h3>
+            <p class="mb-4">Welcome back! Log in to your account.</p>
+            <form method="POST" action="{{ route('login') }}">
+              @csrf
               <div class="form-group first">
                 <label for="username">Email Address</label>
                 <input type="text" class="form-control {{ $errors->has('password') ? 'has-error' : '' }}" placeholder="your-email@gmail.com" id="username" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
@@ -49,21 +47,7 @@
                     <div id="error-box"><!-- Display errors here --></div>
                   @endif 
               </div>
-              <div class="form-group last mb-3">
-                <label for="password">Password</label>
-                <input type="password" class="form-control  @error('password') is-invalid @enderror" placeholder="Your Password" id="password" name="password" required>
-                @error('password')
-                    <span class="invalid-feedback" style="disply:block" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                @enderror
-              </div>
-              <div class="form-group last mb-3">
-                <label for="password">Confirm Password</label>
-                <input type="password" class="form-control " placeholder="Confirm Password" id="password" name=""password_confirmation" required>
-              </div>
-
-              <input type="submit" value="Reset Password" class="btn btn-block btn-primary">
+              <input type="submit" value="Sign In" class="btn btn-block btn-primary">
             </form>
           </div>
         </div>
