@@ -36,7 +36,7 @@
       <div class="container">
         <div class="row align-items-center justify-content-center">
           <div class="col-md-9">
-            <h3>Register to <strong style="color: #fb771a;">Outreach Freaks</strong></h3>
+            <h3 style="font-size: 25px;">Register to <strong style="color: #fb771a;">Outreach Freaks</strong></h3>
             <p class="mb-4">Enter your personal details to create account</p>
             <form method="post" action="{{route('register')}}">
               @csrf

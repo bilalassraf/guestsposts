@@ -313,7 +313,7 @@ class AdminController extends Controller
     }
     public function showCategories()
     {
-        $categories = Category::all();
+        $categories = Category::orderBy('category', 'ASC')->get();
         return view('pages.show-categories', compact('categories'));
     }
     public function editCategory(Request $request, $id)
@@ -551,15 +551,6 @@ class AdminController extends Controller
     {
         $ids = $request->ids;
         DB::table("user_requests")->whereIn('id',explode(",",$ids))->delete();
-        // $ids = $request->ids;
-        // if (!empty($ids)) {
-        //     foreach ($ids as $id) {
-        //         UserRequest::where('id', $id)->get()->each->delete();
-        //     }
-        //     return back()->with('success', 'Selected users has been removed');
-        // } else {
-        //     return back()->with('info', 'Selecte a request before this opreation');
-        // }
         return response()->json(['success'=>"Selected Requests Deleted successfully."]);
     }
 

@@ -1,7 +1,7 @@
 <div id="deleteNicheModal-{{$niche->id}}" class="modal fade">
 	<div class="modal-dialog">
 		<div class="modal-content">
-			<form action="{{ route('admin.niche.deleted',$niche->id) }}" method="get">
+			<form action="{{ route('admin.niche.deleted', $niche->id) }}" method="get">
                 @csrf
 				<div class="modal-header">
 					<h4 class="modal-title">Delete User</h4>

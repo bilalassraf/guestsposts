@@ -44,6 +44,7 @@ Show Niche
                                     @endif
                                     @if (auth()->user()->type == 'Admin')
                                         <th>Domain Rating</th>
+                                        <th>Domain Authority</th>
                                         <th>Organic Traffic (Ahrefs)</th>
                                     @endif
                                     @if (auth()->user()->type == 'Admin' || in_array('Status',$user_permissions))
@@ -90,6 +91,7 @@ if ('{{ auth()->user()->type }}' == 'Admin') {
         {data: 'price', name: 'price'},
         {data: 'categories', name: 'categories'},
         {data: 'domain_rating', name: 'domain_rating' },
+        {data: 'domain_authority', name: 'domain_authority' },
         {data: 'organic_trafic_ahrefs', name: 'organic_trafic_ahrefs' },
         {data: 'status', name: 'status'},
         {data: 'updated_at', name: 'updated_at'},
@@ -121,6 +123,7 @@ if ('{{ auth()->user()->type }}' == 'Admin') {
 }
 var table = $('#users-table').DataTable({
     serverSide: true,
+    order: [[3, 'desc']],
     ajax: "{{ route('get-niche-requests') }}",
     columns:cols,
 });
