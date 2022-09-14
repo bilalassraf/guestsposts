@@ -26,7 +26,7 @@
                                     <label for="outreachcoodinator1">Outreach Coordinator</label><br>
                                     <select class="form-control" name="coordinator_id" id="outreachcoodinator1" style="width: 100%;">
                                         @foreach ($guestCoordinator as $guestCoordinator)
-                                            <option value="{{$guestCoordinator->id}}">{{$guestCoordinator->name}} , {{$guestCoordinator->email}}</option>
+                                            <option {{$request->coordinator_id == $guestCoordinator->id ? "selected" : ''}} value="{{$guestCoordinator->id}}">{{$guestCoordinator->name}} , {{$guestCoordinator->email}}</option>
                                         @endforeach
                                     </select>
                                 </div>

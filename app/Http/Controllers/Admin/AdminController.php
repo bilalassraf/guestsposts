@@ -110,6 +110,7 @@ class AdminController extends Controller
 
             $guest_requests = $user->casino_request()->with(['categories', 'coodinator']);
         }
+
         $guestCoordinator = User::where('type','Outreach Coordinator')->get();
         return DataTables::of($guest_requests)
         ->addColumn('check_box', function($row){
