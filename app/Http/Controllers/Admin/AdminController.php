@@ -1168,14 +1168,8 @@ class AdminController extends Controller
     public function deleteSelectedNiches(Request $request)
     {
         $ids = $request->ids;
-        if (!empty($ids)) {
-            foreach ($ids as $id) {
-                Niche::where('id', $id)->get()->each->delete();
-            }
-            return back()->with('success', 'Selected Niche has been removed');
-        } else {
-            return back()->with('info', 'Selecte a Niche before this opreation');
-        }
+        DB::table("niches")->whereIn('id',explode(",",$ids))->delete();
+        return response()->json(['success'=>"Selected Requests Deleted successfully."]);
     }
     public function showSingleNiche($id)
     {
