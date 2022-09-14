@@ -79,7 +79,7 @@
   
 
   <div class="d-lg-flex half">
-    <div class="bg order-1 order-md-2" id="img-box" style="background-image: url('./images/img1.jpg');"></div>
+    <div class="bg order-1 order-md-2" id="img-box" style="background-image: url('../images/img1.jpg');"></div>
     <div class="contents order-2 order-md-1">
 
       <div class="container">
@@ -94,7 +94,6 @@
             <p class="mb-4">Welcome back! Reset Password to your account.</p>
             <form method="POST" action="{{ route('password.email') }}">
                 @csrf
-                <input type="hidden" name="token" value="{{ $token }}">
               <div class="form-group first">
                 <label for="username">Email Address</label>
                 <input type="text" class="form-control {{ $errors->has('password') ? 'has-error' : '' }}" placeholder="your-email@gmail.com" id="username" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
