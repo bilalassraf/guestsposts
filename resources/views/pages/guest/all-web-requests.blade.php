@@ -183,7 +183,7 @@ var web_lower = 5000;
 var table = $('#users-table').DataTable({
     deferRender: true,
     serverSide: true,
-    bSort: true,
+    order:[[3, 'desc']],
     ajax: {
         'type': 'get',
         'url': '{{ route('get-web-requests') }}',

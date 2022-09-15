@@ -168,6 +168,7 @@ if ('{{ auth()->user()->type }}' == 'Admin') {
 }
 var table = $('#users-table').DataTable({
     serverSide: true,
+    order:[[3, 'desc']],
     ajax: "{{ route('get-casino-requests') }}",
     columns:cols,
 });
