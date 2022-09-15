@@ -8,7 +8,7 @@
         <div class="col-lg-12 col-md-8 col-sm-8">
             <div class="card height-equal">
                 <div class="card-header bg-green p-3">
-                    <h5 style="font-weight:700">Edit  Niche</h5>
+                    <h5 style="font-weight:700">Edit Niche</h5>
                 </div>
                 <div class="contact-form card-body">
                     <form class="theme-form" action="{{ route('admin.chnage.niche', $niche_request->id) }}"

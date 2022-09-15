@@ -140,7 +140,7 @@ Add Website
                         <textarea class="form-control textarea" id="specialnote" rows="3" cols="50" placeholder="Your Message" autocomplete="off" value="{{  old('special_note') }}" name="special_note"></textarea>
                     </div>
                     <div class="text-sm-end">
-                        <button type="submit" class="btn text-white bg-lightblack outline-none">Submit for Approval</button>
+                        <button type="submit" id="submitBtn" class="btn text-white bg-lightblack outline-none">Submit for Approval</button>
                     </div>
                 </form>
             </div>
@@ -172,7 +172,13 @@ textarea.select2-search__field {
             url: "{{route('guestName')}}",
             data:{'webname': webname},
             success: function(result){
-            $("#div2").html(result);
+                if(result){
+                    $("#div2").html(result);
+                    $('#submitBtn').addClass("disabled");
+                }else{
+                    $("#div2").html(result);
+                    $('#submitBtn').removeClass("disabled");
+                }
             }});
         });
         //called when key is pressed in textbox

@@ -202,6 +202,6 @@
         height: 38px !important;
     }
     .selectCategory span.select2-selection.select2-selection--single {
-        display: none;
+        display: none !important;
     }
 </style>
