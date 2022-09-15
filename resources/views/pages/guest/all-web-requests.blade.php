@@ -191,10 +191,12 @@ var table = $('#users-table').DataTable({
     columns:cols,
 });
 $('.web_upper_bar').on('change', function(ev) {  
+    console.log('upeer');
     web_upper = $(this).val();
      changeDataTableUrl();
 });
-$('.web_lower_bar').on('change', function(ev) {  
+$('.web_lower_bar').on('change', function(ev) {
+    console.log('lower');  
     web_lower = $(this).val();
      changeDataTableUrl();
 });

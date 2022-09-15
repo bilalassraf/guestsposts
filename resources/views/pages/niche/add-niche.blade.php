@@ -163,7 +163,7 @@
                                 placeholder="Your Message" name="special_note"  autocomplete="off">{{  old('special_note') }}</textarea>
                         </div>
                         <div class="text-sm-end">
-                            <button type="submit" class="btn btn-primary bg-green outline-none">Submit for Approval</button>
+                            <button type="submit" id="submitBtn" class="btn btn-primary bg-green outline-none">Submit for Approval</button>
                         </div>
                     </form>
                 </div>
@@ -192,7 +192,13 @@
             $.ajax({url: "{{route('getUrl')}}",
             data:{'value': value},
              success: function(result){
-            $("#div1").html(result);
+                if(result){
+                    $("#div1").html(result);
+                    $('#submitBtn').addClass("disabled");
+                }else{
+                    $("#div1").html(result);
+                    $('#submitBtn').removeClass("disabled");
+                }
             }});
         });
         $(".webname").on('change', function(ev){
@@ -200,7 +206,13 @@
             $.ajax({url: "{{ route('getName') }}",
             data:{'webname': webname},
              success: function(result){
-            $("#div2").html(result);
+                if(result){
+                    $("#div2").html(result);
+                    $('#submitBtn').addClass("disabled");
+                }else{
+                    $("#div2").html(result);
+                    $('#submitBtn').removeClass("disabled");
+                }
             }});
         });
 

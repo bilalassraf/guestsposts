@@ -48,8 +48,7 @@
                                             </div>
                                             <div class="col-md-2">
                                                 <div class="multi-range d-block">
-                                                
-                                                    <input type="number" min="1" max="{{ $filter->authority }}" name="domain_upper" class="domain_input range_input mt-2 form-control" value="1" id="domain_upper" oninput="document.getElementById('authority_upper_bar').value = this.value">
+                                                    <input type="number" min="1" max="{{ $filter->authority }}" name="domain_upper" class="domain_input range_input mt-2 form-control authority_upper_bar" value="1" id="domain_upper" oninput="document.getElementById('authority_upper_bar').value = this.value">
                                                 </div>
                                             </div>
                                             <div class="col-md-7 margintop">
@@ -61,7 +60,7 @@
                                             </div>    
                                             <div class="col-md-2">    
                                                 <div class="multi-range d-block">
-                                                    <input type="number" min="1" max="{{ $filter->authority  }}" name="domain_lower" class="domain_input range_input mt-2 form-control" value="{{ $filter->authority }}" id="domain_lower" oninput="document.getElementById('authority_lower_bar').value = this.value">
+                                                    <input type="number" min="1" max="{{ $filter->authority  }}" name="domain_lower" class="domain_input range_input mt-2 form-control authority_lower_bar" value="{{ $filter->authority }}" id="domain_lower" oninput="document.getElementById('authority_lower_bar').value = this.value">
                                                 </div>
                                             </div>
                                         </div>
@@ -75,7 +74,7 @@
                                             </div>
                                             <div class="col-md-2">
                                                 <div class="multi-range d-block">
-                                                    <input type="number" min="1" max="{{ $filter->raitings  }}" name="raitings_upper" class="domainRate_input range_input mt-2 form-control" value="1" id="raitings_upper" oninput="document.getElementById('raitings_upper_bar').value = this.value">
+                                                    <input type="number" min="1" max="{{ $filter->raitings  }}" name="raitings_upper" class="raitings_upper_bar domainRate_input range_input mt-2 form-control" value="1" id="raitings_upper" oninput="document.getElementById('raitings_upper_bar').value = this.value">
                                                 </div>
                                             </div>
                                             <div class="col-md-7 margintop">
@@ -87,7 +86,7 @@
                                             </div>    
                                             <div class="col-md-2">    
                                                 <div class="multi-range d-block">
-                                                    <input type="number" min="1" max="{{ $filter->raitings  }}" name="raitings_lower" class="domainRate_input range_input mt-2 form-control" value="{{ $filter->raitings  }}" id="raitings_lower" oninput="document.getElementById('raitings_lower_bar').value = this.value">
+                                                    <input type="number" min="1" max="{{ $filter->raitings  }}" name="raitings_lower" class="raitings_lower_bar domainRate_input range_input mt-2 form-control" value="{{ $filter->raitings  }}" id="raitings_lower" oninput="document.getElementById('raitings_lower_bar').value = this.value">
                                                 </div>
                                             </div>
                                         </div>
@@ -102,7 +101,7 @@
                                             </div>
                                             <div class="col-md-2">
                                                 <div class="multi-range d-block">
-                                                    <input type="number" min="1" max="{{ $filter->spam_score  }}" name="span_upper" class="spamScore_input range_input mt-2 form-control" value="1" id="span_upper" oninput="document.getElementById('span_upper_bar').value = this.value">
+                                                    <input type="number" min="1" max="{{ $filter->spam_score  }}" name="span_upper" class="span_upper_bar spamScore_input range_input mt-2 form-control" value="1" id="span_upper" oninput="document.getElementById('span_upper_bar').value = this.value">
                                                 </div>
                                             </div>
                                             <div class="col-md-7 margintop">
@@ -114,7 +113,7 @@
                                             </div>    
                                             <div class="col-md-2">    
                                                 <div class="multi-range d-block">
-                                                    <input type="number" min="1" max="{{ $filter->spam_score  }}" name="span_lower" class="spamScore_input range_input mt-2 form-control" value="{{ $filter->spam_score  }}" id="span_lower" oninput="document.getElementById('span_lower_bar').value = this.value">
+                                                    <input type="number" min="1" max="{{ $filter->spam_score  }}" name="span_lower" class="span_lower_bar spamScore_input range_input mt-2 form-control" value="{{ $filter->spam_score  }}" id="span_lower" oninput="document.getElementById('span_lower_bar').value = this.value">
                                                 </div>
                                             </div>
                                         </div>
@@ -128,7 +127,7 @@
                                             </div>
                                             <div class="col-md-2">
                                                 <div class="multi-range d-block">
-                                                    <input type="number" min="1" max="{{ $filter->ahrefs_traffic  }}" name="traffic_upper" class="orgTraffic_input range_input mt-2 form-control" value="1" id="traffic-upper" oninput="document.getElementById('traffic_upper_bar').value = this.value">
+                                                    <input type="number" min="1" max="{{ $filter->ahrefs_traffic  }}" name="traffic_upper" class="traffic_upper_bar orgTraffic_input range_input mt-2 form-control" value="1" id="traffic-upper" oninput="document.getElementById('traffic_upper_bar').value = this.value">
                                                 </div>
                                             </div>
                                             <div class="col-md-7 margintop">
@@ -140,7 +139,7 @@
                                             </div>    
                                             <div class="col-md-2">    
                                                 <div class="multi-range d-block">
-                                                    <input type="number" min="1" max="{{ $filter->ahrefs_traffic  }}" name="traffic_lower" class="orgTraffic_input range_input mt-2 form-control" value="{{ $filter->ahrefs_traffic  }}" id="traffic-lower" oninput="document.getElementById('traffic_lower_bar').value = this.value">
+                                                    <input type="number" min="1" max="{{ $filter->ahrefs_traffic  }}" name="traffic_lower" class="traffic_lower_bar orgTraffic_input range_input mt-2 form-control" value="{{ $filter->ahrefs_traffic  }}" id="traffic-lower" oninput="document.getElementById('traffic_lower_bar').value = this.value">
                                                 </div>
                                             </div>
                                         </div>
@@ -154,7 +153,7 @@
                                             </div>
                                             <div class="col-md-2">
                                                 <div class="multi-range d-block">
-                                                    <input type="number" min="1" max="{{ $filter->company_price  }}" name="company_upper" class="company_input range_input mt-2 form-control" value="1" id="company_upper" oninput="document.getElementById('company_upper_bar').value = this.value">
+                                                    <input type="number" min="1" max="{{ $filter->company_price  }}" name="company_upper" class="company_upper_bar company_input range_input mt-2 form-control" value="1" id="company_upper" oninput="document.getElementById('company_upper_bar').value = this.value">
                                                 </div>
                                             </div>
                                             <div class="col-md-7 margintop">
@@ -166,7 +165,7 @@
                                             </div>    
                                             <div class="col-md-2">    
                                                 <div class="multi-range d-block">
-                                                    <input type="number" min="1" max="{{ $filter->company_price  }}" name="company_lower" class="company_input range_input mt-2 form-control" value="{{ $filter->company_price  }}" id="company_lower" oninput="document.getElementById('company_lower_bar').value = this.value">
+                                                    <input type="number" min="1" max="{{ $filter->company_price  }}" name="company_lower" class="company_lower_bar company_input range_input mt-2 form-control" value="{{ $filter->company_price  }}" id="company_lower" oninput="document.getElementById('company_lower_bar').value = this.value">
                                                 </div>
                                             </div>
                                         </div>
@@ -180,7 +179,7 @@
                                             </div>
                                             <div class="col-md-2">
                                                 <div class="multi-range d-block">
-                                                    <input type="number" min="1" max="{{ $filter->sem_traffic  }}" name="organic_upper" class="semTraffic_input range_input mt-2 form-control" value="1" id="organic_upper" oninput="document.getElementById('organic_upper_bar').value = this.value">
+                                                    <input type="number" min="1" max="{{ $filter->sem_traffic  }}" name="organic_upper" class="semTraffic_input range_input mt-2 form-control organic_upper_bar" value="1" id="organic_upper" oninput="document.getElementById('organic_upper_bar').value = this.value">
                                                 </div>
                                             </div>
                                             <div class="col-md-7 margintop">
@@ -192,7 +191,7 @@
                                             </div>    
                                             <div class="col-md-2">    
                                                 <div class="multi-range d-block">
-                                                    <input type="number" min="1" max="{{ $filter->sem_traffic  }}" name="organic_lower" class="semTraffic_input range_input mt-2 form-control" value="{{ $filter->sem_traffic  }}" id="organic_lower" oninput="document.getElementById('organic_lower_bar').value = this.value">
+                                                    <input type="number" min="1" max="{{ $filter->sem_traffic  }}" name="organic_lower" class="semTraffic_input range_input mt-2 form-control organic_lower_bar" value="{{ $filter->sem_traffic  }}" id="organic_lower" oninput="document.getElementById('organic_lower_bar').value = this.value">
                                                 </div>
                                             </div>
                                         </div>
@@ -206,19 +205,19 @@
                                             </div>
                                             <div class="col-md-2">
                                                 <div class="multi-range d-block">
-                                                    <input type="number" min="1" max="{{ $filter->web_price  }}" name="web_upper" class="webPrice_input range_input mt-2 form-control" value="1" id="web_upper"  oninput="document.getElementById('web_upper_bar').value = this.value">
+                                                    <input type="number" min="1" max="{{ $filter->web_price  }}" name="web_upper" class="webPrice_input range_input mt-2 form-control web_upper_bar" value="1" id="web_upper"  oninput="document.getElementById('web_upper_bar').value = this.value">
                                                 </div>
                                             </div>
                                             <div class="col-md-7 margintop">
                                                 <span class="multi-range d-block">
-                                                    <input type="range" min="1" max="{{ $filter->web_price }}" class="range_input" name="web_upper"  value="1" oninput="document.getElementById('web_upper').value = this.value" id="web_upper_bar">
-                                                    <input type="range" min="1" max="{{ $filter->web_price }}" class="range_input" name="web_lower"  value="{{ $filter->web_price }}" oninput="document.getElementById('web_lower').value = this.value" id="web_lower_bar">
+                                                    <input type="range" min="1" max="{{ $filter->web_price }}" class="range_input web_upper_bar" name="web_upper"  value="1" oninput="document.getElementById('web_upper').value = this.value" id="web_upper_bar">
+                                                    <input type="range" min="1" max="{{ $filter->web_price }}" class="range_input web_lower_bar" name="web_lower"  value="{{ $filter->web_price }}" oninput="document.getElementById('web_lower').value = this.value" id="web_lower_bar">
                                                 </span>
                                                 <p class="text-danger d-none" id="webPrice" style="margin-top: 38px">Web Price should be allowed maximum 5000</p>
                                             </div>    
                                             <div class="col-md-2">    
                                                 <div class="multi-range d-block">
-                                                    <input type="number" min="1" max="{{ $filter->web_price  }}" name="web_lower" class="webPrice_input range_input mt-2 form-control" value="{{ $filter->web_price  }}" id="web_lower" oninput="document.getElementById('web_lower_bar').value = this.value">
+                                                    <input type="number" min="1" max="{{ $filter->web_price  }}" name="web_lower" class="webPrice_input range_input mt-2 form-control web_lower_bar" value="{{ $filter->web_price  }}" id="web_lower" oninput="document.getElementById('web_lower_bar').value = this.value">
                                                 </div>
                                             </div>
                                         </div>
