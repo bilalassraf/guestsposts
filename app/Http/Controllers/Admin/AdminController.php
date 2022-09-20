@@ -288,7 +288,7 @@ class AdminController extends Controller
     }
     public function newPrice(Request $request , $id)
     {
-        $new_price = CasinoRequest::find($id);
+        $new_price = UserRequest::find($id);
         $new_price->new_price = $request->new_price;
         $new_price->status = 'Pending';
         $new_price->update();
