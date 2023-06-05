@@ -28,8 +28,13 @@ class UserRequest extends Model
 
     public function getcheckStatusAttribute()
     {
-        $result = statusData($this,'status');
-        return  $result;
+        if($this->spam == 1){
+            return "Spam Request";
+        }elseif($this->good == 1){
+            return "Good Request";
+        }else{
+            return $this->status;
+        }
     }
 
 }

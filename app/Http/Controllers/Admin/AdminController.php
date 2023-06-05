@@ -915,7 +915,7 @@ class AdminController extends Controller
         //     return redirect()->back()->with('warning', 'Website name alerady exists')->withInput($request->all());
         // }
         if($check_web_url){
-            $check_price = $check_web_url->price < $request->price;
+            $check_price = $check_web_url->price > $request->price;
             if($check_price){
                 $user = User::find($request->user_id);
                 $Niche = new Niche();
@@ -941,6 +941,28 @@ class AdminController extends Controller
             }else{
                 return redirect()->back()->with('warning', 'Your Price Should be Less Then '.$check_web_url->price )->withInput($request->all());
             }
+        }else{
+                $user = User::find($request->user_id);
+                $Niche = new Niche();
+                $Niche->web_name = preg_replace( "#^[^:/.]*[:/]+#i", "", $request->web_name );
+                $Niche->coordinator_id = $request->coordinator_id;
+                $Niche->price = $request->price;
+                $Niche->company_price  =  $request->company_price;
+                $Niche->user_id     = $request->coordinator_id;
+                $Niche->domain_authority     = $request->domain_authority;
+                $Niche->span_score     = $request->span_score;
+                $Niche->domain_rating     = $request->domain_rating;
+                $Niche->organic_trafic_ahrefs     = $request->organic_trafic_ahrefs;
+                $Niche->organic_trafic_sem     = $request->organic_trafic_sem;
+                $Niche->trust_flow     = "0";
+                $Niche->citation_flow = "0";
+                $Niche->email_webmaster = $request->email;
+                $Niche->web_description = $request->web_description;
+                $Niche->special_note = $request->special_note;
+                $Niche->web_url = str_replace("www.","",preg_replace( "#^[^:/.]*[:/]+#i", "", $request->web_url )) ;
+                $user->niche()->save($Niche);
+                $Niche->categories()->sync($request->categories);
+                return redirect(route('admin.show.niches'))->with('success', 'Your request has submitted');
         }
     }
     public function webRequests(Request $request)

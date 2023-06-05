@@ -28,91 +28,354 @@ class Niche extends Model
 
     public function getlessWebNameAttribute()
     {
-        $result = lessData($this,'web_name');
-        return  $result;
+        $field = 'web_name';
+        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_url',$this->web_url)->with('categories')->orderby('deleted_at','desc')->first();
+        $actvive = Niche::where([['web_url',$this->web_url],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+        
+        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
+            if($field == 'coordinator_id'){
+                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
+            }elseif($field == 'categories'){
+                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
+            }elseif($field == 'updated_at'){
+                $result = 0;
+            }else{
+                $result = $deleted[$field].' >> '.$actvive[$field];
+            }
+        }else{
+            $result = $this[$field];
+        }
+        return $result;
     }
 
     public function getlessPriceAttribute()
     {
-        $result = lessData($this,'price');
-        return  $result;
+    
+        $field = 'price';
+        
+        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_url',$this->web_url)->with('categories')->orderby('deleted_at','desc')->first();
+        $actvive = Niche::where([['web_url',$this->web_url],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+
+        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
+            if($field == 'coordinator_id'){
+                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
+            }elseif($field == 'categories'){
+                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
+            }elseif($field == 'updated_at'){
+                $result = 0;
+            }else{
+                $result = $deleted[$field].' >> '.$actvive[$field];
+            }
+        }else{
+            $result = $this[$field];
+        }
+        return $result;
+
     }
 
     public function getlessEmailAttribute()
     {
-        $result = lessData($this,'email_webmaster');
-        return  $result;
+        $field = 'email_webmaster';
+        
+        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_url',$this->web_url)->with('categories')->orderby('deleted_at','desc')->first();
+        $actvive = Niche::where([['web_url',$this->web_url],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+
+        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
+            if($field == 'coordinator_id'){
+                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
+            }elseif($field == 'categories'){
+                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
+            }elseif($field == 'updated_at'){
+                $result = 0;
+            }else{
+                $result = $deleted[$field].' >> '.$actvive[$field];
+            }
+        }else{
+            $result = $this[$field];
+        }
+        return $result;
+
     }
 
     public function getlessCoodinatorAttribute()
     {
-        $result = lessData($this,'coordinator_id');
-        return  $result;
+        $field = 'coordinator_id';
+        
+        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_url',$this->web_url)->with('categories')->orderby('deleted_at','desc')->first();
+        $actvive = Niche::where([['web_url',$this->web_url],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+
+        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
+            if($field == 'coordinator_id'){
+                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
+            }elseif($field == 'categories'){
+                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
+            }elseif($field == 'updated_at'){
+                $result = 0;
+            }else{
+                $result = $deleted[$field].' >> '.$actvive[$field];
+            }
+        }else{
+            $result = $this[$field];
+        }
+        return $result;
+
     }
 
     public function getlessCategoriesAttribute()
     {
-        $result = lessData($this,'categories');
-        return  $result;
+    
+        $field = 'categories';
+        
+        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_url',$this->web_url)->with('categories')->orderby('deleted_at','desc')->first();
+        $actvive = Niche::where([['web_url',$this->web_url],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+
+        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
+            if($field == 'coordinator_id'){
+                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
+            }elseif($field == 'categories'){
+                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
+            }elseif($field == 'updated_at'){
+                $result = 0;
+            }else{
+                $result = $deleted[$field].' >> '.$actvive[$field];
+            }
+        }else{
+            $result = $this->categories[0]['category'];
+        }
+        return $result;
+
     }
 
     public function getlessDomainRatingAttribute()
     {
-        $result = lessData($this,'domain_rating');
-        return  $result;
+        $field = 'domain_rating';
+        
+        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_url',$this->web_url)->with('categories')->orderby('deleted_at','desc')->first();
+        $actvive = Niche::where([['web_url',$this->web_url],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+
+        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
+            if($field == 'coordinator_id'){
+                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
+            }elseif($field == 'categories'){
+                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
+            }elseif($field == 'updated_at'){
+                $result = 0;
+            }else{
+                $result = $deleted[$field].' >> '.$actvive[$field];
+            }
+        }else{
+            $result = $this[$field];
+        }
+        return $result;
+
     }
 
     public function getlessDomainAuthorityAttribute()
     {
-        $result = lessData($this,'domain_authority');
-        return  $result;
+        $field = 'domain_authority';
+        
+        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_url',$this->web_url)->with('categories')->orderby('deleted_at','desc')->first();
+        $actvive = Niche::where([['web_url',$this->web_url],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+
+        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
+            if($field == 'coordinator_id'){
+                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
+            }elseif($field == 'categories'){
+                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
+            }elseif($field == 'updated_at'){
+                $result = 0;
+            }else{
+                $result = $deleted[$field].' >> '.$actvive[$field];
+            }
+        }else{
+            $result = $this[$field];
+        }
+        return $result;
+
     }
 
     public function getlessOrganicTraficAhrefsAttribute()
     {
-        $result = lessData($this,'organic_trafic_ahrefs');
-        return  $result;
+        $field = 'organic_trafic_ahrefs';
+        
+        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_url',$this->web_url)->with('categories')->orderby('deleted_at','desc')->first();
+        $actvive = Niche::where([['web_url',$this->web_url],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+
+        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
+            if($field == 'coordinator_id'){
+                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
+            }elseif($field == 'categories'){
+                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
+            }elseif($field == 'updated_at'){
+                $result = 0;
+            }else{
+                $result = $deleted[$field].' >> '.$actvive[$field];
+            }
+        }else{
+            $result = $this[$field];
+        }
+        return $result;
+
     }
 
     public function getlessSpanScoreAttribute()
     {
-        $result = lessData($this,'span_score');
-        return  $result;
+        $field = 'span_score';
+        
+        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_url',$this->web_url)->with('categories')->orderby('deleted_at','desc')->first();
+        $actvive = Niche::where([['web_url',$this->web_url],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+
+        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
+            if($field == 'coordinator_id'){
+                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
+            }elseif($field == 'categories'){
+                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
+            }elseif($field == 'updated_at'){
+                $result = 0;
+            }else{
+                $result = $deleted[$field].' >> '.$actvive[$field];
+            }
+        }else{
+            $result = $this[$field];
+        }
+        return $result;
+
     }
 
     public function getlessOrganicTraficSemAttribute()
     {
-        $result = lessData($this,'organic_trafic_sem');
-        return  $result;
+        $field = 'organic_trafic_sem';
+        
+        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_url',$this->web_url)->with('categories')->orderby('deleted_at','desc')->first();
+        $actvive = Niche::where([['web_url',$this->web_url],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+
+        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
+            if($field == 'coordinator_id'){
+                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
+            }elseif($field == 'categories'){
+                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
+            }elseif($field == 'updated_at'){
+                $result = 0;
+            }else{
+                $result = $deleted[$field].' >> '.$actvive[$field];
+            }
+        }else{
+            $result = $this[$field];
+        }
+        return $result;
+
     }
 
     public function getlessTrustFlowAttribute()
     {
-        $result = lessData($this,'trust_flow');
-        return  $result;
+        $field = 'trust_flow';
+        
+        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_url',$this->web_url)->with('categories')->orderby('deleted_at','desc')->first();
+        $actvive = Niche::where([['web_url',$this->web_url],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+
+        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
+            if($field == 'coordinator_id'){
+                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
+            }elseif($field == 'categories'){
+                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
+            }elseif($field == 'updated_at'){
+                $result = 0;
+            }else{
+                $result = $deleted[$field].' >> '.$actvive[$field];
+            }
+        }else{
+            $result = $this[$field];
+        }
+        return $result;
+
     }
 
     public function getlessCitationFlowAttribute()
     {
-        $result = lessData($this,'citation_flow');
-        return  $result;
+        $field = 'citation_flow';
+        
+        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_url',$this->web_url)->with('categories')->orderby('deleted_at','desc')->first();
+        $actvive = Niche::where([['web_url',$this->web_url],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+
+        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
+            if($field == 'coordinator_id'){
+                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
+            }elseif($field == 'categories'){
+                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
+            }elseif($field == 'updated_at'){
+                $result = 0;
+            }else{
+                $result = $deleted[$field].' >> '.$actvive[$field];
+            }
+        }else{
+            $result = $this[$field];
+        }
+        return $result;
+
     }
 
     public function getlessWebDescriptionAttribute()
     {
-        $result = lessData($this,'web_description');
-        return  $result;
+        $field = 'web_description';
+        
+        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_url',$this->web_url)->with('categories')->orderby('deleted_at','desc')->first();
+        $actvive = Niche::where([['web_url',$this->web_url],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+
+        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
+            if($field == 'coordinator_id'){
+                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
+            }elseif($field == 'categories'){
+                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
+            }elseif($field == 'updated_at'){
+                $result = 0;
+            }else{
+                $result = $deleted[$field].' >> '.$actvive[$field];
+            }
+        }else{
+            $result = $this[$field];
+        }
+        return $result;
+
     }
 
     public function getlessSpecialNoteAttribute()
     {
-        $result = lessData($this,'special_note');
-        return  $result;
+        $field = 'special_note';
+        
+        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_url',$this->web_url)->with('categories')->orderby('deleted_at','desc')->first();
+        $actvive = Niche::where([['web_url',$this->web_url],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+
+        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
+            if($field == 'coordinator_id'){
+                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
+            }elseif($field == 'categories'){
+                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
+            }elseif($field == 'updated_at'){
+                $result = 0;
+            }else{
+                $result = $deleted[$field].' >> '.$actvive[$field];
+            }
+        }else{
+            $result = $this[$field];
+        }
+        return $result;
+
+    }
+
+    function coodinatorName($id = null)
+    {
+        $user = User::find($id);
+        return $user->name;
     }
 
     public function getcheckClientStatusAttribute()
     {
-        $result = statusData($this,'status');
-        return  $result;
+        if($this->spam == 1){
+            return "Spam Request";
+        }elseif($this->good == 1){
+            return "Good Request";
+        }else{
+            return $this->status;
+        }
     }
 }

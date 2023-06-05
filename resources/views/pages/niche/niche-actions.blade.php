@@ -39,34 +39,18 @@
       contentType: 'application/json',
       success: function(response) {
         if (response.success === 'Approved') {
-            var rowIndex = table.row(function(index, data, node) {
-                return data.niche_id === nicheId;
-            }).index();
-            table.cell(rowIndex, 8).data('Approved');
             toastr.success('Request has been approved');
         } else if (response.info === 'Already Approved') {
             toastr.info('Request is Already Approved');
         }else if (response.success === 'Rejected') {
-            var rowIndex = table.row(function(index, data, node) {
-                return data.niche_id === nicheId;
-            }).index();
-            table.cell(rowIndex, 8).data('Rejected');
             toastr.success('Request has been Rejected');
         }else if (response.info === 'Already Rejected') {
             toastr.info('Request is Already Rejected');
         }else if(response.success == 'Good Request'){
-            var rowIndex = table.row(function(index, data, node) {
-                return data.niche_id === nicheId;
-            }).index();
-            table.cell(rowIndex, 8).data('Good Request');
             toastr.success('Niche added to Good Request');
         }else if(response.info == 'Already Good Request'){
             toastr.success('Niche Already in Good Request');
         }else if(response.success == 'Spam Request'){
-            var rowIndex = table.row(function(index, data, node) {
-                return data.niche_id === nicheId;
-            }).index();
-            table.cell(rowIndex, 8).data('Spam Request');
             toastr.success('Niche added to Spam Request');
         }else if(response.info == 'Already Spam Request'){
             toastr.info('Niche Already in Spam Request');

@@ -5,6 +5,7 @@ use App\Models\User;
 
 function lessData($object = null,$field = null)
 {
+
     $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_url',$object->web_url)->with('categories')->orderby('deleted_at','desc')->first();
     $actvive = Niche::where([['web_url',$object->web_url],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
@@ -32,6 +33,7 @@ function coodinatorName($id = null)
 
 function statusData($object = null, $status = null)
 {
+
     if($object->spam == 1){
         return "Spam Request";
     }elseif($object->good == 1){
