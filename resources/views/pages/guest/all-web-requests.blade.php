@@ -35,6 +35,7 @@ Show Website
                         @endif
                         @if(auth()->user()->type == 'Admin' || in_array('Advance Filter',$user_permissions))
                             <a href="#advanceFilter" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample" class="btn btn-primary bg-white p-2 border-0 filterBtn" style="font-weight: 600 !important;"><i class="text-green fa fa-plus" style="font-size: 17px;"></i> &nbsp; <span>Advance Filter </span></a>
+                            <button  onClick="window.location.reload();" class="btn btn-primary bg-white p-2 border-0" style="font-weight: 600 !important;"><i class="text-green fa fa-refresh" style="font-size: 17px;"></i> &nbsp; <span>Reset Filter </span></button>
                         @endif
                     </div>
                 </div>
@@ -147,7 +148,7 @@ if ('{{ auth()->user()->type }}' == 'Admin') {
         {data: 'domain_rating', name: 'domain_rating' },
         {data: 'domain_authority', name: 'domain_authority' },
         {data: 'organic_trafic_ahrefs', name: 'organic_trafic_ahrefs' },
-        {data: 'status', name: 'status'},
+        {data: 'check_status', name: 'status'},
         {data: 'updated_at', name: 'updated_at'},
         {data: 'actions', name: 'actions', "orderable":false,"searchable":false}
     ];
@@ -166,7 +167,7 @@ if ('{{ auth()->user()->type }}' == 'Admin') {
         {data: 'categories', name: 'categories'},
     @endif
     @if( in_array('Status',$user_permissions))
-    {   data: 'status', name: 'status'},
+    {   data: 'check_status', name: 'status'},
     @endif
         {data: 'updated_at', name: 'updated_at'},
     @if( in_array('action',$user_permissions))
@@ -267,8 +268,13 @@ $('#status').on('change', function(ev) {
     status = $(this).val();
     changeDataTableUrl();
 });
+$('#site_quality').on('change', function(ev) { 
+    console.log($(this).val()) ;
+    siteQuality = $(this).val();
+    changeDataTableUrl();
+});
 function changeDataTableUrl(){
-    table.ajax.url('{{ route('get-web-requests') }}?category='+category+'&status='+status+'&to='+dateTo+'&from='+dateFrom+'&raitings_upper='+raitings_upper+'&raitings_lower='+raitings_lower+'&domain_upper='+domain_upper+'&domain_lower='+domain_lower+'&span_upper='+span_upper+'&span_lower='+span_lower+'&traffic_upper='+traffic_upper+'&traffic_lower='+traffic_lower+'&company_upper='+company_upper+'&company_lower='+company_lower+'&organic_upper='+organic_upper+'&organic_lower='+organic_lower+'&web_lower='+web_lower+'&web_upper='+web_upper).load(); 
+    table.ajax.url('{{ route('get-web-requests') }}?category='+category+'&status='+status+'&to='+dateTo+'&from='+dateFrom+'&raitings_upper='+raitings_upper+'&raitings_lower='+raitings_lower+'&domain_upper='+domain_upper+'&domain_lower='+domain_lower+'&span_upper='+span_upper+'&span_lower='+span_lower+'&traffic_upper='+traffic_upper+'&traffic_lower='+traffic_lower+'&company_upper='+company_upper+'&company_lower='+company_lower+'&organic_upper='+organic_upper+'&organic_lower='+organic_lower+'&web_lower='+web_lower+'&web_upper='+web_upper+'&siteQuality='+siteQuality).load(); 
 }
 // Add event listener for opening and closing details
 $('#users-table tbody').on('click', '.detail', function () {

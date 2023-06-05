@@ -233,8 +233,8 @@
         });
     });
     $(document).ready(function() {
-        $('.select2').select2({});
-        $('#mySelect2').val(null).trigger('change');
+        $('.select2').select2({
+        });
     });
     $(document).ready(function(){
         $("#outreachcoodinator1").select2();

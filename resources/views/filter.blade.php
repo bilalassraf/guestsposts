@@ -247,6 +247,14 @@
                                         <p class="text-danger d-none" id="statusOpt">Please select an Status!</p>
                                     </div>
                                     <div class="col-md-12">
+                                        <label for="site">Site Quality</label>
+                                        <select name="site_quality" class="form-control mb-2" id="site_quality"> 
+                                            <option value="">All</option>
+                                            <option value="Good">Good Site</option>
+                                            <option value="Spam">Spam Site</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-12">
                                         <label for="cars">Date Of the last Update:</label>
                                         <div class="input-group">
                                             <input type="date" class="form-control datepicker hasDatepicker" name="from" id="dateFrom">

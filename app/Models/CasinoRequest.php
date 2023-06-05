@@ -11,6 +11,7 @@ class CasinoRequest extends Model
     use HasFactory;
     use SoftDeletes;
     protected $date = ['deleted_at'];
+    protected $appends = ['check_status'];
     protected $guarded = [];
     public function user()
     {
@@ -24,4 +25,10 @@ class CasinoRequest extends Model
     {
         return $this->belongsTo(User::class, 'Coordinator');
     }
+    public function getcheckStatusAttribute()
+    {
+        $result = statusData($this,'status');
+        return  $result;
+    }
+
 }

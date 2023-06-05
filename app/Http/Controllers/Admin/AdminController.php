@@ -40,7 +40,7 @@ class AdminController extends Controller
     }
     public function addCasinoRequestForm()
     {
-        $categories = Category::all();
+        $categories = Category::orderBy('category', 'asc')->get();
         $guestCoordinator = User::where('type','Outreach Coordinator')->get();
         return view('pages.casino.add-websites', compact('categories','guestCoordinator'));
     }
@@ -140,9 +140,9 @@ class AdminController extends Controller
                 $permission->new_price=0;
             }
             $permission->update();
-            return back()->with('success', 'Request has been approved');
-        } elseif ($permission->status == 'Approved') {
-            return back()->with('info', 'Request is already approved');
+            return response()->json(['success'=>"Requests Approved"]);
+        } else {
+            return response()->json(['info'=>"Already Approved"]);
         }
     }
     public function casinoRejected($id)
@@ -151,10 +151,10 @@ class AdminController extends Controller
         if ($permission->status == 'Pending' || $permission->status == 'Approved') {
             $permission->status = 'Rejected';
             $permission->update();
-            return back()->with('success', 'Request has been Rejected');
-        } elseif ($permission->status == 'rejected') {
-            return back()->with('info', 'Request is already Rejected');
-        }
+            return response()->json(['success'=>"Requests Rejected"]);
+        } else {
+            return response()->json(['info'=>"Already Rejected"]);
+        }    
     }
     public function casinoRequestDelete($id)
     {
@@ -238,11 +238,9 @@ class AdminController extends Controller
     {
         // dd($request->all());
         $url =  str_replace("www.","",preg_replace("/^https?\:\/\//i", "" , $request->webname));
-        $value = Niche::orWhere('web_name', 'like', '%' . $url . '%')->first();
-        // $url = str_replace("www.","",preg_replace( "#^[^:/.]*[:/]+#i", "",  $request->value )) ;
-        // $value = Niche::where( 'web_url',$url )->first();
-        if($value){
-            echo " This website is already there in database. So you
+        $value = Niche::where('spam','1')->orWhere('web_name', 'like', '%' . $url . '%')->first();
+        if(isset($value) && $value->spam == 1){
+            echo " This website is already in Spam. So you
             can not add it again. ";
         }
     }
@@ -253,9 +251,9 @@ class AdminController extends Controller
         $value = Niche::orWhere('web_name', 'like', '%' . $url . '%')->first();
         // $url = str_replace("www.","",preg_replace( "#^[^:/.]*[:/]+#i", "",   $request->webname )) ;
         // $value = Niche::where( 'web_name', $url )->first();
-        if($value){
-            echo " This website name is already there in database. So you
-            can not add it again. ";
+    
+        if(isset($value) && $value->spam == 1){
+            echo "This website has marked as spam. You can not add it again. ";
         }
     } 
     public function guestName(Request $request)
@@ -264,8 +262,7 @@ class AdminController extends Controller
         $url =  str_replace("www.","",preg_replace("/^https?\:\/\//i", "" , $request->webname));
         $value = UserRequest::orWhere('web_name', 'like', '%' . $url . '%')->first();
         if($value){
-            echo " This website name is already there in database. So you
-            can not add it again. ";
+            echo "This website has marked as spam. You can not add it again.";
         }
     }
     public function casinoName(Request $request)
@@ -438,7 +435,7 @@ class AdminController extends Controller
     }
     public function addGuestRequestForm()
     {
-        $categories = Category::all();
+        $categories = Category::orderBy('category', 'asc')->get();
         $guestCoordinator = User::where('type','Outreach Coordinator')->get();
         return view('pages.guest.add-websites', compact('categories','guestCoordinator'));
     }
@@ -490,9 +487,9 @@ class AdminController extends Controller
                 $permission->new_price=0;
             }
             $permission->update();
-            return back()->with('success', 'Request has been approved');
-        } elseif ($permission->status == 'Approved') {
-            return back()->with('info', 'Request is already approved');
+            return response()->json(['success'=>"Requests Approved"]);
+        } else {
+            return response()->json(['info'=>"Already Approved"]);
         }
     }
     public function nicheRejected($id)
@@ -501,9 +498,10 @@ class AdminController extends Controller
         if ($permission->status == 'Pending' || $permission->status == 'Approved') {
             $permission->status = 'Rejected';
             $permission->update();
-            return back()->with('success', 'Request has been Rejected');
-        } elseif ($permission->status == 'rejected') {
-            return back()->with('info', 'Request is already Rejected');
+    
+            return response()->json(['success'=>"Requests Rejected"]);
+        } else {
+            return response()->json(['info'=>"Already Rejected"]);
         }
     }
     public function guestRequestDelete($id)
@@ -652,7 +650,7 @@ class AdminController extends Controller
     public function editRequest($id)
     {
         $web_request = UserRequest::find($id);
-        $categories = Category::all();
+        $categories = Category::orderBy('category', 'asc')->get();
         return view('pages.guest.all-web-requests', compact('web_request', 'categories'));
     }
     public function updateRequest(Request $request, $id)
@@ -847,7 +845,7 @@ class AdminController extends Controller
     }
     public function showAddGuestForm()
     {
-        $categories = Category::all();
+        $categories = Category::orderBy('category', 'asc')->get();
         return view('pages.add-niche', compact('categories'));
     }
     public function showGuest()
@@ -884,7 +882,7 @@ class AdminController extends Controller
     //niche methods
     public function addNicheForm()
     {
-        $categories = Category::all();
+        $categories = Category::orderBy('category', 'asc')->get();
         $guestCoordinator = User::where('type','Outreach Coordinator')->get();
         return view('pages.niche.add-niche', compact('categories','guestCoordinator'));
     }
@@ -896,74 +894,72 @@ class AdminController extends Controller
         $host =  str_replace('www.' , '', $host);
         $request->web_url = $host;
         $request->validate([
-
             'coordinator_id'      => 'required',
             'price'            => 'required|integer',
-            // 'company_price'    => 'required|integer',
             'categories'         => 'required',
             'domain_authority' => 'required',
             'span_score'       => 'required',
             'domain_rating'    => 'required',
             'organic_trafic_ahrefs' => 'required',
             'organic_trafic_sem'    => 'required',
-            // 'trust_flow'        => 'required',
-            // 'citation_flow'     => 'required',
             'email'             => 'required',
             'web_description'   => 'required',
-
-            // 'special_note'      => 'required',
-        ],
-        [
-            'web_name.unique' => 'Sorry, this URL is already in Build with'
-        ]
-    );
-        $check = Niche::where('web_url',$request->web_url)->first();
-        if($check){
-            return redirect()->back()->with('warning', 'Url alerady exists')->withInput($request->all());
+            ],
+            [
+                'web_name.unique' => 'Sorry, this URL is already in Build with'
+            ]
+        );
+        $check_web_url = Niche::where('web_url',$request->web_url)->first();
+        // $check_web_name = Niche::where('web_name',$request->web_name)->first();
+        // if($check_web_name){
+        //     return redirect()->back()->with('warning', 'Website name alerady exists')->withInput($request->all());
+        // }
+        if($check_web_url){
+            $check_price = $check_web_url->price < $request->price;
+            if($check_price){
+                $user = User::find($request->user_id);
+                $Niche = new Niche();
+                $Niche->web_name = preg_replace( "#^[^:/.]*[:/]+#i", "", $request->web_name );
+                $Niche->coordinator_id = $request->coordinator_id;
+                $Niche->price = $request->price;
+                $Niche->company_price  =  $request->company_price;
+                $Niche->user_id     = $request->coordinator_id;
+                $Niche->domain_authority     = $request->domain_authority;
+                $Niche->span_score     = $request->span_score;
+                $Niche->domain_rating     = $request->domain_rating;
+                $Niche->organic_trafic_ahrefs     = $request->organic_trafic_ahrefs;
+                $Niche->organic_trafic_sem     = $request->organic_trafic_sem;
+                $Niche->trust_flow     = "0";
+                $Niche->citation_flow = "0";
+                $Niche->email_webmaster = $request->email;
+                $Niche->web_description = $request->web_description;
+                $Niche->special_note = $request->special_note;
+                $Niche->web_url = str_replace("www.","",preg_replace( "#^[^:/.]*[:/]+#i", "", $request->web_url )) ;
+                $user->niche()->save($Niche);
+                $Niche->categories()->sync($request->categories);
+                return redirect(route('admin.show.niches'))->with('success', 'Your request has submitted');
+            }else{
+                return redirect()->back()->with('warning', 'Your Price Should be Less Then '.$check_web_url->price )->withInput($request->all());
+            }
         }
-        $check = Niche::where('web_name',$request->web_name)->first();
-        if($check){
-            return redirect()->back()->with('warning', 'Website name alerady exists')->withInput($request->all());
-        }
-
-        $user = User::find($request->user_id);
-        $Niche = new Niche();
-        $Niche->web_name = preg_replace( "#^[^:/.]*[:/]+#i", "", $request->web_name );
-        $Niche->coordinator_id = $request->coordinator_id;
-        $Niche->price = $request->price;
-        $Niche->company_price  =  $request->company_price;
-        //$Niche->category     = $request->category;
-        $Niche->user_id     = $request->coordinator_id;
-        $Niche->domain_authority     = $request->domain_authority;
-        $Niche->span_score     = $request->span_score;
-        $Niche->domain_rating     = $request->domain_rating;
-        $Niche->organic_trafic_ahrefs     = $request->organic_trafic_ahrefs;
-        $Niche->organic_trafic_sem     = $request->organic_trafic_sem;
-        $Niche->trust_flow     = "0";
-        $Niche->citation_flow = "0";
-        $Niche->email_webmaster = $request->email;
-        $Niche->web_description = $request->web_description;
-        $Niche->special_note = $request->special_note;
-        $Niche->web_url = str_replace("www.","",preg_replace( "#^[^:/.]*[:/]+#i", "", $request->web_url )) ;
-        $user->niche()->save($Niche);
-        $Niche->categories()->sync($request->categories);
-        return redirect(route('admin.show.niches'))->with('success', 'Your request has submitted');
     }
     public function webRequests(Request $request)
     {
-        //dd($request->all());
         $user = User::find(Auth::user()->id);
         if( $user->type == 'Admin' || $user->type == 'Moderator' ){
-
             $guest_requests = UserRequest::with(['categories','coodinator'])->orderBy('id', 'DESC')->get();
         }else{
-
             $guest_requests = $user->user_request()->with(['categories', 'coodinator']);
         }
         $guest_requests = UserRequest::with(['categories','coodinator']);
         if($request->status ){
             $guest_requests->where(['status'=> $request->status]);
-        
+        }
+        if($request->siteQuality == 'Good'){
+            $guest_requests->where(['good'=> 1]);
+        }
+        if($request->siteQuality == 'Spam'){
+            $guest_requests->where(['spam'=> 1]);
         }
         if($request->category){
             $category = $request->category;
@@ -979,8 +975,15 @@ class AdminController extends Controller
         elseif($request->from){
             $guest_requests->where('created_at', '>=', $request->from);
         }
-        if($request->domain_upper && $request->domain_lower){
-            $guest_requests->wherebetween('domain_authority', [$request->domain_upper , $request->domain_lower]);
+        if (!empty($request->domain_upper) && !empty($request->domain_lower)) {
+            $guest_requests->where(function ($query) use ($request) {
+                if (!empty($request->domain_authority)) {
+                    $query->where('domain_authority', '!=', '')
+                          ->whereBetween('domain_authority', [$request->domain_upper, $request->domain_lower]);
+                } else {
+                    return true;
+                }
+            });
         }
         if($request->raitings_upper && $request->raitings_lower){
             $guest_requests->wherebetween('domain_rating',  [$request->raitings_upper, $request->raitings_lower]);
@@ -1077,14 +1080,14 @@ class AdminController extends Controller
             $niches = $user->Niche;
         }
         $user_permissions = $user->permissions()->where('type', 2)->pluck('permissions.name')->toArray();
-        $categories = Category::all();
-        //dd( $user_permissions);
+        $categories = Category::orderBy('category', 'asc')->get();
+    
         return view('pages.niche.all-niche-request', compact('niches', 'categories', 'user_permissions'));
     }
     public function editNicheRequest(Request $request, $id)
     {
         $niche_request = Niche::find($id);
-        $categories = Category::all();
+        $categories = Category::orderBy('category', 'asc')->get();
         return view('pages.niche.edit-niche', compact('niche_request', 'categories'));
     }
     public function updateNicheRequest(Request $request, $id)
@@ -1113,16 +1116,32 @@ class AdminController extends Controller
     public function nicheApprove(Request $request, $id)
     {
         $permission = Niche::find($id);
+       
         if ($permission->status == 'Pending' || $permission->status == 'Rejected') {
+            $check_web_url = $permission->web_url;
+            $check_max_niches = Niche::where('web_url', $check_web_url)->where('status', 'Approved')->where('price','>=',$permission->price)->get();
+            $check_min_niches = Niche::where('web_url', $check_web_url)->where('status', 'Approved')->where('price','<',$permission->price)->get();
+            
+            if (count($check_max_niches) > 0 ) {
+                foreach ($check_max_niches as $niche) {
+                    $del_obj = Niche::find($niche->id);
+                    $del_obj->delete();
+                }
+            }
+            if(count($check_min_niches) > 0){
+                $permission->delete();
+            }
+            
             $permission->status = 'Approved';
             if($permission->niche_new_price > 0){
                 $permission->price =$permission->niche_new_price;
                 $permission->niche_new_price=0;
             }
             $permission->update();
-            return back()->with('success', 'Request has been approved');
+            return response()->json(['success'=>"Approved"]);
+
         } elseif ($permission->status == 'Approved') {
-            return back()->with('info', 'Request is already approved');
+            return response()->json(['info'=>"Already Approved"]);
         }
     }
     public function nicheReject(Request $request, $id)
@@ -1131,11 +1150,86 @@ class AdminController extends Controller
         if ($permission->status == 'Pending' || $permission->status == 'Approved') {
             $permission->status = 'Rejected';
             $permission->update();
-            return back()->with('success', 'Niche has been Rejected');
+            return response()->json(['success'=>"Rejected"]);
+
         } elseif ($permission->status == 'Rejected') {
-            return back()->with('info', 'Niche is already Rejected');
+            return response()->json(['info'=>"Already Rejected"]);
         }
     }
+    public function nicheGood($id)
+    {
+        $permission = Niche::find($id);
+        if($permission->good != 1){
+            $permission->good = 1;
+            $permission->spam = 0;
+            $permission->update();
+            return response()->json(['success'=>"Good Request"]);
+        }else{
+            return response()->json(['info'=>"Already Good Request"]);
+        }
+    }
+    public function nicheSpam($id)
+    {
+        $permission = Niche::find($id);
+        if($permission->spam != 1){
+            $permission->spam = 1;
+            $permission->good = 0;
+            $permission->update();
+            return response()->json(['success'=>"Spam Request"]);   
+        }else{
+            return response()->json(['info'=>"Already Spam Request"]);
+        }
+    }
+    public function guestRequestSpam($id)
+    {
+        $permission = UserRequest::find($id);
+        if($permission->spam != 1){
+            $permission->spam = 1;
+            $permission->good = 0;
+            $permission->update();
+            return response()->json(['success'=>"Spam Request"]);   
+        }else{
+            return response()->json(['info'=>"Already Spam Request"]);
+        }
+    }
+    public function guestRequestGood($id)
+    {
+        $permission = UserRequest::find($id);
+        if($permission->good != 1){
+            $permission->good = 1;
+            $permission->spam = 0;
+            $permission->update();
+            return response()->json(['success'=>"Good Request"]);
+        }else{
+            return response()->json(['info'=>"Already Good Request"]);
+        }
+    }
+    public function casinoGood($id)
+    {
+        $permission = CasinoRequest::find($id);
+        if($permission->good != 1){
+            $permission->good = 1;
+            $permission->spam = 0;
+            $permission->update();
+            return response()->json(['success'=>"Good Request"]);
+        }else{
+            return response()->json(['info'=>"Already Good Request"]);
+        }
+    }
+
+    public function casinoSpam($id)
+    {
+        $permission = CasinoRequest::find($id);
+        if($permission->spam != 1){
+            $permission->spam = 1;
+            $permission->good = 0;
+            $permission->update();
+            return response()->json(['success'=>"Spam Request"]);   
+        }else{
+            return response()->json(['info'=>"Already Spam Request"]);
+        }
+    }
+    
     public function nicheDelete(Request $request, $id)
     {
         $permission = Niche::find($id);

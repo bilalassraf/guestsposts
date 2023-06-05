@@ -246,7 +246,7 @@ textarea.select2-search__field {
     });
     $(document).ready(function() {
         $('.select2').select2({});
-        $('#mySelect2').val(null).trigger('change');
+        // $('#mySelect2').val(null).trigger('change');
     });
     $(document).ready(function(){
         $("#outreachcoodinator1").select2();

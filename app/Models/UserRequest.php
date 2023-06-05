@@ -12,6 +12,7 @@ class UserRequest extends Model
     use HasFactory;
     protected $date = ['deleted_at'];
     protected $guarded = [];
+    protected $appends = ['check_status'];
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -23,6 +24,12 @@ class UserRequest extends Model
     public function coodinator()
     {
         return $this->belongsTo(User::class, 'coordinator_id');
+    }
+
+    public function getcheckStatusAttribute()
+    {
+        $result = statusData($this,'status');
+        return  $result;
     }
 
 }
