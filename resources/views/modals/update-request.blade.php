@@ -133,7 +133,7 @@
                                     <select name="site_quality" class="form-control mb-2" id="site_quality"> 
                                         <option value="" disabled selected>Select Site Quality</option>
                                         <option {{ $request->good == 1 ? 'selected' : '' }} value="Good">Good Site</option>
-                                        <option {{ $request->spam == 1 ? 'selected' : '' }} value="Spam">Spam Site</option>
+                                        <option {{ $request->black_hat == 1 ? 'selected' : '' }} value="Black">Black Hat</option>
                                     </select>
                                 </div>    
                             </div>

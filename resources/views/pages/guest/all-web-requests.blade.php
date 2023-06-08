@@ -20,6 +20,9 @@ Show Website
                 <div class="card-header bg-green text-white">
                     <h1 class="card-title p-3" style="font-weight:500;font-size:28px !important;">Websites</h1>
                     <div class="float-right mt-3">
+                        @if (auth()->user()->type == 'Admin')
+                            <button class="btn btn-primary bg-white p-2 border-0 selected-spam" type="button" style="font-weight: 600 !important;"><i class="text-green fa fa-plus" style="font-size: 17px;"></i> &nbsp; <span>Mark to Spam</span></button>
+                        @endif  
                         {{--<a href="{{ route('admin.add.guest.request') }}" class="btn btn-primary bg-white p-2 border-0 " style="font-weight: 600 !important;"><i class="text-green fa fa-plus" style="font-size: 17px;"></i> &nbsp; <span>Add Website</span></a> --}}
                         @if(auth()->user()->type == 'Admin' || in_array('Approved Data',$user_permissions))
                             <button type="submit" class="btn btn-primary bg-white border-0 approved-selected" style="font-weight: 600 !important; padding:8px;"><i class="text-green fa fa-check" style="font-size: 17px;"></i><span>Approve All</span></button>
@@ -147,8 +150,8 @@ if ('{{ auth()->user()->type }}' == 'Admin') {
             "render": function(data, type, row) {
                 if (row.check_status === 'Good Request') {
                     return '<i class="material-icons fa fa-check-circle text-success" title="Good Request"></i> ' + data;
-                } else if (row.check_status === 'Spam Request') {
-                    return '<i class="material-icons fa fa-user-secret text-danger" title="Bad Request"></i> ' + data;
+                } else if (row.check_status === 'Black Hat') {
+                    return '<i class="material-icons fas fa-hat-cowboy text-dark" title="Bad Request"></i> ' + data;
                 } else {
                     return data;
                 }
@@ -330,35 +333,35 @@ $('.approved-selected').on('click', function(e) {
        alert("Please select row.");
     }  else {
     var check = confirm("Are you sure you want to approved this row?");
-    if(check == true){
+        if(check == true){
 
-        var join_selected_values = allVals.join(",");
+            var join_selected_values = allVals.join(",");
 
-        $.ajax({
-            url: "{{ route('admin.approved.selected.request') }}",
-            type: 'POST',
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-            data: 'ids='+join_selected_values,
-            success: function (data) {
-                if (data['success']) {
-                    $(".sub_chk:checked").each(function() {
-                        $(this).parents("tr").remove();
-                    });
-                    alert(data['success']);
-                    table.draw();
-                    //location.reload();
-                } else if (data['error']) {
-                    alert(data['error']);
-                } else {
-                    alert('Whoops Something went wrong!!');
+            $.ajax({
+                url: "{{ route('admin.approved.selected.request') }}",
+                type: 'POST',
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                data: 'ids='+join_selected_values,
+                success: function (data) {
+                    if (data['success']) {
+                        $(".sub_chk:checked").each(function() {
+                            $(this).parents("tr").remove();
+                        });
+                        alert(data['success']);
+                        table.draw();
+                        //location.reload();
+                    } else if (data['error']) {
+                        alert(data['error']);
+                    } else {
+                        alert('Whoops Something went wrong!!');
+                    }
+                },
+                error: function (data) {
+                    alert(data.responseText);
                 }
-            },
-            error: function (data) {
-                alert(data.responseText);
-            }
-        });
+            });
+        }
     }
-}
 });
 
 $('.delete-selected').on('click', function(e) {
@@ -400,6 +403,46 @@ $('.delete-selected').on('click', function(e) {
         });
     }
 }
+});
+
+$('.selected-spam').on('click', function(e) {
+    var allVals = [];
+    $(".sub_chk:checked").each(function() {
+       allVals.push($(this).val());
+    });
+    if(allVals.length <=0){
+       alert("Please select row.");
+    }  else {
+    var check = confirm("Are you sure you want to Spam this row?");
+        if(check == true){
+
+            var join_selected_values = allVals.join(",");
+
+            $.ajax({
+                url: "{{ route('admin.guest.request.spam') }}",
+                type: 'POST',
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                data: 'ids='+join_selected_values,
+                success: function (data) {
+                    if (data['success']) {
+                        $(".sub_chk:checked").each(function() {
+                            $(this).parents("tr").remove();
+                        });
+                        alert(data['success']);
+                        table.draw();
+                        //location.reload();
+                    } else if (data['error']) {
+                        alert(data['error']);
+                    } else {
+                        alert('Whoops Something went wrong!!');
+                    }
+                },
+                error: function (data) {
+                    alert(data.responseText);
+                }
+            });
+        }
+    }
 });
 </script>
 @endsection

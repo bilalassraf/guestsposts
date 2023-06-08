@@ -251,7 +251,7 @@
                                         <select name="site_quality" class="form-control mb-2" id="site_quality"> 
                                             <option value="">All</option>
                                             <option value="Good">Good Site</option>
-                                            <option value="Spam">Spam Site</option>
+                                            <option value="Black">Black Hat</option>
                                         </select>
                                     </div>
                                     <div class="col-md-12">

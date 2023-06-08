@@ -15,6 +15,9 @@ Show Niche
                         <h1 class="card-title p-3" style="font-weight:500;font-size:28px !important;">Niches
                         </h1>
                         <div class="float-right mt-3">
+                            @if (auth()->user()->type == 'Admin')
+                                <button class="btn btn-primary bg-white p-2 border-0 selected-spam" type="button" style="font-weight: 600 !important;"><i class="text-green fa fa-plus" style="font-size: 17px;"></i> &nbsp; <span>Mark to Spam</span></button>
+                            @endif    
                             <a href="{{ route('admin.add.niche') }}" class="btn btn-primary bg-white p-2 border-0 " style="font-weight: 600 !important;"><i class="text-green fa fa-plus" style="font-size: 17px;"></i> &nbsp; <span>Add Niche</span></a>
                             <button type="submit" class="btn btn-primary bg-white border-0 " style="font-weight: 600 !important; padding:8px;"><i class="text-green fa fa-trash" style="font-size: 17px;"></i><span> Delete Selected</span></button>
                         </div>
@@ -92,8 +95,8 @@ if ('{{ auth()->user()->type }}' == 'Admin') {
             "render": function(data, type, row) {
                 if (row.check_client_status === 'Good Request') {
                     return '<i class="material-icons fa fa-check-circle text-success" title="Good Request"></i> ' + data;
-                } else if (row.check_client_status === 'Spam Request') {
-                    return '<i class="material-icons fa fa-user-secret text-danger" title="Bad Request"></i> ' + data;
+                } else if (row.check_client_status === 'Black Hat') {
+                    return '<i class="material-icons fas fa-hat-cowboy text-dark" title="Bad Request"></i> ' + data;
                 } else {
                     return data;
                 }
@@ -214,6 +217,46 @@ $('.delete-selected').on('click', function(e) {
         });
     }
 }
+});
+
+$('.selected-spam').on('click', function(e) {
+    var allVals = [];
+    $(".sub_chk:checked").each(function() {
+       allVals.push($(this).val());
+    });
+    if(allVals.length <=0){
+       alert("Please select row.");
+    }  else {
+    var check = confirm("Are you sure you want to Spam this row?");
+        if(check == true){
+
+            var join_selected_values = allVals.join(",");
+
+            $.ajax({
+                url: "{{ route('admin.niche.spam') }}",
+                type: 'POST',
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                data: 'ids='+join_selected_values,
+                success: function (data) {
+                    if (data['success']) {
+                        $(".sub_chk:checked").each(function() {
+                            $(this).parents("tr").remove();
+                        });
+                        alert(data['success']);
+                        table.draw();
+                        //location.reload();
+                    } else if (data['error']) {
+                        alert(data['error']);
+                    } else {
+                        alert('Whoops Something went wrong!!');
+                    }
+                },
+                error: function (data) {
+                    alert(data.responseText);
+                }
+            });
+        }
+    }
 });
 </script>
 @endsection

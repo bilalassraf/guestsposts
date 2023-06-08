@@ -95,7 +95,7 @@ class AdminController extends Controller
 
         $user_permissions = $user->permissions()->where('type', 3)->pluck('permissions.name')->toArray();
         if($user->type == 'Admin'){
-            $guest_requests = CasinoRequest::orderBy('id', 'DESC')->get();
+            $guest_requests = CasinoRequest::where('spam',0)->orderBy('id', 'DESC')->get();
         }else{
             $guest_requests = $user->user_request;
         }
@@ -105,7 +105,7 @@ class AdminController extends Controller
     {
         $user = User::find(Auth::user()->id);
         if( $user->type == 'Admin' || $user->type == 'Moderator' ){
-            $guest_requests = CasinoRequest::with(['categories','coodinator'])->orderBy('id', 'DESC')->get();
+            $guest_requests = CasinoRequest::where('spam',0)->with(['categories','coodinator'])->orderBy('id', 'DESC')->get();
         }else{
 
             $guest_requests = $user->casino_request()->with(['categories', 'coodinator']);
@@ -185,7 +185,7 @@ class AdminController extends Controller
         $userRequest->web_description = $request->web_description;
         $userRequest->special_note = $request->special_note;
         $userRequest->good = $request->site_quality == "Good" ? 1 : 0;
-        $userRequest->spam = $request->site_quality == "Spam" ? 1 : 0;
+        $userRequest->black_hat = $request->site_quality == "Black" ? 1 : 0;
         $userRequest->update();
         $userRequest->categories()->sync($request->categories);
         return back()->with('success', 'Request updated successfully');
@@ -461,7 +461,7 @@ class AdminController extends Controller
 
         $user_permissions = $user->permissions()->where('type', 1)->pluck('permissions.name')->toArray();
         if($user->type == 'Admin'){
-            $guest_requests = UserRequest::orderBy('id', 'DESC')->get();
+            $guest_requests = UserRequest::where('spam',0)->orderBy('id', 'DESC')->get();
         }else{
             $guest_requests = $user->user_request;
         }
@@ -688,7 +688,7 @@ class AdminController extends Controller
         $userRequest->web_description = $request->web_description;
         $userRequest->special_note = $request->special_note;
         $userRequest->good = $request->site_quality == "Good" ? 1 : 0;
-        $userRequest->spam = $request->site_quality == "Spam" ? 1 : 0;
+        $userRequest->black_hat = $request->site_quality == "Black" ? 1 : 0;
         $userRequest->update();
         $userRequest->categories()->sync($request->categories);
         return back()->with('success', 'Request updated successfully');
@@ -868,7 +868,7 @@ class AdminController extends Controller
     }
     public function showGuest()
     {
-        $niches = UserRequest::all();
+        $niches = UserRequest::where('spam',0)->get();
         return view('pages.all-niche-request', compact('niches'));
     }
     public function permissions(Request $request, $id)
@@ -991,19 +991,19 @@ class AdminController extends Controller
     {
         $user = User::find(Auth::user()->id);
         if( $user->type == 'Admin' || $user->type == 'Moderator' ){
-            $guest_requests = UserRequest::with(['categories','coodinator'])->orderBy('id', 'DESC')->get();
+            $guest_requests = UserRequest::where('spam',0)->with(['categories','coodinator'])->orderBy('id', 'DESC')->get();
         }else{
             $guest_requests = $user->user_request()->with(['categories', 'coodinator']);
         }
-        $guest_requests = UserRequest::with(['categories','coodinator']);
+        $guest_requests = UserRequest::where('spam',0)->with(['categories','coodinator']);
         if($request->status ){
             $guest_requests->where(['status'=> $request->status]);
         }
         if($request->siteQuality == 'Good'){
             $guest_requests->where(['good'=> 1]);
         }
-        if($request->siteQuality == 'Spam'){
-            $guest_requests->where(['spam'=> 1]);
+        if($request->siteQuality == 'Black'){
+            $guest_requests->where(['black_hat'=> 1]);
         }
         if($request->category){
             $category = $request->category;
@@ -1073,7 +1073,7 @@ class AdminController extends Controller
     {
         $user = User::find(Auth::user()->id);
         if($user->type == 'Admin' || $user->type == 'Moderator'){
-            $niches = Niche::with(['categories', 'coodinator'])->get();
+            $niches = Niche::where('spam','0')->with(['categories', 'coodinator'])->get();
         }else{
             $niches = $user->Niche()->with(['categories', 'coodinator'])->get();
         }
@@ -1154,7 +1154,7 @@ class AdminController extends Controller
         $Niche->special_note = $request->special_note;
         $Niche->web_url = $request->web_url;
         $Niche->good = $request->site_quality == "Good" ? 1 : 0;
-        $Niche->spam = $request->site_quality == "Spam" ? 1 : 0;
+        $Niche->black_hat = $request->site_quality == "Black" ? 1 : 0;
         $Niche->update();
         $Niche->categories()->sync($request->categories);
         return redirect(route('admin.show.niches'))->with('success', 'Your Niche has been Updated');
@@ -1214,29 +1214,17 @@ class AdminController extends Controller
             return response()->json(['info'=>"Already Good Request"]);
         }
     }
-    public function nicheSpam($id)
+    public function nicheSpam(Request $request)
     {
-        $permission = Niche::find($id);
-        if($permission->spam != 1){
-            $permission->spam = 1;
-            $permission->good = 0;
-            $permission->update();
-            return response()->json(['success'=>"Spam Request"]);   
-        }else{
-            return response()->json(['info'=>"Already Spam Request"]);
-        }
+        $ids = $request->ids;
+        Niche::whereIn('id', explode(",", $ids))->update(['spam' => 1]);
+        return response()->json(['success' => "Add to Spam Request Successfully"]);
     }
-    public function guestRequestSpam($id)
+    public function guestRequestSpam(Request $request)
     {
-        $permission = UserRequest::find($id);
-        if($permission->spam != 1){
-            $permission->spam = 1;
-            $permission->good = 0;
-            $permission->update();
-            return response()->json(['success'=>"Spam Request"]);   
-        }else{
-            return response()->json(['info'=>"Already Spam Request"]);
-        }
+        $ids = $request->ids;
+        UserRequest::whereIn('id', explode(",", $ids))->update(['spam' => 1]);
+        return response()->json(['success' => "Add to Spam Request Successfully"]);
     }
     public function guestUnspam($id)
     {
@@ -1280,17 +1268,11 @@ class AdminController extends Controller
         }
     }
 
-    public function casinoSpam($id)
+    public function casinoSpam(Request $request)
     {
-        $permission = CasinoRequest::find($id);
-        if($permission->spam != 1){
-            $permission->spam = 1;
-            $permission->good = 0;
-            $permission->update();
-            return response()->json(['success'=>"Spam Request"]);   
-        }else{
-            return response()->json(['info'=>"Already Spam Request"]);
-        }
+        $ids = $request->ids;
+        CasinoRequest::whereIn('id', explode(",", $ids))->update(['spam' => 1]);
+        return response()->json(['success' => "Add to Spam Request Successfully"]);
     }
 
     public function casinoUnspam($id)

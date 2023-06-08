@@ -44,7 +44,7 @@
                                             </td>
                                         @endif 
                                         <td>{{ $guest->id }}</td>
-                                        <td>{{ $guest->web_name }}</td>
+                                        <td><i class="material-icons fa fa-user-secret text-danger" title="Bad Request"></i> {{ $guest->web_name }}</td>
                                         <td>{{ $guest->email_webmaster }}</td>
                                         <td>{{ $guest->coodinator->type ?? "" }}</td>
                                         <td>{{ Str::limit($guest->web_description, 50, ' (...)') }}</td>

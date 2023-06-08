@@ -27,8 +27,8 @@ class CasinoRequest extends Model
     }
     public function getcheckStatusAttribute()
     {
-        if($this->spam == 1){
-            return "Spam Request";
+        if($this->black_hat == 1){
+            return "Black Hat";
         }elseif($this->good == 1){
             return "Good Request";
         }else{
