@@ -117,6 +117,18 @@
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
+                                <label for="site">Site Quality</label>
+                                <select name="site_quality" class="form-control mb-2" id="site_quality"> 
+                                    <option value="" disabled selected>Select Site Quality</option>
+                                    <option {{ $niche->good == 1 ? 'selected' : '' }} value="Good">Good Site</option>
+                                    <option {{ $niche->spam == 1 ? 'selected' : '' }} value="Spam">Spam Site</option>
+                                </select>
+                            </div>    
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-3">
                                 <label>Website Url</label>
                                 <input class="form-control" type="url" placeholder="Email" name="web_url" required value="{{ $niche->web_url }}">
                             </div>

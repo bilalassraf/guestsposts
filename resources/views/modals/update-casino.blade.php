@@ -120,12 +120,22 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="emailwebmaster">Email (Webmaster)</label>
                                     <input class="form-control"  type="email" placeholder="Email"
                                         name="email" required value="{{ $request->email_webmaster }}">
                                 </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="site">Site Quality</label>
+                                    <select name="site_quality" class="form-control mb-2" id="site_quality"> 
+                                        <option value="" disabled selected>Select Site Quality</option>
+                                        <option {{ $request->good == 1 ? 'selected' : '' }} value="Good">Good Site</option>
+                                        <option {{ $request->spam == 1 ? 'selected' : '' }} value="Spam">Spam Site</option>
+                                    </select>
+                                </div>    
                             </div>
                         </div>
                         <div class="mb-3">
@@ -165,41 +175,43 @@
 <script>
 
     $(document).ready(function() {
-    $('.select2').select2({
-        tags: true,
-    });
-    $(document).ready(function(){
+        $('.selectCategory').select2({
+            tags: true,
+        });
         $("#outreachcoodinator1").select2();
+        // $('#mySelect2').val(null).trigger('change');
     });
-    $("#price").keyup(function(){
-        var price = $("#price").val();
-        var percentage = price ;
-        var company = parseInt(price *8/100 + 50) + parseInt(price);
-        $("#companyprice").val(company);
-    });
-    $('#domainauthorityCasino').on('change', function(ev) {  
-        $('#domainAuthCasino').addClass('d-none'); 
-        var value = $(this).val();
-        if(value < 25){
-            $('#domainAuthCasino').removeClass('d-none');
-        }
-    });
-    $('#domainratingCasino').on('change', function(ev) {  
-        $('#domainRateCasino').addClass('d-none'); 
-        var value = $(this).val();
-        if(value < 25){
-            $('#domainRateCasino').removeClass('d-none');
-        }
-    });
+    $(document).ready(function() {
+    
+        $("#price").keyup(function(){
+            var price = $("#price").val();
+            var percentage = price ;
+            var company = parseInt(price *8/100 + 50) + parseInt(price);
+            $("#companyprice").val(company);
+        });
+        $('#domainauthorityCasino').on('change', function(ev) {  
+            $('#domainAuthCasino').addClass('d-none'); 
+            var value = $(this).val();
+            if(value < 25){
+                $('#domainAuthCasino').removeClass('d-none');
+            }
+        });
+        $('#domainratingCasino').on('change', function(ev) {  
+            $('#domainRateCasino').addClass('d-none'); 
+            var value = $(this).val();
+            if(value < 25){
+                $('#domainRateCasino').removeClass('d-none');
+            }
+        });
 
-    $('#organictraficCasino').on('change', function(ev) {  
-        $('#organicTrasCasino').addClass('d-none'); 
-        var value = $(this).val();
-        if(value < 1000){
-            $('#organicTrasCasino').removeClass('d-none');
-        }
+        $('#organictraficCasino').on('change', function(ev) {  
+            $('#organicTrasCasino').addClass('d-none'); 
+            var value = $(this).val();
+            if(value < 1000){
+                $('#organicTrasCasino').removeClass('d-none');
+            }
+        });
     });
-});
 </script>
 <style>
     .select2-container--default .select2-selection--multiple .select2-selection__choice {

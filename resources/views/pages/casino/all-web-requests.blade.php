@@ -133,7 +133,19 @@ var cols =[];
 if ('{{ auth()->user()->type }}' == 'Admin') {
     cols = [
         {data: 'check_box', name:'check_box', "orderable":false,"searchable":false},
-        {data: 'web_name', name: 'web_name'},
+        {
+            "data": "web_name",
+            "name": "web_name",
+            "render": function(data, type, row) {
+                if (row.check_status === 'Good Request') {
+                    return '<i class="material-icons fa fa-check-circle text-success" title="Good Request"></i> ' + data;
+                } else if (row.check_status === 'Spam Request') {
+                    return '<i class="material-icons fa fa-user-secret text-danger" title="Bad Request"></i> ' + data;
+                } else {
+                    return data;
+                }
+            }
+        },
         {data: 'coordinator', name: 'coordinator'},
         {data: 'price', name: 'price'},
         {data: 'categories', name: 'categories'},

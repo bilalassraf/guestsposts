@@ -184,6 +184,8 @@ class AdminController extends Controller
         $userRequest->email_webmaster = $request->email;
         $userRequest->web_description = $request->web_description;
         $userRequest->special_note = $request->special_note;
+        $userRequest->good = $request->site_quality == "Good" ? 1 : 0;
+        $userRequest->spam = $request->site_quality == "Spam" ? 1 : 0;
         $userRequest->update();
         $userRequest->categories()->sync($request->categories);
         return back()->with('success', 'Request updated successfully');
@@ -234,6 +236,14 @@ class AdminController extends Controller
         DB::table("casino_requests")->whereIn('id',explode(",",$ids))->delete();
         return response()->json(['success'=>"Selected Requests Deleted successfully."]);
     }
+    public function casinoSpamWebsites()
+    {
+        $data = CasinoRequest::where('spam',1)->get();
+        $empty_message = "There is no Spam Request";
+        return view('pages.casino.spam-request', compact('data', 'empty_message'));
+    }
+
+
     public function getUrl(Request $request)
     {
         // dd($request->all());
@@ -261,8 +271,11 @@ class AdminController extends Controller
         // dd($request->all());
         $url =  str_replace("www.","",preg_replace("/^https?\:\/\//i", "" , $request->webname));
         $value = UserRequest::orWhere('web_name', 'like', '%' . $url . '%')->first();
-        if($value){
-            echo "This website has marked as spam. You can not add it again.";
+        // if($value){
+        //     echo "This website has marked as spam. You can not add it again.";
+        // }
+        if(isset($value) && $value->spam == 1){
+            echo "This website has marked as spam. You can not add it again. ";
         }
     }
     public function casinoName(Request $request)
@@ -270,9 +283,12 @@ class AdminController extends Controller
         
         $url =  str_replace("www.","",preg_replace("/^https?\:\/\//i", "" , $request->webname));
         $value = CasinoRequest::orWhere('web_name', 'like', '%' . $url . '%')->first();
-        if($value){
-            echo " This website name is already there in database. So you
-            can not add it again. ";
+        // if($value){
+        //     echo " This website name is already there in database. So you
+        //     can not add it again. ";
+        // }
+        if(isset($value) && $value->spam == 1){
+            echo "This website has marked as spam. You can not add it again. ";
         }
     }
     public function casinoNewPrice(Request $request , $id)
@@ -671,6 +687,8 @@ class AdminController extends Controller
         $userRequest->email_webmaster = $request->email;
         $userRequest->web_description = $request->web_description;
         $userRequest->special_note = $request->special_note;
+        $userRequest->good = $request->site_quality == "Good" ? 1 : 0;
+        $userRequest->spam = $request->site_quality == "Spam" ? 1 : 0;
         $userRequest->update();
         $userRequest->categories()->sync($request->categories);
         return back()->with('success', 'Request updated successfully');
@@ -914,55 +932,59 @@ class AdminController extends Controller
         // if($check_web_name){
         //     return redirect()->back()->with('warning', 'Website name alerady exists')->withInput($request->all());
         // }
-        if($check_web_url){
-            $check_price = $check_web_url->price > $request->price;
-            if($check_price){
-                $user = User::find($request->user_id);
-                $Niche = new Niche();
-                $Niche->web_name = preg_replace( "#^[^:/.]*[:/]+#i", "", $request->web_name );
-                $Niche->coordinator_id = $request->coordinator_id;
-                $Niche->price = $request->price;
-                $Niche->company_price  =  $request->company_price;
-                $Niche->user_id     = $request->coordinator_id;
-                $Niche->domain_authority     = $request->domain_authority;
-                $Niche->span_score     = $request->span_score;
-                $Niche->domain_rating     = $request->domain_rating;
-                $Niche->organic_trafic_ahrefs     = $request->organic_trafic_ahrefs;
-                $Niche->organic_trafic_sem     = $request->organic_trafic_sem;
-                $Niche->trust_flow     = "0";
-                $Niche->citation_flow = "0";
-                $Niche->email_webmaster = $request->email;
-                $Niche->web_description = $request->web_description;
-                $Niche->special_note = $request->special_note;
-                $Niche->web_url = str_replace("www.","",preg_replace( "#^[^:/.]*[:/]+#i", "", $request->web_url )) ;
-                $user->niche()->save($Niche);
-                $Niche->categories()->sync($request->categories);
-                return redirect(route('admin.show.niches'))->with('success', 'Your request has submitted');
+        if (isset($check_web_url) && $check_web_url->spam == 0) {
+            if($check_web_url){
+                $check_price = $check_web_url->price > $request->price;
+                if($check_price){
+                    $user = User::find($request->user_id);
+                    $Niche = new Niche();
+                    $Niche->web_name = preg_replace( "#^[^:/.]*[:/]+#i", "", $request->web_name );
+                    $Niche->coordinator_id = $request->coordinator_id;
+                    $Niche->price = $request->price;
+                    $Niche->company_price  =  $request->company_price;
+                    $Niche->user_id     = $request->coordinator_id;
+                    $Niche->domain_authority     = $request->domain_authority;
+                    $Niche->span_score     = $request->span_score;
+                    $Niche->domain_rating     = $request->domain_rating;
+                    $Niche->organic_trafic_ahrefs     = $request->organic_trafic_ahrefs;
+                    $Niche->organic_trafic_sem     = $request->organic_trafic_sem;
+                    $Niche->trust_flow     = "0";
+                    $Niche->citation_flow = "0";
+                    $Niche->email_webmaster = $request->email;
+                    $Niche->web_description = $request->web_description;
+                    $Niche->special_note = $request->special_note;
+                    $Niche->web_url = str_replace("www.","",preg_replace( "#^[^:/.]*[:/]+#i", "", $request->web_url )) ;
+                    $user->niche()->save($Niche);
+                    $Niche->categories()->sync($request->categories);
+                    return redirect(route('admin.show.niches'))->with('success', 'Your request has submitted');
+                }else{
+                    return redirect()->back()->with('warning', 'Your Price Should be Less Then '.$check_web_url->price )->withInput($request->all());
+                }
             }else{
-                return redirect()->back()->with('warning', 'Your Price Should be Less Then '.$check_web_url->price )->withInput($request->all());
+                    $user = User::find($request->user_id);
+                    $Niche = new Niche();
+                    $Niche->web_name = preg_replace( "#^[^:/.]*[:/]+#i", "", $request->web_name );
+                    $Niche->coordinator_id = $request->coordinator_id;
+                    $Niche->price = $request->price;
+                    $Niche->company_price  =  $request->company_price;
+                    $Niche->user_id     = $request->coordinator_id;
+                    $Niche->domain_authority     = $request->domain_authority;
+                    $Niche->span_score     = $request->span_score;
+                    $Niche->domain_rating     = $request->domain_rating;
+                    $Niche->organic_trafic_ahrefs     = $request->organic_trafic_ahrefs;
+                    $Niche->organic_trafic_sem     = $request->organic_trafic_sem;
+                    $Niche->trust_flow     = "0";
+                    $Niche->citation_flow = "0";
+                    $Niche->email_webmaster = $request->email;
+                    $Niche->web_description = $request->web_description;
+                    $Niche->special_note = $request->special_note;
+                    $Niche->web_url = str_replace("www.","",preg_replace( "#^[^:/.]*[:/]+#i", "", $request->web_url )) ;
+                    $user->niche()->save($Niche);
+                    $Niche->categories()->sync($request->categories);
+                    return redirect(route('admin.show.niches'))->with('success', 'Your request has submitted');
             }
         }else{
-                $user = User::find($request->user_id);
-                $Niche = new Niche();
-                $Niche->web_name = preg_replace( "#^[^:/.]*[:/]+#i", "", $request->web_name );
-                $Niche->coordinator_id = $request->coordinator_id;
-                $Niche->price = $request->price;
-                $Niche->company_price  =  $request->company_price;
-                $Niche->user_id     = $request->coordinator_id;
-                $Niche->domain_authority     = $request->domain_authority;
-                $Niche->span_score     = $request->span_score;
-                $Niche->domain_rating     = $request->domain_rating;
-                $Niche->organic_trafic_ahrefs     = $request->organic_trafic_ahrefs;
-                $Niche->organic_trafic_sem     = $request->organic_trafic_sem;
-                $Niche->trust_flow     = "0";
-                $Niche->citation_flow = "0";
-                $Niche->email_webmaster = $request->email;
-                $Niche->web_description = $request->web_description;
-                $Niche->special_note = $request->special_note;
-                $Niche->web_url = str_replace("www.","",preg_replace( "#^[^:/.]*[:/]+#i", "", $request->web_url )) ;
-                $user->niche()->save($Niche);
-                $Niche->categories()->sync($request->categories);
-                return redirect(route('admin.show.niches'))->with('success', 'Your request has submitted');
+            return redirect()->back()->with('warning', '')->withInput($request->all());
         }
     }
     public function webRequests(Request $request)
@@ -1131,6 +1153,8 @@ class AdminController extends Controller
         $Niche->web_description = $request->web_description;
         $Niche->special_note = $request->special_note;
         $Niche->web_url = $request->web_url;
+        $Niche->good = $request->site_quality == "Good" ? 1 : 0;
+        $Niche->spam = $request->site_quality == "Spam" ? 1 : 0;
         $Niche->update();
         $Niche->categories()->sync($request->categories);
         return redirect(route('admin.show.niches'))->with('success', 'Your Niche has been Updated');
@@ -1214,6 +1238,17 @@ class AdminController extends Controller
             return response()->json(['info'=>"Already Spam Request"]);
         }
     }
+    public function guestUnspam($id)
+    {
+        $permission = UserRequest::find($id);
+        if($permission->spam == 1){
+            $permission->spam = 0;
+            $permission->update();
+            return response()->json(['success'=>"Un-Spam Request"]);   
+        }else{
+            return response()->json(['info'=>"Already Spam Request"]);
+        }
+    }
     public function guestRequestGood($id)
     {
         $permission = UserRequest::find($id);
@@ -1225,6 +1260,12 @@ class AdminController extends Controller
         }else{
             return response()->json(['info'=>"Already Good Request"]);
         }
+    }
+    public function guestSpamWebsites()
+    {
+        $data = UserRequest::where('spam',1)->get();
+        $empty_message = "There is no Spam Request";
+        return view('pages.guest.spam-request', compact('data', 'empty_message'));
     }
     public function casinoGood($id)
     {
@@ -1251,7 +1292,36 @@ class AdminController extends Controller
             return response()->json(['info'=>"Already Spam Request"]);
         }
     }
-    
+
+    public function casinoUnspam($id)
+    {
+        $permission = CasinoRequest::find($id);
+        if($permission->spam == 1){
+            $permission->spam = 0;
+            $permission->update();
+            return response()->json(['success'=>"Un-Spam Request"]);   
+        }else{
+            return response()->json(['info'=>"Already Spam Request"]);
+        }
+    }
+    public function nicheUnspam($id)
+    {
+        $permission = Niche::find($id);
+        if($permission->spam == 1){
+            $permission->spam = 0;
+            $permission->update();
+            return response()->json(['success'=>"Un-Spam Request"]);   
+        }else{
+            return response()->json(['info'=>"Already Spam Request"]);
+        }
+    }
+    public function nicheSpamWebsites()
+    {
+        $data = Niche::where('spam',1)->get();
+        $empty_message = "There is no Spam Request";
+        return view('pages.niche.spam-request', compact('data', 'empty_message'));
+    }
+
     public function nicheDelete(Request $request, $id)
     {
         $permission = Niche::find($id);

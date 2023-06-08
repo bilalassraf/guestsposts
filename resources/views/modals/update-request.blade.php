@@ -120,12 +120,22 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="emailwebmaster">Email (Webmaster)</label>
                                     <input class="form-control"  type="email" placeholder="Email"
                                         name="email" required value="{{ $request->email_webmaster }}">
                                 </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="site">Site Quality</label>
+                                    <select name="site_quality" class="form-control mb-2" id="site_quality"> 
+                                        <option value="" disabled selected>Select Site Quality</option>
+                                        <option {{ $request->good == 1 ? 'selected' : '' }} value="Good">Good Site</option>
+                                        <option {{ $request->spam == 1 ? 'selected' : '' }} value="Spam">Spam Site</option>
+                                    </select>
+                                </div>    
                             </div>
                         </div>
                         <div class="mb-3">

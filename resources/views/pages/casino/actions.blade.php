@@ -9,12 +9,12 @@
 <a href="javascript:void(0);" onclick="sendAjaxRequest('{{route('admin.casino.request.rejected', $request->id)}}', {{ $request->id }});" class="edit">
     <i class="material-icons fa fa-close text-green" title="reject request"></i>
 </a>
-<a href="javascript:void(0);" class="edit" onclick="sendAjaxRequest('{{ route('admin.casino.request.good', $request->id) }}', {{ $request->id }});">    
+{{-- <a href="javascript:void(0);" class="edit" onclick="sendAjaxRequest('{{ route('admin.casino.request.good', $request->id) }}', {{ $request->id }});">    
   <i class="material-icons fa fa-check-circle text-success" title="Good Request"></i>
 </a>
 <a href="javascript:void(0);" class="edit" onclick="sendAjaxRequest('{{ route('admin.casino.request.spam', $request->id) }}', {{ $request->id }});">    
   <i class="material-icons fa fa-user-secret text-waring" title="Spam Request"></i>
-</a>
+</a> --}}
 <a href="#" class="delete" data-toggle="modal" data-target="#deleteGuestModal-{{ $request->id }}"><i class="material-icons fa fa-trash text-green" title="Delete a request"></i></a>
 @include('modals.delete-casino-request')
 @include('modals.update-casino')

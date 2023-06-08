@@ -86,7 +86,19 @@ if ('{{ auth()->user()->type }}' == 'Admin') {
     cols = [
 
         {data: 'check_box', name:'check_box', "orderable":false,"searchable":false},
-        {data: 'less_web_name', name: 'web_name'},
+        {
+            "data": "less_web_name",
+            "name": "web_name",
+            "render": function(data, type, row) {
+                if (row.check_client_status === 'Good Request') {
+                    return '<i class="material-icons fa fa-check-circle text-success" title="Good Request"></i> ' + data;
+                } else if (row.check_client_status === 'Spam Request') {
+                    return '<i class="material-icons fa fa-user-secret text-danger" title="Bad Request"></i> ' + data;
+                } else {
+                    return data;
+                }
+            }
+        },
         {data: 'less_coodinator', name: 'coordinator'},
         {data: 'less_price', name: 'price'},
         {data: 'less_categories', name: 'categories'},

@@ -38,8 +38,10 @@ Route::post('admin/store/casino/request',[AdminController::class,'storeCasinoReq
 Route::get('admin/show/casino/requests',[AdminController::class,'showCasinoRequests'])->name('admin.show.casino.request');
 Route::get('admin/casino/approved/{id}',[AdminController::class,'casinoRequestApprove'])->name('admin.casino.request.approved');
 Route::get('admin/casino/rejected/{id}',[AdminController::class,'casinoRejected'])->name('admin.casino.request.rejected');
+Route::get('admin/casino/spam/websides',[AdminController::class,'casinoSpamWebsites'])->name('admin.casino.spam.requests');
 Route::get('admin/casino/good/{id}',[AdminController::class,'casinoGood'])->name('admin.casino.request.good');
 Route::get('admin/casino/spam/{id}',[AdminController::class,'casinoSpam'])->name('admin.casino.request.spam');
+Route::get('admin/casino/upspam/{id}',[AdminController::class,'casinoUnspam'])->name('admin.casino.request.unspam');
 Route::get('admin/casino/deleted/{id}',[AdminController::class,'casinoRequestDelete'])->name('admin.casino.delete.request');
 Route::post('admin/change/casino/{id}',[AdminController::class,'updateCasino'])->name('admin.update.casino');
 Route::get('admin/show/casino/deleted/requests',[AdminController::class,'showCasinoDeleted'])->name('admin.casino.deleted.requests');
@@ -62,6 +64,8 @@ Route::post('admin/delete/users/requests',[AdminController::class,'deleteSelecte
 Route::post('admin/approved/users/requests',[AdminController::class,'approvedSelectedREquest'])->name('admin.approved.selected.request');
 Route::get('admin/guest/approved/{id}',[AdminController::class,'guestRequestApprove'])->name('admin.guest.request.approved');
 Route::get('admin/guest/rejected/{id}',[AdminController::class,'nicheRejected'])->name('admin.guest.request.rejected');
+Route::get('admin/guest/unspam/request/{id}',[AdminController::class,'guestUnspam'])->name('admin.guest.unspam.requests');
+Route::get('admin/guest/spam/websides',[AdminController::class,'guestSpamWebsites'])->name('admin.guest.spam.requests');
 Route::get('admin/guest/good/{id}',[AdminController::class,'guestRequestGood'])->name('admin.guest.request.good');
 Route::get('admin/guest/spam/{id}',[AdminController::class,'guestRequestSpam'])->name('admin.guest.request.spam');
 Route::get('admin/guest/deleted/{id}',[AdminController::class,'guestRequestDelete'])->name('admin.guest.delete.request');
@@ -114,6 +118,8 @@ Route::post('admin/change/niche/{id}',[AdminController::class,'updateNicheReques
 Route::get('admin/approve/niche/{id}',[AdminController::class,'nicheApprove'])->name('admin.niche.approved');
 Route::get('admin/pending/niche/{id}',[AdminController::class,'nichePending'])->name('admin.niche.pending');
 Route::get('admin/rejected/niche/{id}',[AdminController::class,'nicheReject'])->name('admin.niche.rejected');
+Route::get('admin/niche/unspam/request/{id}',[AdminController::class,'nicheUnspam'])->name('admin.niche.unspam.requests');
+Route::get('admin/niche/spam/websides',[AdminController::class,'nicheSpamWebsites'])->name('admin.niche.spam.requests');
 Route::get('admin/good/niche/{id}',[AdminController::class,'nicheGood'])->name('admin.niche.good');
 Route::get('admin/spam/niche/{id}',[AdminController::class,'nicheSpam'])->name('admin.niche.spam');
 Route::get('admin/niche/remove/{id}',[AdminController::class,'nicheDelete'])->name('admin.niche.deleted');

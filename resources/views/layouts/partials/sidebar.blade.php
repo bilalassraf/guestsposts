@@ -103,6 +103,13 @@
                         <p >Deleted Websites</p>
                       </a>
                     </li>
+
+                    <li class="nav-item">
+                      <a href="{{route('admin.casino.spam.requests')}}" class="nav-link text-white {{ (\Request::route()->getName() == 'admin.guest.deleted.requests') ? 'active' : '' }}">
+                        <i class="far fa-menu nav-icon "></i>
+                        <p >Spam Websites</p>
+                      </a>
+                    </li>
                  
                 </ul>
               </li>
@@ -130,6 +137,12 @@
                       <p>Deleted Websites</p>
                     </a>
                   </li>
+                  <li class="nav-item">
+                    <a href="{{route('admin.guest.spam.requests')}}" class="nav-link text-white">
+                      <i class="far fa-menu nav-icon "></i>
+                      <p >Spam Websites</p>
+                    </a>
+                  </li>
                 </ul>
               </li>
               <li class="nav-item @if(Route::currentRouteName()=='admin.add.niche' || Route::currentRouteName()=='admin.show.niches' ||Route::currentRouteName()=='admin.show.deleted.niche') menu-is-opening menu-open @endif">
@@ -154,6 +167,12 @@
                     <a href="{{route('admin.show.deleted.niche')}}" class="nav-link text-white{{ (\Request::route()->getName() == 'admin.show.deleted.niche') ? 'active' : '' }}">
                       <i class="far fa-menu nav-icon "></i>
                       <p>Deleted Websites</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{{route('admin.niche.spam.requests')}}" class="nav-link text-white">
+                      <i class="far fa-menu nav-icon "></i>
+                      <p >Spam Websites</p>
                     </a>
                   </li>
                 </ul>
