@@ -50,44 +50,65 @@ class AdminController extends Controller
             'web_name'         => 'required|unique:user_requests',
             'coordinator_id'      => 'required',
             'price'            => 'required|integer|regex:/^[-0-9\+]+$/',
-            // 'company_price'    => 'required|integer|regex:/^[-0-9\+]+$/',
             'categories'         => 'required',
             'domain_authority' => 'required',
             'span_score'       => 'required',
             'domain_rating'    => 'required',
             'organic_trafic_ahrefs' => 'required',
             'organic_trafic_sem'    => 'required',
-            // 'trust_flow'        => 'required',
-            // 'citation_flow'     => 'required',
             'email'             => 'required',
             'web_description'   => 'required',
-            // 'special_note'      => 'required',
-        ],
-        [
-            'web_name.unique' => 'Sorry, this URL is already in Build with'
         ]);
         // $percentage = 8/100 * $request->price;
 
-
-        $user = User::find($request->coordinator_id);
-        $userRequest = new CasinoRequest();
-        $userRequest->web_name = $request->web_name;
-        $userRequest->Coordinator = $request->coordinator_id;
-        $userRequest->price = $request->price;
-        $userRequest->company_price  = $request->company_price;
-        $userRequest->span_score     = $request->span_score;
-        $userRequest->domain_rating     = $request->domain_rating;
-        $userRequest->domain_authority     = $request->domain_authority;
-        $userRequest->organic_trafic_ahrefs     = $request->organic_trafic_ahrefs;
-        $userRequest->organic_trafic_sem     = $request->organic_trafic_sem;
-        $userRequest->trust_flow     = "0";
-        $userRequest->citation_flow = "0";
-        $userRequest->email_webmaster = $request->email;
-        $userRequest->web_description = $request->web_description;
-        $userRequest->special_note = $request->special_note;
-        $user->user_request()->save($userRequest);
-        $userRequest->categories()->sync($request->categories);
-        return redirect(route('admin.add.casino.request'))->with('success', 'Your request has submitted');
+        $check_web_url = CasinoRequest::where('web_name',$request->web_name)->first();
+       
+        if (isset($check_web_url) && $check_web_url->spam == 0) {
+            $check_price = $check_web_url->price > $request->price;
+                if($check_price){
+                    $user = User::find($request->coordinator_id);
+                    $userRequest = new CasinoRequest();
+                    $userRequest->web_name = $request->web_name;
+                    $userRequest->Coordinator = $request->coordinator_id;
+                    $userRequest->price = $request->price;
+                    $userRequest->company_price  = $request->company_price;
+                    $userRequest->span_score     = $request->span_score;
+                    $userRequest->domain_rating     = $request->domain_rating;
+                    $userRequest->domain_authority     = $request->domain_authority;
+                    $userRequest->organic_trafic_ahrefs     = $request->organic_trafic_ahrefs;
+                    $userRequest->organic_trafic_sem     = $request->organic_trafic_sem;
+                    $userRequest->trust_flow     = "0";
+                    $userRequest->citation_flow = "0";
+                    $userRequest->email_webmaster = $request->email;
+                    $userRequest->web_description = $request->web_description;
+                    $userRequest->special_note = $request->special_note;
+                    $user->user_request()->save($userRequest);
+                    $userRequest->categories()->sync($request->categories);
+                    return redirect(route('admin.add.casino.request'))->with('success', 'Your request has submitted');
+                }else{
+                    return redirect()->back()->with('warning', 'Your Price Should be Less Then '.$check_web_url->price )->withInput($request->all());
+                }  
+        }else{
+            $user = User::find($request->coordinator_id);
+            $userRequest = new CasinoRequest();
+            $userRequest->web_name = $request->web_name;
+            $userRequest->Coordinator = $request->coordinator_id;
+            $userRequest->price = $request->price;
+            $userRequest->company_price  = $request->company_price;
+            $userRequest->span_score     = $request->span_score;
+            $userRequest->domain_rating     = $request->domain_rating;
+            $userRequest->domain_authority     = $request->domain_authority;
+            $userRequest->organic_trafic_ahrefs     = $request->organic_trafic_ahrefs;
+            $userRequest->organic_trafic_sem     = $request->organic_trafic_sem;
+            $userRequest->trust_flow     = "0";
+            $userRequest->citation_flow = "0";
+            $userRequest->email_webmaster = $request->email;
+            $userRequest->web_description = $request->web_description;
+            $userRequest->special_note = $request->special_note;
+            $user->user_request()->save($userRequest);
+            $userRequest->categories()->sync($request->categories);
+            return redirect(route('admin.add.casino.request'))->with('success', 'Your request has submitted');
+        }    
     }
     public function showCasinoRequests()
     {
@@ -133,15 +154,31 @@ class AdminController extends Controller
     public function casinoRequestApprove($id)
     {
         $permission = CasinoRequest::find($id);
+
         if ($permission->status == 'Pending' || $permission->status == 'Rejected') {
+            $check_web_url = $permission->web_name;
+            $check_max_niches = CasinoRequest::where('web_name', $check_web_url)->where('status', 'Approved')->where('price','>=',$permission->price)->get();
+            $check_min_niches = CasinoRequest::where('web_name', $check_web_url)->where('status', 'Approved')->where('price','<',$permission->price)->get();
+            
+            if (count($check_max_niches) > 0 ) {
+                foreach ($check_max_niches as $niche) {
+                    $del_obj = CasinoRequest::find($niche->id);
+                    $del_obj->delete();
+                }
+            }
+            if(count($check_min_niches) > 0){
+                $permission->delete();
+            }
+            
             $permission->status = 'Approved';
             if($permission->new_price > 0){
                 $permission->price =$permission->new_price;
                 $permission->new_price=0;
             }
             $permission->update();
-            return response()->json(['success'=>"Requests Approved"]);
-        } else {
+            return response()->json(['success'=>"Approved"]);
+
+        } elseif ($permission->status == 'Approved') {
             return response()->json(['info'=>"Already Approved"]);
         }
     }
@@ -347,7 +384,7 @@ class AdminController extends Controller
     {
         // dd($request->all());
         $request->validate([
-            'web_name'         => 'required|unique:user_requests',
+            'web_name'         => 'required',
             'coordinator_id'      => 'required',
             'price'            => 'required|integer|regex:/^[-0-9\+]+$/',
             // 'company_price'    => 'required|integer|regex:/^[-0-9\+]+$/',
@@ -362,33 +399,61 @@ class AdminController extends Controller
             'email'             => 'required',
             'web_description'   => 'required',
             // 'special_note'      => 'required',
-        ],
-        [
-            'web_name.unique' => 'Sorry, this URL is already in Build with'
         ]);
         // $percentage = 8/100 * $request->price;
 
-        $user = User::find($request->coordinator_id);
-        $userRequest = new UserRequest();
-        $userRequest->web_name = $request->web_name;
-        $userRequest->coordinator_id = $request->coordinator_id;
-        $userRequest->price = $request->price;
-        $userRequest->company_price  = $request->company_price;
-        $userRequest->span_score     = $request->span_score;
-        $userRequest->domain_authority     = $request->domain_authority;
-        $userRequest->domain_rating     = $request->domain_rating;
-        $userRequest->organic_trafic_ahrefs     = $request->organic_trafic_ahrefs;
-        $userRequest->organic_trafic_sem     = $request->organic_trafic_sem;
-        $userRequest->trust_flow     = "0";
-        $userRequest->citation_flow = "0";
-        $userRequest->email_webmaster = $request->email;
-        $userRequest->web_description = $request->web_description;
-        $userRequest->special_note = $request->special_note;
-        $user->user_request()->save($userRequest);
-        $userRequest->categories()->sync($request->categories);
-        
-        return redirect(route('admin.add.guest.request'))->with('success', 'Your request has submitted');
+        $check_web_url = UserRequest::where('web_name',$request->web_name)->first();
+       
+        if (isset($check_web_url) && $check_web_url->spam == 0) {
+            $check_price = $check_web_url->price > $request->price;
+            if($check_price){
+                $user = User::find($request->coordinator_id);
+                $userRequest = new UserRequest();
+                $userRequest->web_name = $request->web_name;
+                $userRequest->coordinator_id = $request->coordinator_id;
+                $userRequest->price = $request->price;
+                $userRequest->company_price  = $request->company_price;
+                $userRequest->span_score     = $request->span_score;
+                $userRequest->domain_authority     = $request->domain_authority;
+                $userRequest->domain_rating     = $request->domain_rating;
+                $userRequest->organic_trafic_ahrefs     = $request->organic_trafic_ahrefs;
+                $userRequest->organic_trafic_sem     = $request->organic_trafic_sem;
+                $userRequest->trust_flow     = "0";
+                $userRequest->citation_flow = "0";
+                $userRequest->email_webmaster = $request->email;
+                $userRequest->web_description = $request->web_description;
+                $userRequest->special_note = $request->special_note;
+                $user->user_request()->save($userRequest);
+                $userRequest->categories()->sync($request->categories);
+                
+                return redirect(route('admin.add.guest.request'))->with('success', 'Your request has submitted');
+            }else{
+                return redirect()->back()->with('warning', 'Your Price Should be Less Then '.$check_web_url->price )->withInput($request->all());
+            }  
+        }else{
+            $user = User::find($request->coordinator_id);
+            $userRequest = new UserRequest();
+            $userRequest->web_name = $request->web_name;
+            $userRequest->coordinator_id = $request->coordinator_id;
+            $userRequest->price = $request->price;
+            $userRequest->company_price  = $request->company_price;
+            $userRequest->span_score     = $request->span_score;
+            $userRequest->domain_authority     = $request->domain_authority;
+            $userRequest->domain_rating     = $request->domain_rating;
+            $userRequest->organic_trafic_ahrefs     = $request->organic_trafic_ahrefs;
+            $userRequest->organic_trafic_sem     = $request->organic_trafic_sem;
+            $userRequest->trust_flow     = "0";
+            $userRequest->citation_flow = "0";
+            $userRequest->email_webmaster = $request->email;
+            $userRequest->web_description = $request->web_description;
+            $userRequest->special_note = $request->special_note;
+            $user->user_request()->save($userRequest);
+            $userRequest->categories()->sync($request->categories);
+            
+            return redirect(route('admin.add.guest.request'))->with('success', 'Your request has submitted');
+        }    
     }
+
     public function showSingleRequest($id)
     {
         $request = UserRequest::find($id);
@@ -496,15 +561,31 @@ class AdminController extends Controller
     public function guestRequestApprove($id)
     {
         $permission = UserRequest::find($id);
+       
         if ($permission->status == 'Pending' || $permission->status == 'Rejected') {
+            $check_web_url = $permission->web_name;
+            $check_max_niches = UserRequest::where('web_name', $check_web_url)->where('status', 'Approved')->where('price','>=',$permission->price)->get();
+            $check_min_niches = UserRequest::where('web_name', $check_web_url)->where('status', 'Approved')->where('price','<',$permission->price)->get();
+            
+            if (count($check_max_niches) > 0 ) {
+                foreach ($check_max_niches as $niche) {
+                    $del_obj = UserRequest::find($niche->id);
+                    $del_obj->delete();
+                }
+            }
+            if(count($check_min_niches) > 0){
+                $permission->delete();
+            }
+            
             $permission->status = 'Approved';
             if($permission->new_price > 0){
                 $permission->price =$permission->new_price;
                 $permission->new_price=0;
             }
             $permission->update();
-            return response()->json(['success'=>"Requests Approved"]);
-        } else {
+            return response()->json(['success'=>"Approved"]);
+
+        } elseif ($permission->status == 'Approved') {
             return response()->json(['info'=>"Already Approved"]);
         }
     }
@@ -960,31 +1041,29 @@ class AdminController extends Controller
                 }else{
                     return redirect()->back()->with('warning', 'Your Price Should be Less Then '.$check_web_url->price )->withInput($request->all());
                 }
-            }else{
-                    $user = User::find($request->user_id);
-                    $Niche = new Niche();
-                    $Niche->web_name = preg_replace( "#^[^:/.]*[:/]+#i", "", $request->web_name );
-                    $Niche->coordinator_id = $request->coordinator_id;
-                    $Niche->price = $request->price;
-                    $Niche->company_price  =  $request->company_price;
-                    $Niche->user_id     = $request->coordinator_id;
-                    $Niche->domain_authority     = $request->domain_authority;
-                    $Niche->span_score     = $request->span_score;
-                    $Niche->domain_rating     = $request->domain_rating;
-                    $Niche->organic_trafic_ahrefs     = $request->organic_trafic_ahrefs;
-                    $Niche->organic_trafic_sem     = $request->organic_trafic_sem;
-                    $Niche->trust_flow     = "0";
-                    $Niche->citation_flow = "0";
-                    $Niche->email_webmaster = $request->email;
-                    $Niche->web_description = $request->web_description;
-                    $Niche->special_note = $request->special_note;
-                    $Niche->web_url = str_replace("www.","",preg_replace( "#^[^:/.]*[:/]+#i", "", $request->web_url )) ;
-                    $user->niche()->save($Niche);
-                    $Niche->categories()->sync($request->categories);
-                    return redirect(route('admin.show.niches'))->with('success', 'Your request has submitted');
             }
         }else{
-            return redirect()->back()->with('warning', '')->withInput($request->all());
+            $user = User::find($request->user_id);
+            $Niche = new Niche();
+            $Niche->web_name = preg_replace( "#^[^:/.]*[:/]+#i", "", $request->web_name );
+            $Niche->coordinator_id = $request->coordinator_id;
+            $Niche->price = $request->price;
+            $Niche->company_price  =  $request->company_price;
+            $Niche->user_id     = $request->coordinator_id;
+            $Niche->domain_authority     = $request->domain_authority;
+            $Niche->span_score     = $request->span_score;
+            $Niche->domain_rating     = $request->domain_rating;
+            $Niche->organic_trafic_ahrefs     = $request->organic_trafic_ahrefs;
+            $Niche->organic_trafic_sem     = $request->organic_trafic_sem;
+            $Niche->trust_flow     = "0";
+            $Niche->citation_flow = "0";
+            $Niche->email_webmaster = $request->email;
+            $Niche->web_description = $request->web_description;
+            $Niche->special_note = $request->special_note;
+            $Niche->web_url = str_replace("www.","",preg_replace( "#^[^:/.]*[:/]+#i", "", $request->web_url )) ;
+            $user->niche()->save($Niche);
+            $Niche->categories()->sync($request->categories);
+            return redirect(route('admin.show.niches'))->with('success', 'Your request has submitted');
         }
     }
     public function webRequests(Request $request)

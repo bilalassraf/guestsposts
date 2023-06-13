@@ -22,6 +22,10 @@
   /*change the hover text color*/
 }
 
+i.material-icons.fas.fa-hat-cowboy.text-dark {
+    font-size: 17px;
+}
+
 /*below block of css for change style when active*/
 
 .dataTables_wrapper .dataTables_paginate .paginate_button:active {
