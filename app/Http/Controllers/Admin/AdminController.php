@@ -307,7 +307,7 @@ class AdminController extends Controller
         $url =  str_replace("www.", "", preg_replace("/^https?\:\/\//i", "", $request->webName));
         $value = Niche::orWhere('web_name', 'like', '%' . $url . '%')->first();
         if (isset($value) && $request->webName !== null) {
-            if ($value->price < $request->price) {
+            if ($value->price <= $request->price) {
                 $result = "You need to lower the price.";
                 $color = "red";
             } else {
@@ -337,7 +337,7 @@ class AdminController extends Controller
         $url =  str_replace("www.", "", preg_replace("/^https?\:\/\//i", "", $request->webName));
         $value = UserRequest::orWhere('web_name', 'like', '%' . $url . '%')->first();
         if (isset($value) && $request->webName !== null) {
-            if ($value->price < $request->price) {
+            if ($value->price <= $request->price) {
                 $result = "You need to lower the price.";
                 $color = "red";
             } else {
@@ -367,7 +367,7 @@ class AdminController extends Controller
         $value = CasinoRequest::orWhere('web_name', 'like', '%' . $url . '%')->first();
    
         if (isset($value) && $request->webName !== null) {
-            if ($value->price < $request->price) {
+            if ($value->price <= $request->price) {
                 $result = "You need to lower the price.";
                 $color = "red";
             } else {
