@@ -293,40 +293,91 @@ class AdminController extends Controller
     }
     public function getName(Request $request)
     {
-        //dd($request->all());
         $url =  str_replace("www.","",preg_replace("/^https?\:\/\//i", "" , $request->webname));
         $value = Niche::orWhere('web_name', 'like', '%' . $url . '%')->first();
-        // $url = str_replace("www.","",preg_replace( "#^[^:/.]*[:/]+#i", "",   $request->webname )) ;
-        // $value = Niche::where( 'web_name', $url )->first();
-    
-        if(isset($value) && $value->spam == 1){
-            echo "This website has marked as spam. You can not add it again. ";
+        if($value->spam == 0){
+            echo "The website is already added in the database. Though you have a chance to BEAT THE PRICE. ";
         }
+        if(isset($value) && $value->spam == 1){
+            echo "The website is marked as SPAM. You can not add it anymore. ";
+        }
+    }
+    public function nicheCheckPrice(Request $request)
+    {
+        $url =  str_replace("www.", "", preg_replace("/^https?\:\/\//i", "", $request->webName));
+        $value = Niche::orWhere('web_name', 'like', '%' . $url . '%')->first();
+        if (isset($value) && $request->webName !== null) {
+            if ($value->price < $request->price) {
+                $result = "You need to lower the price.";
+                $color = "red";
+            } else {
+                $result = "You are good to go. Please add the website now.";
+                $color = "green";
+            }
+            return response()->json([
+                'result' => $result,
+                'color' => $color
+            ]);
+        }    
     } 
     public function guestName(Request $request)
     {
-        // dd($request->all());
         $url =  str_replace("www.","",preg_replace("/^https?\:\/\//i", "" , $request->webname));
         $value = UserRequest::orWhere('web_name', 'like', '%' . $url . '%')->first();
-        // if($value){
-        //     echo "This website has marked as spam. You can not add it again.";
-        // }
-        if(isset($value) && $value->spam == 1){
-            echo "This website has marked as spam. You can not add it again. ";
+        
+        if($value->spam == 0){
+            echo "The website is already added in the database. Though you have a chance to BEAT THE PRICE. ";
         }
+        if(isset($value) && $value->spam == 1){
+            echo "The website is marked as SPAM. You can not add it anymore. ";
+        }
+    }
+    public function guestCheckPrice(Request $request)
+    {
+        $url =  str_replace("www.", "", preg_replace("/^https?\:\/\//i", "", $request->webName));
+        $value = UserRequest::orWhere('web_name', 'like', '%' . $url . '%')->first();
+        if (isset($value) && $request->webName !== null) {
+            if ($value->price < $request->price) {
+                $result = "You need to lower the price.";
+                $color = "red";
+            } else {
+                $result = "You are good to go. Please add the website now.";
+                $color = "green";
+            }
+            return response()->json([
+                'result' => $result,
+                'color' => $color
+            ]);
+        }    
     }
     public function casinoName(Request $request)
     {
-        
         $url =  str_replace("www.","",preg_replace("/^https?\:\/\//i", "" , $request->webname));
         $value = CasinoRequest::orWhere('web_name', 'like', '%' . $url . '%')->first();
-        // if($value){
-        //     echo " This website name is already there in database. So you
-        //     can not add it again. ";
-        // }
-        if(isset($value) && $value->spam == 1){
-            echo "This website has marked as spam. You can not add it again. ";
+        if($value->spam == 0){
+            echo "The website is already added in the database. Though you have a chance to BEAT THE PRICE. ";
         }
+        if(isset($value) && $value->spam == 1){
+            echo "The website is marked as SPAM. You can not add it anymore. ";
+        }
+    }
+    public function casinoCheckPrice(Request $request)
+    {
+        $url =  str_replace("www.", "", preg_replace("/^https?\:\/\//i", "", $request->webname));
+        $value = CasinoRequest::orWhere('web_name', 'like', '%' . $url . '%')->first();
+        if (isset($value) && $request->webName !== null) {
+            if ($value->price < $request->price) {
+                $result = "You need to lower the price.";
+                $color = "red";
+            } else {
+                $result = "You are good to go. Please add the website now.";
+                $color = "green";
+            }
+            return response()->json([
+                'result' => $result,
+                'color' => $color
+            ]);
+        }        
     }
     public function casinoNewPrice(Request $request , $id)
     {
@@ -988,10 +1039,10 @@ class AdminController extends Controller
     public function addStoreNiche(Request $request)
     {
        // preg_replace( "#^[^:/.]*[:/]+#i", "", $request->web_url );
-        $url = parse_url($request->web_url);
-        $host = $url['host'];
-        $host =  str_replace('www.' , '', $host);
-        $request->web_url = $host;
+        // $url = parse_url($request->web_url);
+        // $host = $url['host'];
+        // $host =  str_replace('www.' , '', $host);
+        $request->web_url = '';
         $request->validate([
             'coordinator_id'      => 'required',
             'price'            => 'required|integer',
@@ -1003,12 +1054,9 @@ class AdminController extends Controller
             'organic_trafic_sem'    => 'required',
             'email'             => 'required',
             'web_description'   => 'required',
-            ],
-            [
-                'web_name.unique' => 'Sorry, this URL is already in Build with'
             ]
         );
-        $check_web_url = Niche::where('web_url',$request->web_url)->first();
+        $check_web_url = Niche::where('web_name',$request->web_name)->first();
         // $check_web_name = Niche::where('web_name',$request->web_name)->first();
         // if($check_web_name){
         //     return redirect()->back()->with('warning', 'Website name alerady exists')->withInput($request->all());
@@ -1034,7 +1082,7 @@ class AdminController extends Controller
                     $Niche->email_webmaster = $request->email;
                     $Niche->web_description = $request->web_description;
                     $Niche->special_note = $request->special_note;
-                    $Niche->web_url = str_replace("www.","",preg_replace( "#^[^:/.]*[:/]+#i", "", $request->web_url )) ;
+                    $Niche->web_url = '';
                     $user->niche()->save($Niche);
                     $Niche->categories()->sync($request->categories);
                     return redirect(route('admin.show.niches'))->with('success', 'Your request has submitted');
@@ -1060,7 +1108,8 @@ class AdminController extends Controller
             $Niche->email_webmaster = $request->email;
             $Niche->web_description = $request->web_description;
             $Niche->special_note = $request->special_note;
-            $Niche->web_url = str_replace("www.","",preg_replace( "#^[^:/.]*[:/]+#i", "", $request->web_url )) ;
+            // $Niche->web_url = str_replace("www.","",preg_replace( "#^[^:/.]*[:/]+#i", "", $request->web_url )) ;
+            $Niche->web_url = '';
             $user->niche()->save($Niche);
             $Niche->categories()->sync($request->categories);
             return redirect(route('admin.show.niches'))->with('success', 'Your request has submitted');
@@ -1231,7 +1280,7 @@ class AdminController extends Controller
         $Niche->email_webmaster = $request->email;
         $Niche->web_description = $request->web_description;
         $Niche->special_note = $request->special_note;
-        $Niche->web_url = $request->web_url;
+        $Niche->web_url = '';
         $Niche->good = $request->site_quality == "Good" ? 1 : 0;
         $Niche->black_hat = $request->site_quality == "Black" ? 1 : 0;
         $Niche->update();

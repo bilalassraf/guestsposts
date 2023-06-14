@@ -51,6 +51,7 @@ Add Website
                             <div class="mb-3">
                                 <label for="price">Price</label>
                                 <input class="form-control" id="price" type="text" placeholder="Price" name="price" value="{{  old('price') }}" autocomplete="off" required>&nbsp;<span id="errmsg"></span>
+                                <div id="price_error_div"></div>
                             </div>
                         </div>
                         @if (auth()->user()->type == "Admin")
@@ -167,14 +168,13 @@ textarea.select2-search__field {
     $(document).ready(function() {
         $(".webname").change(function(){
             var webname = $(this).val();
-            console.log(webname);
             $.ajax({
             url: "{{route('guestName')}}",
             data:{'webname': webname},
             success: function(result){
                 if(result){
                     $("#div2").html(result);
-                    $('#submitBtn').addClass("disabled");
+                    // $('#submitBtn').addClass("disabled");
                 }else{
                     $("#div2").html(result);
                     $('#submitBtn').removeClass("disabled");
@@ -190,11 +190,29 @@ textarea.select2-search__field {
                 return false;
             }
         });
-        $("#price").keyup(function(){
+        $("#price").on('change', function (ev) {
             var price = $("#price").val();
-            var percentage = price ;
-            var company = parseInt(price *8/100 + 50) + parseInt(price);
+            var percentage = price;
+            var company = parseInt(price * 8 / 100 + 50) + parseInt(price);
             $("#companyprice").val(company);
+            var webName = $(".webname").val();
+            $.ajax({
+                url: "{{ route('guestCheckPrice') }}",
+                data: {'price': price, 'webName': webName},
+                success: function (response) {
+                    var result = response.result;
+                    var color = response.color;
+
+                    $("#price_error_div").html(result);
+                    $("#price_error_div").css('color', color);
+
+                    if (color === "red") {
+                        $('#submitBtn').addClass("disabled");
+                    } else {
+                        $('#submitBtn').removeClass("disabled");
+                    }
+                }
+            });
         });
         $('#domainauths').on('change', function() {
             $('.domainAuth').addClass('d-none');  

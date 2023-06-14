@@ -122,20 +122,20 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <div class="mb-3">
                                     <label for="emailwebmaster">Email (Webmaster)</label>
                                     <input class="form-control" id="emailwebmaster" type="email" placeholder="Email"
                                         name="email" required value="{{ $niche_request->email_webmaster }}">
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            {{-- <div class="col-md-6">
                                 <div class="mb-3">
                                     <label>Website Url</label>
                                     <input class="form-control" type="url" placeholder="Email"
                                         name="web_url" required value="{{ $niche_request->web_url }}">
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                         <div class="mb-3">
                             <label class="col-form-label" for="websitedescription">Website Description</label>

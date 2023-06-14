@@ -29,8 +29,8 @@ class Niche extends Model
     public function getlessWebNameAttribute()
     {
         $field = 'web_name';
-        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_url',$this->web_url)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = Niche::where([['web_url',$this->web_url],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
+        $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
         
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
             if($field == 'coordinator_id'){
@@ -53,8 +53,8 @@ class Niche extends Model
     
         $field = 'price';
         
-        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_url',$this->web_url)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = Niche::where([['web_url',$this->web_url],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
+        $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
             if($field == 'coordinator_id'){
@@ -77,8 +77,8 @@ class Niche extends Model
     {
         $field = 'email_webmaster';
         
-        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_url',$this->web_url)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = Niche::where([['web_url',$this->web_url],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
+        $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
             if($field == 'coordinator_id'){
@@ -101,8 +101,8 @@ class Niche extends Model
     {
         $field = 'coordinator_id';
         
-        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_url',$this->web_url)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = Niche::where([['web_url',$this->web_url],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
+        $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
             if($field == 'coordinator_id'){
@@ -126,8 +126,8 @@ class Niche extends Model
     
         $field = 'categories';
         
-        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_url',$this->web_url)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = Niche::where([['web_url',$this->web_url],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
+        $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
             if($field == 'coordinator_id'){
@@ -150,8 +150,8 @@ class Niche extends Model
     {
         $field = 'domain_rating';
         
-        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_url',$this->web_url)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = Niche::where([['web_url',$this->web_url],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
+        $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
             if($field == 'coordinator_id'){
@@ -174,8 +174,8 @@ class Niche extends Model
     {
         $field = 'domain_authority';
         
-        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_url',$this->web_url)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = Niche::where([['web_url',$this->web_url],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
+        $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
             if($field == 'coordinator_id'){
@@ -198,8 +198,8 @@ class Niche extends Model
     {
         $field = 'organic_trafic_ahrefs';
         
-        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_url',$this->web_url)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = Niche::where([['web_url',$this->web_url],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
+        $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
             if($field == 'coordinator_id'){
@@ -222,8 +222,8 @@ class Niche extends Model
     {
         $field = 'span_score';
         
-        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_url',$this->web_url)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = Niche::where([['web_url',$this->web_url],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
+        $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
             if($field == 'coordinator_id'){
@@ -246,8 +246,8 @@ class Niche extends Model
     {
         $field = 'organic_trafic_sem';
         
-        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_url',$this->web_url)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = Niche::where([['web_url',$this->web_url],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
+        $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
             if($field == 'coordinator_id'){
@@ -270,8 +270,8 @@ class Niche extends Model
     {
         $field = 'trust_flow';
         
-        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_url',$this->web_url)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = Niche::where([['web_url',$this->web_url],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
+        $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
             if($field == 'coordinator_id'){
@@ -294,8 +294,8 @@ class Niche extends Model
     {
         $field = 'citation_flow';
         
-        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_url',$this->web_url)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = Niche::where([['web_url',$this->web_url],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
+        $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
             if($field == 'coordinator_id'){
@@ -318,8 +318,8 @@ class Niche extends Model
     {
         $field = 'web_description';
         
-        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_url',$this->web_url)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = Niche::where([['web_url',$this->web_url],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
+        $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
             if($field == 'coordinator_id'){
@@ -342,8 +342,8 @@ class Niche extends Model
     {
         $field = 'special_note';
         
-        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_url',$this->web_url)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = Niche::where([['web_url',$this->web_url],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
+        $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
             if($field == 'coordinator_id'){

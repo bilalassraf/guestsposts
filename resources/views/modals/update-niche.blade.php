@@ -126,14 +126,14 @@
                             </div>    
                         </div>
                     </div>
-                    <div class="row">
+                    {{-- <div class="row">
                         <div class="col-md-12">
                             <div class="mb-3">
                                 <label>Website Url</label>
                                 <input class="form-control" type="url" placeholder="Email" name="web_url" required value="{{ $niche->web_url }}">
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="mb-3">
                         <label class="col-form-label" for="websitedescription">Website Description</label>
                         <script type="text/javascript">

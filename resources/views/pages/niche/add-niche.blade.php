@@ -49,6 +49,7 @@
                                     <label for="price">Price</label>
                                     <input class="form-control" id="price" type="text" placeholder="Price" autocomplete="off" value="{{  old('price') }}" name="price"
                                         required>&nbsp;<span id="errmsg"></span>
+                                    <div id="price_error_div"></div>    
                                 </div>
                             </div>
                             @if (auth()->user()->type == "Admin")
@@ -130,21 +131,21 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <div class="mb-3">
                                     <label for="emailwebmaster">Email (Webmaster)</label>
                                     <input class="form-control" id="emailwebmaster" type="email" autocomplete="off" placeholder="Email"
                                         name="email" value="{{  old('email') }}" required>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            {{-- <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="url">Website Url</label>
                                     <input class="form-control ent" id="url" type="url" autocomplete="off" placeholder="https://www.google.com/"
                                         name="web_url" value="{{  old('web_url') }}" required>
                                     <div id="div1" class="text-danger"></div>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                         <div class="mb-3">
                             <label class="col-form-label" for="websitedescription">Website Description</label>
@@ -225,11 +226,29 @@
                 return false;
             }
         });
-         $("#price").keyup(function(){
+        $("#price").on('change', function (ev) {
             var price = $("#price").val();
-            var percentage = price ;
-            var company = parseInt(price *8/100 + 50) + parseInt(price);
+            var percentage = price;
+            var company = parseInt(price * 8 / 100 + 50) + parseInt(price);
             $("#companyprice").val(company);
+            var webName = $(".webname").val();
+            $.ajax({
+                url: "{{ route('nicheCheckPrice') }}",
+                data: {'price': price, 'webName': webName},
+                success: function (response) {
+                    var result = response.result;
+                    var color = response.color;
+
+                    $("#price_error_div").html(result);
+                    $("#price_error_div").css('color', color);
+
+                    if (color === "red") {
+                        $('#submitBtn').addClass("disabled");
+                    } else {
+                        $('#submitBtn').removeClass("disabled");
+                    }
+                }
+            });
         });
     });
     $(document).ready(function() {

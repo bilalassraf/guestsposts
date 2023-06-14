@@ -106,8 +106,11 @@ Route::get('details/casino/{id}',[AdminController::class,'getCasinoDetails'])->n
 //ajex route
 Route::get('get/url',[AdminController::class,'getUrl'])->name('getUrl');
 Route::get('get/webname',[AdminController::class,'getName'])->name('getName');
+Route::get('niche/check/price',[AdminController::class,'nicheCheckPrice'])->name('nicheCheckPrice');
 Route::get('guest/webname',[AdminController::class,'guestName'])->name('guestName');
+Route::get('guest/check/price',[AdminController::class,'guestCheckPrice'])->name('guestCheckPrice');
 Route::get('casino/webname',[AdminController::class,'casinoName'])->name('casinoName');
+Route::get('casino/check/price',[AdminController::class,'casinoCheckPrice'])->name('casinoCheckPrice');
 //niche
 Route::get('admin/add/niche',[AdminController::class,'addNicheForm'])->name('admin.add.niche');
 Route::post('admin/store/niche',[AdminController::class,'addStoreNiche'])->name('admin.store.niche');
