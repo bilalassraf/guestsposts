@@ -363,8 +363,9 @@ class AdminController extends Controller
     }
     public function casinoCheckPrice(Request $request)
     {
-        $url =  str_replace("www.", "", preg_replace("/^https?\:\/\//i", "", $request->webname));
+        $url =  str_replace("www.", "", preg_replace("/^https?\:\/\//i", "", $request->webName));
         $value = CasinoRequest::orWhere('web_name', 'like', '%' . $url . '%')->first();
+   
         if (isset($value) && $request->webName !== null) {
             if ($value->price < $request->price) {
                 $result = "You need to lower the price.";
