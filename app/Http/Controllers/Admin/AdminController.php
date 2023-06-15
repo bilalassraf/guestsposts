@@ -1293,9 +1293,10 @@ class AdminController extends Controller
         $permission = Niche::find($id);
        
         if ($permission->status == 'Pending' || $permission->status == 'Rejected') {
-            $check_web_url = $permission->web_url;
-            $check_max_niches = Niche::where('web_url', $check_web_url)->where('status', 'Approved')->where('price','>=',$permission->price)->get();
-            $check_min_niches = Niche::where('web_url', $check_web_url)->where('status', 'Approved')->where('price','<',$permission->price)->get();
+            $check_web_url = $permission->web_name;
+
+            $check_max_niches = Niche::where('web_name', $check_web_url)->where('status', 'Approved')->where('price','>=',$permission->price)->get();
+            $check_min_niches = Niche::where('web_name', $check_web_url)->where('status', 'Approved')->where('price','<',$permission->price)->get();
             
             if (count($check_max_niches) > 0 ) {
                 foreach ($check_max_niches as $niche) {
@@ -1306,7 +1307,7 @@ class AdminController extends Controller
             if(count($check_min_niches) > 0){
                 $permission->delete();
             }
-            
+ 
             $permission->status = 'Approved';
             if($permission->niche_new_price > 0){
                 $permission->price =$permission->niche_new_price;
