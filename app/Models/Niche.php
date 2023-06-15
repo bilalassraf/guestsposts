@@ -33,15 +33,7 @@ class Niche extends Model
         $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
         
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'coordinator_id'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+            $result = $deleted[$field].' >> '.$actvive[$field];
         }else{
             $result = $this[$field];
         }
@@ -57,15 +49,7 @@ class Niche extends Model
         $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'coordinator_id'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+            $result = $deleted[$field].' >> '.$actvive[$field];
         }else{
             $result = $this[$field];
         }
@@ -81,15 +65,7 @@ class Niche extends Model
         $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'coordinator_id'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+            $result = $deleted[$field].' >> '.$actvive[$field];
         }else{
             $result = $this[$field];
         }
@@ -107,15 +83,9 @@ class Niche extends Model
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
             if($field == 'coordinator_id'){
                 $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
             }
         }else{
-            $result = $this[$field];
+            $result = $this->coodinatorName($this[$field]);
         }
         return $result;
 
@@ -154,15 +124,9 @@ class Niche extends Model
         $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'coordinator_id'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+           
+            $result = $deleted[$field].' >> '.$actvive[$field];
+
         }else{
             $result = $this[$field];
         }
@@ -178,15 +142,9 @@ class Niche extends Model
         $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'coordinator_id'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+           
+            $result = $deleted[$field].' >> '.$actvive[$field];
+            
         }else{
             $result = $this[$field];
         }
@@ -202,15 +160,8 @@ class Niche extends Model
         $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'coordinator_id'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+            
+            $result = $deleted[$field].' >> '.$actvive[$field];
         }else{
             $result = $this[$field];
         }
@@ -226,15 +177,8 @@ class Niche extends Model
         $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'coordinator_id'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+            
+            $result = $deleted[$field].' >> '.$actvive[$field];
         }else{
             $result = $this[$field];
         }
@@ -250,15 +194,9 @@ class Niche extends Model
         $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'coordinator_id'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+            
+            $result = $deleted[$field].' >> '.$actvive[$field];
+
         }else{
             $result = $this[$field];
         }
@@ -274,15 +212,8 @@ class Niche extends Model
         $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'coordinator_id'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+            
+            $result = $deleted[$field].' >> '.$actvive[$field];
         }else{
             $result = $this[$field];
         }
@@ -298,15 +229,8 @@ class Niche extends Model
         $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'coordinator_id'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+            
+            $result = $deleted[$field].' >> '.$actvive[$field];
         }else{
             $result = $this[$field];
         }
@@ -322,15 +246,9 @@ class Niche extends Model
         $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'coordinator_id'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+           
+            $result = $deleted[$field].' >> '.$actvive[$field];
+            
         }else{
             $result = $this[$field];
         }
@@ -346,15 +264,9 @@ class Niche extends Model
         $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'coordinator_id'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+            
+            $result = $deleted[$field].' >> '.$actvive[$field];
+            
         }else{
             $result = $this[$field];
         }

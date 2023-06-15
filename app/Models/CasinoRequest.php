@@ -33,16 +33,9 @@ class CasinoRequest extends Model
         $deleted = CasinoRequest::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
         $actvive = CasinoRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
    
-        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'Coordinator'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved')
+        {    
+            $result = $deleted[$field].' >> '.$actvive[$field];
         }else{
             $result = $this[$field];
         }
@@ -58,15 +51,7 @@ class CasinoRequest extends Model
         $actvive = CasinoRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'Coordinator'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+            $result = $deleted[$field].' >> '.$actvive[$field];
         }else{
             $result = $this[$field];
         }
@@ -82,15 +67,8 @@ class CasinoRequest extends Model
         $actvive = CasinoRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'Coordinator'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+           
+            $result = $deleted[$field].' >> '.$actvive[$field];
         }else{
             $result = $this[$field];
         }
@@ -108,18 +86,11 @@ class CasinoRequest extends Model
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
             if($field == 'Coordinator'){
                 $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
             }
         }else{
-            $result = $this[$field];
+            $result = $this->coodinatorName($this[$field]);
         }
         return $result;
-
     }
 
     public function getlessCategoriesAttribute()
@@ -155,15 +126,7 @@ class CasinoRequest extends Model
         $actvive = CasinoRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'Coordinator'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+            $result = $deleted[$field].' >> '.$actvive[$field];
         }else{
             $result = $this[$field];
         }
@@ -179,20 +142,11 @@ class CasinoRequest extends Model
         $actvive = CasinoRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'Coordinator'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+            $result = $deleted[$field].' >> '.$actvive[$field];
         }else{
             $result = $this[$field];
         }
         return $result;
-
     }
 
     public function getlessOrganicTraficAhrefsAttribute()
@@ -203,15 +157,7 @@ class CasinoRequest extends Model
         $actvive = CasinoRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'Coordinator'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+            $result = $deleted[$field].' >> '.$actvive[$field];
         }else{
             $result = $this[$field];
         }
@@ -227,15 +173,7 @@ class CasinoRequest extends Model
         $actvive = CasinoRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'Coordinator'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+            $result = $deleted[$field].' >> '.$actvive[$field];
         }else{
             $result = $this[$field];
         }
@@ -251,15 +189,7 @@ class CasinoRequest extends Model
         $actvive = CasinoRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'Coordinator'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+            $result = $deleted[$field].' >> '.$actvive[$field];
         }else{
             $result = $this[$field];
         }
@@ -275,15 +205,7 @@ class CasinoRequest extends Model
         $actvive = CasinoRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'Coordinator'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+            $result = $deleted[$field].' >> '.$actvive[$field];
         }else{
             $result = $this[$field];
         }
@@ -299,15 +221,7 @@ class CasinoRequest extends Model
         $actvive = CasinoRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'Coordinator'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+            $result = $deleted[$field].' >> '.$actvive[$field];
         }else{
             $result = $this[$field];
         }
@@ -323,15 +237,7 @@ class CasinoRequest extends Model
         $actvive = CasinoRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'Coordinator'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+            $result = $deleted[$field].' >> '.$actvive[$field];
         }else{
             $result = $this[$field];
         }
@@ -347,15 +253,7 @@ class CasinoRequest extends Model
         $actvive = CasinoRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'Coordinator'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+            $result = $deleted[$field].' >> '.$actvive[$field];
         }else{
             $result = $this[$field];
         }

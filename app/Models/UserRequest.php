@@ -28,21 +28,12 @@ class UserRequest extends Model
 
     public function getlessWebNameAttribute()
     {
-        
         $field = 'web_name';
         $deleted = UserRequest::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
         $actvive = UserRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
    
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'coordinator_id'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+            $result = $deleted[$field].' >> '.$actvive[$field];
         }else{
             $result = $this[$field];
         }
@@ -53,20 +44,11 @@ class UserRequest extends Model
     {
     
         $field = 'price';
-        
         $deleted = UserRequest::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
         $actvive = UserRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'coordinator_id'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+            $result = $deleted[$field].' >> '.$actvive[$field];
         }else{
             $result = $this[$field];
         }
@@ -82,15 +64,9 @@ class UserRequest extends Model
         $actvive = UserRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'coordinator_id'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+            
+            $result = $deleted[$field].' >> '.$actvive[$field];
+            
         }else{
             $result = $this[$field];
         }
@@ -108,18 +84,11 @@ class UserRequest extends Model
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
             if($field == 'coordinator_id'){
                 $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
             }
         }else{
-            $result = $this[$field];
+            $result = $this->coodinatorName($this[$field]);
         }
         return $result;
-
     }
 
     public function getlessCategoriesAttribute()
@@ -155,15 +124,9 @@ class UserRequest extends Model
         $actvive = UserRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'coordinator_id'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+            
+            $result = $deleted[$field].' >> '.$actvive[$field];
+
         }else{
             $result = $this[$field];
         }
@@ -179,15 +142,9 @@ class UserRequest extends Model
         $actvive = UserRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'coordinator_id'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+            
+            $result = $deleted[$field].' >> '.$actvive[$field];
+            
         }else{
             $result = $this[$field];
         }
@@ -203,15 +160,8 @@ class UserRequest extends Model
         $actvive = UserRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'coordinator_id'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
+            
                 $result = $deleted[$field].' >> '.$actvive[$field];
-            }
         }else{
             $result = $this[$field];
         }
@@ -227,15 +177,9 @@ class UserRequest extends Model
         $actvive = UserRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'coordinator_id'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+            
+            $result = $deleted[$field].' >> '.$actvive[$field];
+            
         }else{
             $result = $this[$field];
         }
@@ -251,15 +195,9 @@ class UserRequest extends Model
         $actvive = UserRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'coordinator_id'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+           
+            $result = $deleted[$field].' >> '.$actvive[$field];
+            
         }else{
             $result = $this[$field];
         }
@@ -275,15 +213,9 @@ class UserRequest extends Model
         $actvive = UserRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'coordinator_id'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+            
+            $result = $deleted[$field].' >> '.$actvive[$field];
+            
         }else{
             $result = $this[$field];
         }
@@ -299,15 +231,9 @@ class UserRequest extends Model
         $actvive = UserRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'coordinator_id'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+            
+            $result = $deleted[$field].' >> '.$actvive[$field];
+            
         }else{
             $result = $this[$field];
         }
@@ -323,15 +249,9 @@ class UserRequest extends Model
         $actvive = UserRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'coordinator_id'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+            
+            $result = $deleted[$field].' >> '.$actvive[$field];
+            
         }else{
             $result = $this[$field];
         }
@@ -347,15 +267,9 @@ class UserRequest extends Model
         $actvive = UserRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
 
         if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'coordinator_id'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
+            
+            $result = $deleted[$field].' >> '.$actvive[$field];
+            
         }else{
             $result = $this[$field];
         }
@@ -366,7 +280,7 @@ class UserRequest extends Model
     function coodinatorName($id = null)
     {
         $user = User::find($id);
-        return $user->name;
+        return $user->name ?? '';
     }
 
     public function getcheckStatusAttribute()

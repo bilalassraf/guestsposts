@@ -176,7 +176,7 @@ class AdminController extends Controller
                 $permission->new_price=0;
             }
             $permission->update();
-            return response()->json(['success'=>"Approved"]);
+            return response()->json(['success'=>"Requests Approved"]);
 
         } elseif ($permission->status == 'Approved') {
             return response()->json(['info'=>"Already Approved"]);
@@ -635,7 +635,7 @@ class AdminController extends Controller
                 $permission->new_price=0;
             }
             $permission->update();
-            return response()->json(['success'=>"Approved"]);
+            return response()->json(['success'=>"Requests Approved"]);
 
         } elseif ($permission->status == 'Approved') {
             return response()->json(['info'=>"Already Approved"]);

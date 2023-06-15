@@ -103,12 +103,12 @@ if ('{{ auth()->user()->type }}' == 'Admin') {
             }
         },
         {data: 'less_coodinator', name: 'coordinator'},
-        {data: 'less_price', name: 'price'},
+        {data: 'price', name: 'price'},
         {data: 'less_categories', name: 'categories'},
         {data: 'less_domain_rating', name: 'domain_rating' },
         {data: 'less_domain_authority', name: 'domain_authority' },
         {data: 'less_organic_trafic_ahrefs', name: 'organic_trafic_ahrefs' },
-        {data: 'check_client_status', name: 'status'},
+        {data: 'status', name: 'status'},
         {data: 'updated_at', name: 'updated_at'},
         {data: 'niche_actions', name: 'niche_actions', "orderable":false,"searchable":false}
     ];
