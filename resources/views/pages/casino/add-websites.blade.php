@@ -179,21 +179,32 @@ textarea.select2-search__field {
 <script type="text/javascript">
 
     $(document).ready(function() {
-        $(".webname").change(function(){
-            var webname = $(this).val();
+        $(".webname").on('change', function (ev) {
+        var webname = $(this).val();
             $.ajax({
-            url: "{{ route('casinoName') }}",
-            data:{'webname': webname},
-                success: function(result){
-                    if(result){
+                url: "{{ route('casinoName') }}",
+                data: { 'webname': webname },
+                success: function (response) {
+                var result = response.result;
+                    if (response.status === 'fail') {
+                        // Display the result message in div2
                         $("#div2").html(result);
-                    }else{
+                        // Prevent form submission
+                        $('#submitBtn').addClass("d-none");
+                    }
+                    if(response.status === 'pass') {
                         $("#div2").html(result);
-                        $('#submitBtn').removeClass("disabled");
+                        // Allow form submission
+                        $('#submitBtn').removeClass("d-none");
+                    }
+                    if(response.status === '' && response.result === ''){
+                        $("#div2").html("");
+                        $('#submitBtn').removeClass("d-none");
                     }
                 }
             });
         });
+
         //called when key is pressed in textbox
         $("#price").keypress(function(e) {
             //if the letter is not digit then display error and don't type anything

@@ -178,8 +178,9 @@
         $('.selectCategory').select2({
             tags: true,
         });
+    });
+    $(document).ready(function(){
         $("#outreachcoodinator1").select2();
-        // $('#mySelect2').val(null).trigger('change');
     });
     $(document).ready(function() {
     

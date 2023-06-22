@@ -202,21 +202,31 @@
                 }
             }});
         });
-        $(".webname").on('change', function(ev){
+        $(".webname").on('change', function (ev) {
             var webname = $(this).val();
-            $.ajax({url: "{{ route('getName') }}",
-            data:{'webname': webname},
-             success: function(result){
-                if(result){
-                    $("#div2").html(result);
-                    $('#submitBtn').addClass("disabled");
-                }else{
-                    $("#div2").html(result);
-                    $('#submitBtn').removeClass("disabled");
+            $.ajax({
+                url: "{{ route('getName') }}",
+                data: { 'webname': webname },
+                success: function (response) {
+                var result = response.result;
+                    if (response.status === 'fail') {
+                        // Display the result message in div2
+                        $("#div2").html(result);
+                        // Prevent form submission
+                        $('#submitBtn').addClass("d-none");
+                    }
+                    if(response.status === 'pass') {
+                        $("#div2").html(result);
+                        // Allow form submission
+                        $('#submitBtn').removeClass("d-none");
+                    }
+                    if(response.status === '' && response.result === ''){
+                        $("#div2").html("");
+                        $('#submitBtn').removeClass("d-none");
+                    }
                 }
-            }});
+            });
         });
-
         //called when key is pressed in textbox
         $("#price").keypress(function(e) {
             //if the letter is not digit then display error and don't type anything

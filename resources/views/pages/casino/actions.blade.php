@@ -37,7 +37,7 @@
       data: JSON.stringify(data),
       contentType: 'application/json',
       success: function(response) {
-        if (response.success === 'Requests Approved') {
+        if (response.success === 'Approved') {
             toastr.success('Request has been approved');
         } else if (response.info === 'Already Approved') {
             toastr.info('Request is Already Approved');

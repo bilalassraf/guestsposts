@@ -12,7 +12,7 @@ class Niche extends Model
     use HasFactory;
     protected $date = ['deleted_at'];
     protected $guarded = [];
-    protected $appends = ['less_web_name','less_price','less_email','less_coodinator','less_categories','less_domain_rating','less_domain_authority','less_organic_trafic_ahrefs','less_organic_trafic_sem','less_trust_flow','less_span_score','less_citation_flow','less_web_description','less_special_note','check_client_status'];
+    protected $appends = ['less_web_name','less_price','less_email','less_coodinator','less_categories','less_domain_rating','less_domain_authority','less_organic_trafic_ahrefs','less_organic_trafic_sem','less_trust_flow','less_span_score','less_citation_flow','less_web_description','less_special_note','check_client_status','less_status'];
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -29,14 +29,7 @@ class Niche extends Model
     public function getlessWebNameAttribute()
     {
         $field = 'web_name';
-        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
-        
-        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            $result = $deleted[$field].' >> '.$actvive[$field];
-        }else{
-            $result = $this[$field];
-        }
+        $result = $this->commonValue($this->web_name,$field);
         return $result;
     }
 
@@ -44,234 +37,117 @@ class Niche extends Model
     {
     
         $field = 'price';
-        
-        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
-
-        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            $result = $deleted[$field].' >> '.$actvive[$field];
-        }else{
-            $result = $this[$field];
-        }
+        $result = $this->commonValue($this->web_name,$field);
         return $result;
-
     }
 
     public function getlessEmailAttribute()
     {
         $field = 'email_webmaster';
-        
-        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
-
-        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            $result = $deleted[$field].' >> '.$actvive[$field];
-        }else{
-            $result = $this[$field];
-        }
+        $result = $this->commonValue($this->web_name,$field);
         return $result;
-
     }
 
     public function getlessCoodinatorAttribute()
     {
         $field = 'coordinator_id';
-        
-        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+        $min_val = Niche::where('web_name', $this->web_name)->with('categories')->min('price');
+        $max_val = Niche::where('web_name', $this->web_name)->with('categories')->max('price');
+        $min_record = Niche::where('web_name', $this->web_name)->where('price', '=', $min_val ?? '')->with('categories')->first();
+        $max_record = Niche::where('web_name', $this->web_name)->where('price', '=', $max_val ?? '')->with('categories')->first();
 
-        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'coordinator_id'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }
+        if (!empty($min_val) && !empty($max_val) && $max_val != $min_val) {
+            $result = $this->coodinatorName($max_record[$field]).' >> '.$this->coodinatorName($min_record[$field]);
         }else{
             $result = $this->coodinatorName($this[$field]);
         }
         return $result;
-
     }
 
     public function getlessCategoriesAttribute()
     {
-    
         $field = 'categories';
-        
-        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+        $min_val = Niche::where('web_name', $this->web_name)->with('categories')->min('price');
+        $max_val = Niche::where('web_name', $this->web_name)->with('categories')->max('price');
+        $min_record = Niche::where('web_name', $this->web_name)->where('price', '=', $min_val ?? '')->with('categories')->first();
+        $max_record = Niche::where('web_name', $this->web_name)->where('price', '=', $max_val ?? '')->with('categories')->first();
 
-        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'coordinator_id'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
-        }else{
+        if (!empty($min_val) && !empty($max_val) && $max_val != $min_val) {
+            $result = $max_record->categories[0]['category'].' >> '.$min_record->categories[0]['category'];
+        } else {
             $result = $this->categories[0]['category'];
         }
         return $result;
-
     }
 
     public function getlessDomainRatingAttribute()
     {
         $field = 'domain_rating';
-        
-        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
-
-        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-           
-            $result = $deleted[$field].' >> '.$actvive[$field];
-
-        }else{
-            $result = $this[$field];
-        }
+        $result = $this->commonValue($this->web_name,$field);
         return $result;
-
     }
 
     public function getlessDomainAuthorityAttribute()
     {
         $field = 'domain_authority';
-        
-        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
-
-        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-           
-            $result = $deleted[$field].' >> '.$actvive[$field];
-            
-        }else{
-            $result = $this[$field];
-        }
+        $result = $this->commonValue($this->web_name,$field);
         return $result;
-
     }
 
     public function getlessOrganicTraficAhrefsAttribute()
     {
         $field = 'organic_trafic_ahrefs';
-        
-        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
-
-        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            
-            $result = $deleted[$field].' >> '.$actvive[$field];
-        }else{
-            $result = $this[$field];
-        }
+        $result = $this->commonValue($this->web_name,$field);
         return $result;
-
     }
 
     public function getlessSpanScoreAttribute()
     {
         $field = 'span_score';
-        
-        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
-
-        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            
-            $result = $deleted[$field].' >> '.$actvive[$field];
-        }else{
-            $result = $this[$field];
-        }
+        $result = $this->commonValue($this->web_name,$field);
         return $result;
-
     }
 
     public function getlessOrganicTraficSemAttribute()
     {
         $field = 'organic_trafic_sem';
-        
-        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
-
-        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            
-            $result = $deleted[$field].' >> '.$actvive[$field];
-
-        }else{
-            $result = $this[$field];
-        }
+        $result = $this->commonValue($this->web_name,$field);
         return $result;
-
     }
 
     public function getlessTrustFlowAttribute()
     {
         $field = 'trust_flow';
-        
-        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
-
-        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            
-            $result = $deleted[$field].' >> '.$actvive[$field];
-        }else{
-            $result = $this[$field];
-        }
+        $result = $this->commonValue($this->web_name,$field);
         return $result;
-
     }
 
     public function getlessCitationFlowAttribute()
     {
         $field = 'citation_flow';
-        
-        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
-
-        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            
-            $result = $deleted[$field].' >> '.$actvive[$field];
-        }else{
-            $result = $this[$field];
-        }
+        $result = $this->commonValue($this->web_name,$field);
         return $result;
-
     }
 
     public function getlessWebDescriptionAttribute()
     {
         $field = 'web_description';
-        
-        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
-
-        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-           
-            $result = $deleted[$field].' >> '.$actvive[$field];
-            
-        }else{
-            $result = $this[$field];
-        }
+        $result = $this->commonValue($this->web_name,$field);
         return $result;
-
     }
 
     public function getlessSpecialNoteAttribute()
     {
         $field = 'special_note';
-        
-        $deleted = Niche::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = Niche::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
-
-        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            
-            $result = $deleted[$field].' >> '.$actvive[$field];
-            
-        }else{
-            $result = $this[$field];
-        }
+        $result = $this->commonValue($this->web_name,$field);
         return $result;
+    }
 
+    public function getlessStatusAttribute()
+    {
+        $field = 'status';
+        $result = $this->commonValue($this->web_name,$field);
+        return $result;
     }
 
     function coodinatorName($id = null)
@@ -279,6 +155,22 @@ class Niche extends Model
         $user = User::find($id);
         return $user->name;
     }
+
+    public function commonValue($domain = null, $field = null)
+    {
+        $min_val = Niche::where('web_name', $domain)->with('categories')->groupBy('web_name')->min('price');
+        $max_val = Niche::where('web_name', $domain)->with('categories')->groupBy('web_name')->max('price');
+        $min_record = Niche::where('web_name', $domain)->where('price', $min_val)->with('categories')->first();
+        $max_record = Niche::where('web_name', $domain)->where('price', $max_val)->with('categories')->first();
+
+        if (!empty($min_val) && !empty($max_val) && $max_val != $min_val) {
+            $result = $max_record[$field] . ' >> ' . $min_record[$field];
+        } else {
+            $result = $this[$field];
+        }
+        return $result;
+    }
+
 
     public function getcheckClientStatusAttribute()
     {

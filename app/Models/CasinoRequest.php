@@ -11,7 +11,7 @@ class CasinoRequest extends Model
     use HasFactory;
     use SoftDeletes;
     protected $date = ['deleted_at'];
-    protected $appends = ['less_web_name','less_price','less_email','less_coodinator','less_categories','less_domain_rating','less_domain_authority','less_organic_trafic_ahrefs','less_organic_trafic_sem','less_trust_flow','less_span_score','less_citation_flow','less_web_description','less_special_note','check_status'];
+    protected $appends = ['less_web_name','less_price','less_email','less_coodinator','less_categories','less_domain_rating','less_domain_authority','less_organic_trafic_ahrefs','less_organic_trafic_sem','less_trust_flow','less_span_score','less_citation_flow','less_web_description','less_special_note','check_status','less_status'];
     protected $guarded = [];
     public function user()
     {
@@ -28,17 +28,8 @@ class CasinoRequest extends Model
 
     public function getlessWebNameAttribute()
     {
-        
         $field = 'web_name';
-        $deleted = CasinoRequest::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = CasinoRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
-   
-        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved')
-        {    
-            $result = $deleted[$field].' >> '.$actvive[$field];
-        }else{
-            $result = $this[$field];
-        }
+        $result = $this->commonValue($this->web_name,$field);
         return $result;
     }
 
@@ -46,47 +37,27 @@ class CasinoRequest extends Model
     {
     
         $field = 'price';
-        
-        $deleted = CasinoRequest::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = CasinoRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
-
-        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            $result = $deleted[$field].' >> '.$actvive[$field];
-        }else{
-            $result = $this[$field];
-        }
+        $result = $this->commonValue($this->web_name,$field);
         return $result;
-
     }
 
     public function getlessEmailAttribute()
     {
         $field = 'email_webmaster';
-        
-        $deleted = CasinoRequest::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = CasinoRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
-
-        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-           
-            $result = $deleted[$field].' >> '.$actvive[$field];
-        }else{
-            $result = $this[$field];
-        }
+        $result = $this->commonValue($this->web_name,$field);
         return $result;
-
     }
 
     public function getlessCoodinatorAttribute()
     {
         $field = 'Coordinator';
-        
-        $deleted = CasinoRequest::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = CasinoRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+        $min_val = CasinoRequest::where('web_name', $this->web_name)->where('spam','0')->with('categories')->min('price');
+        $max_val = CasinoRequest::where('web_name', $this->web_name)->where('spam','0')->with('categories')->max('price');
+        $min_record = CasinoRequest::where('web_name', $this->web_name)->where('spam','0')->where('price', '=', $min_val ?? '')->with('categories')->first();
+        $max_record = CasinoRequest::where('web_name', $this->web_name)->where('spam','0')->where('price', '=', $max_val ?? '')->with('categories')->first();
 
-        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'Coordinator'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }
+        if (!empty($min_val) && !empty($max_val) && $max_val != $min_val) {
+            $result = $this->coodinatorName($max_record[$field]).' >> '.$this->coodinatorName($min_record[$field]);
         }else{
             $result = $this->coodinatorName($this[$field]);
         }
@@ -95,176 +66,109 @@ class CasinoRequest extends Model
 
     public function getlessCategoriesAttribute()
     {
-    
         $field = 'categories';
-        
-        $deleted = CasinoRequest::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = CasinoRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
+        $min_val = CasinoRequest::where('web_name', $this->web_name)->where('spam','0')->with('categories')->min('price');
+        $max_val = CasinoRequest::where('web_name', $this->web_name)->where('spam','0')->with('categories')->max('price');
+        $min_record = CasinoRequest::where('web_name', $this->web_name)->where('spam','0')->where('price', '=', $min_val ?? '')->with('categories')->first();
+        $max_record = CasinoRequest::where('web_name', $this->web_name)->where('spam','0')->where('price', '=', $max_val ?? '')->with('categories')->first();
 
-        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            if($field == 'Coordinator'){
-                $result = $this->coodinatorName($deleted[$field]).' >> '.$this->coodinatorName($actvive[$field]);
-            }elseif($field == 'categories'){
-                $result = $deleted->categories[0]['category'].' >> '.$actvive->categories[0]['category'];
-            }elseif($field == 'updated_at'){
-                $result = 0;
-            }else{
-                $result = $deleted[$field].' >> '.$actvive[$field];
-            }
-        }else{
+        if (!empty($min_val) && !empty($max_val) && $max_val != $min_val) {
+            $result = $max_record->categories[0]['category'].' >> '.$min_record->categories[0]['category'];
+        } else {
             $result = $this->categories[0]['category'];
         }
         return $result;
-
     }
 
     public function getlessDomainRatingAttribute()
     {
         $field = 'domain_rating';
-        
-        $deleted = CasinoRequest::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = CasinoRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
-
-        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            $result = $deleted[$field].' >> '.$actvive[$field];
-        }else{
-            $result = $this[$field];
-        }
+        $result = $this->commonValue($this->web_name,$field);
         return $result;
-
     }
 
     public function getlessDomainAuthorityAttribute()
     {
         $field = 'domain_authority';
-        
-        $deleted = CasinoRequest::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = CasinoRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
-
-        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            $result = $deleted[$field].' >> '.$actvive[$field];
-        }else{
-            $result = $this[$field];
-        }
+        $result = $this->commonValue($this->web_name,$field);
         return $result;
     }
 
     public function getlessOrganicTraficAhrefsAttribute()
     {
         $field = 'organic_trafic_ahrefs';
-        
-        $deleted = CasinoRequest::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = CasinoRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
-
-        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            $result = $deleted[$field].' >> '.$actvive[$field];
-        }else{
-            $result = $this[$field];
-        }
+        $result = $this->commonValue($this->web_name,$field);
         return $result;
-
     }
 
     public function getlessSpanScoreAttribute()
     {
         $field = 'span_score';
-        
-        $deleted = CasinoRequest::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = CasinoRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
-
-        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            $result = $deleted[$field].' >> '.$actvive[$field];
-        }else{
-            $result = $this[$field];
-        }
+        $result = $this->commonValue($this->web_name,$field);
         return $result;
-
     }
 
     public function getlessOrganicTraficSemAttribute()
     {
         $field = 'organic_trafic_sem';
-        
-        $deleted = CasinoRequest::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = CasinoRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
-
-        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            $result = $deleted[$field].' >> '.$actvive[$field];
-        }else{
-            $result = $this[$field];
-        }
+        $result = $this->commonValue($this->web_name,$field);
         return $result;
-
     }
 
     public function getlessTrustFlowAttribute()
     {
         $field = 'trust_flow';
-        
-        $deleted = CasinoRequest::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = CasinoRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
-
-        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            $result = $deleted[$field].' >> '.$actvive[$field];
-        }else{
-            $result = $this[$field];
-        }
+        $result = $this->commonValue($this->web_name,$field);
         return $result;
-
     }
 
     public function getlessCitationFlowAttribute()
     {
         $field = 'citation_flow';
-        
-        $deleted = CasinoRequest::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = CasinoRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
-
-        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            $result = $deleted[$field].' >> '.$actvive[$field];
-        }else{
-            $result = $this[$field];
-        }
+        $result = $this->commonValue($this->web_name,$field);
         return $result;
-
     }
 
     public function getlessWebDescriptionAttribute()
     {
         $field = 'web_description';
-        
-        $deleted = CasinoRequest::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = CasinoRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
-
-        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            $result = $deleted[$field].' >> '.$actvive[$field];
-        }else{
-            $result = $this[$field];
-        }
+        $result = $this->commonValue($this->web_name,$field);
         return $result;
+    }
 
+    public function getlessStatusAttribute()
+    {
+        $field = 'status';
+        $result = $this->commonValue($this->web_name,$field);
+        return $result;
     }
 
     public function getlessSpecialNoteAttribute()
     {
         $field = 'special_note';
-        
-        $deleted = CasinoRequest::onlyTrashed()->where('status','Approved')->where('web_name',$this->web_name)->with('categories')->orderby('deleted_at','desc')->first();
-        $actvive = CasinoRequest::where([['web_name',$this->web_name],['status','Approved'],['price','<',$deleted->price ?? 0]])->with('categories')->first();
-
-        if(!empty($deleted) && !empty($actvive) && $actvive->price != $deleted->price && $this->status == 'Approved'){
-            $result = $deleted[$field].' >> '.$actvive[$field];
-        }else{
-            $result = $this[$field];
-        }
+        $result = $this->commonValue($this->web_name,$field);
         return $result;
-
     }
 
     function coodinatorName($id = null)
     {
         $user = User::find($id);
         return $user->name ?? '';
+    }
+
+    public function commonValue($domain = null, $field = null)
+    {
+        $min_val = CasinoRequest::where('web_name', $domain)->where('spam','0')->with('categories')->min('price');
+        $max_val = CasinoRequest::where('web_name', $domain)->where('spam','0')->with('categories')->max('price');
+        $min_record = CasinoRequest::where('web_name', $domain)->where('spam','0')->where('price', '=', $min_val ?? '')->with('categories')->first();
+        $max_record = CasinoRequest::where('web_name', $domain)->where('spam','0')->where('price', '=', $max_val ?? '')->with('categories')->first();
+
+        if (!empty($min_val) && !empty($max_val) && $max_val != $min_val) {
+            $result = $max_record[$field] . ' >> ' . $min_record[$field];
+        } else {
+            $result = $this[$field];
+        }
+        return $result;
     }
 
     public function getcheckStatusAttribute()

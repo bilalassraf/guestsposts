@@ -87,8 +87,10 @@ class AdminController extends Controller
                     return redirect(route('admin.add.casino.request'))->with('success', 'Your request has submitted');
                 }else{
                     return redirect()->back()->with('warning', 'Your Price Should be Less Then '.$check_web_url->price )->withInput($request->all());
-                }  
-        }else{
+                }
+        }elseif(isset($check_web_url) && $check_web_url->spam == 1) {
+            return redirect()->back()->with('warning', 'This website is already in Spam. So you can not add it again.');    
+        }elseif(empty($check_web_url)){
             $user = User::find($request->coordinator_id);
             $userRequest = new CasinoRequest();
             $userRequest->web_name = $request->web_name;
@@ -108,7 +110,7 @@ class AdminController extends Controller
             $user->user_request()->save($userRequest);
             $userRequest->categories()->sync($request->categories);
             return redirect(route('admin.add.casino.request'))->with('success', 'Your request has submitted');
-        }    
+        }  
     }
     public function showCasinoRequests()
     {
@@ -116,7 +118,12 @@ class AdminController extends Controller
 
         $user_permissions = $user->permissions()->where('type', 3)->pluck('permissions.name')->toArray();
         if($user->type == 'Admin'){
-            $guest_requests = CasinoRequest::where('spam',0)->orderBy('id', 'DESC')->get();
+            $guest_requests = \DB::table('casino_requests')
+                ->where('spam',0)
+                ->select('casino_requests.*',DB::raw('COUNT(web_name) as count'))
+                ->groupBy('web_name')
+                ->orderBy('count')
+                ->get();
         }else{
             $guest_requests = $user->user_request;
         }
@@ -126,7 +133,7 @@ class AdminController extends Controller
     {
         $user = User::find(Auth::user()->id);
         if( $user->type == 'Admin' || $user->type == 'Moderator' ){
-            $guest_requests = CasinoRequest::where('spam',0)->with(['categories','coodinator'])->orderBy('id', 'DESC')->get();
+            $guest_requests = CasinoRequest::where('spam','0')->groupBy('web_name')->with(['categories','coodinator'])->orderBy('id', 'DESC')->get();
         }else{
 
             $guest_requests = $user->casino_request()->with(['categories', 'coodinator']);
@@ -154,12 +161,10 @@ class AdminController extends Controller
     public function casinoRequestApprove($id)
     {
         $permission = CasinoRequest::find($id);
-
-        if ($permission->status == 'Pending' || $permission->status == 'Rejected') {
-            $check_web_url = $permission->web_name;
-            $check_max_niches = CasinoRequest::where('web_name', $check_web_url)->where('status', 'Approved')->where('price','>=',$permission->price)->get();
-            $check_min_niches = CasinoRequest::where('web_name', $check_web_url)->where('status', 'Approved')->where('price','<',$permission->price)->get();
-            
+        $check_web_url = $permission->web_name;
+        $check_max_niches = CasinoRequest::where('web_name', $check_web_url)->where('price','>=',$permission->price)->get();
+        $check_min_niches = CasinoRequest::where('web_name', $check_web_url)->where('price','<',$permission->price)->get();
+        if(count($check_min_niches) > 0 && count($check_max_niches) > 0){
             if (count($check_max_niches) > 0 ) {
                 foreach ($check_max_niches as $niche) {
                     $del_obj = CasinoRequest::find($niche->id);
@@ -167,19 +172,27 @@ class AdminController extends Controller
                 }
             }
             if(count($check_min_niches) > 0){
-                $permission->delete();
+                foreach ($check_min_niches as $niche) {
+                    $obj = CasinoRequest::find($niche->id);
+                    $obj->status = 'Approved';
+                    $obj->update();
+                }
             }
             
-            $permission->status = 'Approved';
-            if($permission->new_price > 0){
-                $permission->price =$permission->new_price;
-                $permission->new_price=0;
-            }
-            $permission->update();
-            return response()->json(['success'=>"Requests Approved"]);
+            return response()->json(['success'=>"Approved"]);
 
-        } elseif ($permission->status == 'Approved') {
-            return response()->json(['info'=>"Already Approved"]);
+        }else{
+            if ($permission->status == 'Pending' || $permission->status == 'Rejected') {
+                $permission->status = 'Approved';
+                if($permission->niche_new_price > 0){
+                    $permission->price =$permission->niche_new_price;
+                    $permission->niche_new_price=0;
+                }
+                $permission->update();
+                return response()->json(['success'=>"Approved"]);
+            } elseif ($permission->status == 'Approved') {
+                return response()->json(['info'=>"Already Approved"]);
+            }
         }
     }
     public function casinoRejected($id)
@@ -295,12 +308,17 @@ class AdminController extends Controller
     {
         $url =  str_replace("www.","",preg_replace("/^https?\:\/\//i", "" , $request->webname));
         $value = Niche::orWhere('web_name', 'like', '%' . $url . '%')->first();
-        if($value->spam == 0){
-            echo "The website is already added in the database. Though you have a chance to BEAT THE PRICE. ";
+        if (isset($value) && $value->spam == 0) {
+            $result = "The website is already added in the database. Though you have a chance to BEAT THE PRICE.";
+            $status = 'pass';
+        } elseif (isset($value) && $value->spam == 1) {
+            $result = "The website is marked as SPAM. You cannot add it anymore.";
+            $status = 'fail';
+        } else {
+            $result = ""; // Set a default result if necessary
+            $status = "";
         }
-        if(isset($value) && $value->spam == 1){
-            echo "The website is marked as SPAM. You can not add it anymore. ";
-        }
+        return response()->json(['result' => $result, 'status' => $status]);
     }
     public function nicheCheckPrice(Request $request)
     {
@@ -325,12 +343,18 @@ class AdminController extends Controller
         $url =  str_replace("www.","",preg_replace("/^https?\:\/\//i", "" , $request->webname));
         $value = UserRequest::orWhere('web_name', 'like', '%' . $url . '%')->first();
         
-        if($value->spam == 0){
-            echo "The website is already added in the database. Though you have a chance to BEAT THE PRICE. ";
+        if (isset($value) && $value->spam == 0) {
+            $result = "The website is already added in the database. Though you have a chance to BEAT THE PRICE.";
+            $status = 'pass';
+        } elseif (isset($value) && $value->spam == 1) {
+            $result = "The website is marked as SPAM. You cannot add it anymore.";
+            $status = 'fail';
+        } else {
+            $result = ""; // Set a default result if necessary
+            $status = "";
         }
-        if(isset($value) && $value->spam == 1){
-            echo "The website is marked as SPAM. You can not add it anymore. ";
-        }
+        
+        return response()->json(['result' => $result, 'status' => $status]);
     }
     public function guestCheckPrice(Request $request)
     {
@@ -352,15 +376,23 @@ class AdminController extends Controller
     }
     public function casinoName(Request $request)
     {
-        $url =  str_replace("www.","",preg_replace("/^https?\:\/\//i", "" , $request->webname));
+        $url = str_replace("www.", "", preg_replace("/^https?\:\/\//i", "", $request->webname));
         $value = CasinoRequest::orWhere('web_name', 'like', '%' . $url . '%')->first();
-        if($value->spam == 0){
-            echo "The website is already added in the database. Though you have a chance to BEAT THE PRICE. ";
+        
+        if (isset($value) && $value->spam == 0) {
+            $result = "The website is already added in the database. Though you have a chance to BEAT THE PRICE.";
+            $status = 'pass';
+        } elseif (isset($value) && $value->spam == 1) {
+            $result = "The website is marked as SPAM. You cannot add it anymore.";
+            $status = 'fail';
+        } else {
+            $result = ""; // Set a default result if necessary
+            $status = "";
         }
-        if(isset($value) && $value->spam == 1){
-            echo "The website is marked as SPAM. You can not add it anymore. ";
-        }
+        
+        return response()->json(['result' => $result, 'status' => $status]);
     }
+
     public function casinoCheckPrice(Request $request)
     {
         $url =  str_replace("www.", "", preg_replace("/^https?\:\/\//i", "", $request->webName));
@@ -578,7 +610,12 @@ class AdminController extends Controller
 
         $user_permissions = $user->permissions()->where('type', 1)->pluck('permissions.name')->toArray();
         if($user->type == 'Admin'){
-            $guest_requests = UserRequest::where('spam',0)->orderBy('id', 'DESC')->get();
+            $guest_requests = \DB::table('user_requests')
+                ->where('spam',0)
+                ->select('user_requests.*',DB::raw('COUNT(web_name) as count'))
+                ->groupBy('web_name')
+                ->orderBy('count')
+                ->get();
         }else{
             $guest_requests = $user->user_request;
         }
@@ -613,12 +650,11 @@ class AdminController extends Controller
     public function guestRequestApprove($id)
     {
         $permission = UserRequest::find($id);
+        $check_web_url = $permission->web_name;
+        $check_max_niches = UserRequest::where('web_name', $check_web_url)->where('price','>=',$permission->price)->get();
+        $check_min_niches = UserRequest::where('web_name', $check_web_url)->where('price','<',$permission->price)->get();
        
-        if ($permission->status == 'Pending' || $permission->status == 'Rejected') {
-            $check_web_url = $permission->web_name;
-            $check_max_niches = UserRequest::where('web_name', $check_web_url)->where('status', 'Approved')->where('price','>=',$permission->price)->get();
-            $check_min_niches = UserRequest::where('web_name', $check_web_url)->where('status', 'Approved')->where('price','<',$permission->price)->get();
-            
+        if(count($check_min_niches) > 0 && count($check_max_niches) > 0){
             if (count($check_max_niches) > 0 ) {
                 foreach ($check_max_niches as $niche) {
                     $del_obj = UserRequest::find($niche->id);
@@ -626,19 +662,25 @@ class AdminController extends Controller
                 }
             }
             if(count($check_min_niches) > 0){
-                $permission->delete();
+                foreach ($check_min_niches as $niche) {
+                    $obj = UserRequest::find($niche->id);
+                    $obj->status = 'Approved';
+                    $obj->update();
+                }
             }
-            
-            $permission->status = 'Approved';
-            if($permission->new_price > 0){
-                $permission->price =$permission->new_price;
-                $permission->new_price=0;
-            }
-            $permission->update();
             return response()->json(['success'=>"Requests Approved"]);
-
-        } elseif ($permission->status == 'Approved') {
-            return response()->json(['info'=>"Already Approved"]);
+        }else{
+            if ($permission->status == 'Pending' || $permission->status == 'Rejected') {
+                $permission->status = 'Approved';
+                if($permission->niche_new_price > 0){
+                    $permission->price =$permission->niche_new_price;
+                    $permission->niche_new_price=0;
+                }
+                $permission->update();
+                return response()->json(['success'=>"Requests Approved"]);
+            } elseif ($permission->status == 'Approved') {
+                return response()->json(['info'=>"Already Approved"]);
+            }
         }
     }
     public function nicheRejected($id)
@@ -1120,11 +1162,11 @@ class AdminController extends Controller
     {
         $user = User::find(Auth::user()->id);
         if( $user->type == 'Admin' || $user->type == 'Moderator' ){
-            $guest_requests = UserRequest::where('spam',0)->with(['categories','coodinator'])->orderBy('id', 'DESC')->get();
+            $guest_requests = UserRequest::where('spam',0)->groupBy('web_name')->with(['categories','coodinator'])->orderBy('id', 'DESC')->get();
         }else{
             $guest_requests = $user->user_request()->with(['categories', 'coodinator']);
         }
-        $guest_requests = UserRequest::where('spam',0)->with(['categories','coodinator']);
+        $guest_requests = UserRequest::where('spam',0)->groupBy('web_name')->with(['categories','coodinator']);
         if($request->status ){
             $guest_requests->where(['status'=> $request->status]);
         }
@@ -1202,14 +1244,13 @@ class AdminController extends Controller
     {
         $user = User::find(Auth::user()->id);
         if($user->type == 'Admin' || $user->type == 'Moderator'){
-            $niches = Niche::where('spam','0')->with(['categories', 'coodinator'])->get();
+            $niches = Niche::where('spam','0')->groupBy('web_name')->with(['categories', 'coodinator'])->get();
         }else{
             $niches = $user->Niche()->with(['categories', 'coodinator'])->get();
         }
         $guestCoordinator = User::where('type','Outreach Coordinator')->get();
         return DataTables::of($niches)
         ->addColumn('check_box', function($row){
-
             return '<label><input type="checkbox" class="check sub_chk" value="'.$row->id.'" name="ids[]"></label>
                     <a style="cursor: pointer; color:black; display: inline;" class="detail dropdown-toggle">
                     </a>';
@@ -1248,7 +1289,16 @@ class AdminController extends Controller
     {
         $user = User::find(Auth::user()->id);
         if($user->type == 'Admin'){
-            $niches = Niche::all();
+            $niches = \DB::table('niches')
+                ->select('niches.*',DB::raw('COUNT(web_name) as count'))
+                ->groupBy('web_name')
+                ->orderBy('count')
+                ->get();
+            // foreach($niches as $niche){
+            //     echo $niche->web_name;
+            //     echo "<br>";
+            // }
+            // exit();   
         }else{
             $niches = $user->Niche;
         }
@@ -1291,13 +1341,10 @@ class AdminController extends Controller
     public function nicheApprove(Request $request, $id)
     {
         $permission = Niche::find($id);
-       
-        if ($permission->status == 'Pending' || $permission->status == 'Rejected') {
-            $check_web_url = $permission->web_name;
-
-            $check_max_niches = Niche::where('web_name', $check_web_url)->where('status', 'Approved')->where('price','>=',$permission->price)->get();
-            $check_min_niches = Niche::where('web_name', $check_web_url)->where('status', 'Approved')->where('price','<',$permission->price)->get();
-            
+        $check_web_url = $permission->web_name;
+        $check_max_niches = Niche::where('web_name', $check_web_url)->where('price','>=',$permission->price)->get();
+        $check_min_niches = Niche::where('web_name', $check_web_url)->where('price','<',$permission->price)->get();
+        if(count($check_min_niches) > 0 && count($check_max_niches) > 0){
             if (count($check_max_niches) > 0 ) {
                 foreach ($check_max_niches as $niche) {
                     $del_obj = Niche::find($niche->id);
@@ -1305,19 +1352,27 @@ class AdminController extends Controller
                 }
             }
             if(count($check_min_niches) > 0){
-                $permission->delete();
+                foreach ($check_min_niches as $niche) {
+                    $obj = Niche::find($niche->id);
+                    $obj->status = 'Approved';
+                    $obj->update();
+                }
             }
- 
-            $permission->status = 'Approved';
-            if($permission->niche_new_price > 0){
-                $permission->price =$permission->niche_new_price;
-                $permission->niche_new_price=0;
-            }
-            $permission->update();
+            
             return response()->json(['success'=>"Approved"]);
 
-        } elseif ($permission->status == 'Approved') {
-            return response()->json(['info'=>"Already Approved"]);
+        }else{
+            if ($permission->status == 'Pending' || $permission->status == 'Rejected') {
+                $permission->status = 'Approved';
+                if($permission->niche_new_price > 0){
+                    $permission->price =$permission->niche_new_price;
+                    $permission->niche_new_price=0;
+                }
+                $permission->update();
+                return response()->json(['success'=>"Approved"]);
+            } elseif ($permission->status == 'Approved') {
+                return response()->json(['info'=>"Already Approved"]);
+            }
         }
     }
     public function nicheReject(Request $request, $id)
