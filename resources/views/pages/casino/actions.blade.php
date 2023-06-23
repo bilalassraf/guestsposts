@@ -11,10 +11,10 @@
 </a>
 {{-- <a href="javascript:void(0);" class="edit" onclick="sendAjaxRequest('{{ route('admin.casino.request.good', $request->id) }}', {{ $request->id }});">    
   <i class="material-icons fa fa-check-circle text-success" title="Good Request"></i>
-</a>
-<a href="javascript:void(0);" class="edit" onclick="sendAjaxRequest('{{ route('admin.casino.request.spam', $request->id) }}', {{ $request->id }});">    
-  <i class="material-icons fa fa-user-secret text-waring" title="Spam Request"></i>
 </a> --}}
+<a href="{{ route('admin.single.casino.request.spam', $request->id) }}" class="edit">    
+  <i class="material-icons fa fa-user-secret text-danger" title="Spam Request"></i>
+</a>
 <a href="#" class="delete" data-toggle="modal" data-target="#deleteGuestModal-{{ $request->id }}"><i class="material-icons fa fa-trash text-green" title="Delete a request"></i></a>
 @include('modals.delete-casino-request')
 @include('modals.update-casino')
@@ -27,7 +27,7 @@
   function sendAjaxRequest(route, nicheId) {
     // Prepare the data to be sent
     var data = {
-      niche_id: nicheId
+      casino_id: nicheId
     };
   
     // Send the AJAX request

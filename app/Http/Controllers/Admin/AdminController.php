@@ -184,9 +184,9 @@ class AdminController extends Controller
         }else{
             if ($permission->status == 'Pending' || $permission->status == 'Rejected') {
                 $permission->status = 'Approved';
-                if($permission->niche_new_price > 0){
-                    $permission->price =$permission->niche_new_price;
-                    $permission->niche_new_price=0;
+                if($permission->new_price > 0){
+                    $permission->price =$permission->new_price;
+                    $permission->new_price=0;
                 }
                 $permission->update();
                 return response()->json(['success'=>"Approved"]);
@@ -308,13 +308,18 @@ class AdminController extends Controller
     {
         $url =  str_replace("www.","",preg_replace("/^https?\:\/\//i", "" , $request->webname));
         $value = Niche::orWhere('web_name', 'like', '%' . $url . '%')->first();
-        if (isset($value) && $value->spam == 0) {
+        $pending_niche = Niche::orWhere('web_name', 'like', '%' . $url . '%')->where('status','Pending')->first();
+        
+        if (isset($value) && $value->spam == 0 && !isset($pending_niche) && empty($pending_niche)) {
             $result = "The website is already added in the database. Though you have a chance to BEAT THE PRICE.";
             $status = 'pass';
-        } elseif (isset($value) && $value->spam == 1) {
+        }elseif (isset($value) && $value->spam == 1 || isset($pending_niche) && $pending_niche->spam == 1) {
             $result = "The website is marked as SPAM. You cannot add it anymore.";
             $status = 'fail';
-        } else {
+        }elseif (isset($pending_niche) && !empty($pending_niche)) {
+            $result = "The website is already in QUEUE. You cannot add it right now.";
+            $status = 'fail';
+        }else {
             $result = ""; // Set a default result if necessary
             $status = "";
         }
@@ -342,14 +347,18 @@ class AdminController extends Controller
     {
         $url =  str_replace("www.","",preg_replace("/^https?\:\/\//i", "" , $request->webname));
         $value = UserRequest::orWhere('web_name', 'like', '%' . $url . '%')->first();
+        $pending_request = UserRequest::orWhere('web_name', 'like', '%' . $url . '%')->where('status','Pending')->first();
         
-        if (isset($value) && $value->spam == 0) {
+        if (isset($value) && $value->spam == 0 && !isset($pending_request) && empty($pending_request)) {
             $result = "The website is already added in the database. Though you have a chance to BEAT THE PRICE.";
             $status = 'pass';
-        } elseif (isset($value) && $value->spam == 1) {
+        }elseif (isset($value) && $value->spam == 1 || isset($pending_request) && $pending_request->spam == 1) {
             $result = "The website is marked as SPAM. You cannot add it anymore.";
             $status = 'fail';
-        } else {
+        }elseif (isset($pending_request) && !empty($pending_request)) {
+            $result = "The website is already in QUEUE. You cannot add it right now.";
+            $status = 'fail';
+        }else {
             $result = ""; // Set a default result if necessary
             $status = "";
         }
@@ -378,14 +387,18 @@ class AdminController extends Controller
     {
         $url = str_replace("www.", "", preg_replace("/^https?\:\/\//i", "", $request->webname));
         $value = CasinoRequest::orWhere('web_name', 'like', '%' . $url . '%')->first();
+        $pending_casino = CasinoRequest::orWhere('web_name', 'like', '%' . $url . '%')->where('status','Pending')->first();
         
-        if (isset($value) && $value->spam == 0) {
+        if (isset($value) && $value->spam == 0 && !isset($pending_casino) && empty($pending_casino)) {
             $result = "The website is already added in the database. Though you have a chance to BEAT THE PRICE.";
             $status = 'pass';
-        } elseif (isset($value) && $value->spam == 1) {
+        }elseif (isset($value) && $value->spam == 1 || isset($pending_casino) && $pending_casino->spam == 1) {
             $result = "The website is marked as SPAM. You cannot add it anymore.";
             $status = 'fail';
-        } else {
+        }elseif (isset($pending_casino) && !empty($pending_casino)) {
+            $result = "The website is already in QUEUE. You cannot add it right now.";
+            $status = 'fail';
+        }else {
             $result = ""; // Set a default result if necessary
             $status = "";
         }
@@ -672,9 +685,9 @@ class AdminController extends Controller
         }else{
             if ($permission->status == 'Pending' || $permission->status == 'Rejected') {
                 $permission->status = 'Approved';
-                if($permission->niche_new_price > 0){
-                    $permission->price =$permission->niche_new_price;
-                    $permission->niche_new_price=0;
+                if($permission->new_price > 0){
+                    $permission->price =$permission->new_price;
+                    $permission->new_price=0;
                 }
                 $permission->update();
                 return response()->json(['success'=>"Requests Approved"]);
@@ -1110,7 +1123,8 @@ class AdminController extends Controller
                 if($check_price){
                     $user = User::find($request->user_id);
                     $Niche = new Niche();
-                    $Niche->web_name = preg_replace( "#^[^:/.]*[:/]+#i", "", $request->web_name );
+                    // $Niche->web_name = preg_replace( "#^[^:/.]*[:/]+#i", "", $request->web_name );
+                    $Niche->web_name = $request->web_name;
                     $Niche->coordinator_id = $request->coordinator_id;
                     $Niche->price = $request->price;
                     $Niche->company_price  =  $request->company_price;
@@ -1136,7 +1150,7 @@ class AdminController extends Controller
         }else{
             $user = User::find($request->user_id);
             $Niche = new Niche();
-            $Niche->web_name = preg_replace( "#^[^:/.]*[:/]+#i", "", $request->web_name );
+            $Niche->web_name = $request->web_name;
             $Niche->coordinator_id = $request->coordinator_id;
             $Niche->price = $request->price;
             $Niche->company_price  =  $request->company_price;
@@ -1434,6 +1448,12 @@ class AdminController extends Controller
             return response()->json(['info'=>"Already Good Request"]);
         }
     }
+
+    public function singleGuestSpam($id){
+        UserRequest::whereIn('id', explode(",", $id))->update(['spam' => 1]);
+        return back()->with(['success' => "Add to Spam Request Successfully"]);
+    }
+
     public function guestSpamWebsites()
     {
         $data = UserRequest::where('spam',1)->get();
@@ -1458,6 +1478,12 @@ class AdminController extends Controller
         $ids = $request->ids;
         CasinoRequest::whereIn('id', explode(",", $ids))->update(['spam' => 1]);
         return response()->json(['success' => "Add to Spam Request Successfully"]);
+    }
+
+    public function singleCasinoSpam($id)
+    {
+        CasinoRequest::whereIn('id', explode(",", $id))->update(['spam' => 1]);
+        return back()->with(['success' => "Add to Spam Request Successfully"]);
     }
 
     public function casinoUnspam($id)
@@ -1498,6 +1524,11 @@ class AdminController extends Controller
             $permission->delete();
             return back()->with('success', 'Niche has been deleted');
         }
+    }
+    public function singleNicheSpam($id)
+    {
+        Niche::whereIn('id', explode(",", $id))->update(['spam' => 1]);
+        return back()->with(['success' => "Add to Spam Request Successfully"]);
     }
     public function showDeleteNiches()
     {

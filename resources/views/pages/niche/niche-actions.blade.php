@@ -9,10 +9,10 @@
 </a>
 {{-- <a href="javascript:void(0);" class="edit" onclick="sendAjaxRequest('{{ route('admin.niche.good', $niche->id) }}', {{ $niche->id }});">    
     <i class="material-icons fa fa-check-circle text-success" title="Good Request"></i>
-</a>
-<a href="javascript:void(0);" class="edit" onclick="sendAjaxRequest('{{ route('admin.niche.spam', $niche->id) }}', {{ $niche->id }});">    
-    <i class="material-icons fa fa-user-secret text-waring" title="Spam Request"></i>
 </a> --}}
+<a href="{{ route('admin.single.niche.request.spam', $niche->id) }}" class="edit">    
+    <i class="material-icons fa fa-user-secret text-danger" title="Spam Request"></i>
+</a>
 <a href="" class="delete" data-toggle="modal" data-target="#deleteNicheModal-{{ $niche->id }}"><i class="material-icons fa fa-trash text-green" title="Delete a request"></i></a>
 
 <!-- Niche Modal -->

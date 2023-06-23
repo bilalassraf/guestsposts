@@ -158,10 +158,11 @@ class Niche extends Model
 
     public function commonValue($domain = null, $field = null)
     {
-        $min_val = Niche::where('web_name', $domain)->with('categories')->groupBy('web_name')->min('price');
-        $max_val = Niche::where('web_name', $domain)->with('categories')->groupBy('web_name')->max('price');
-        $min_record = Niche::where('web_name', $domain)->where('price', $min_val)->with('categories')->first();
-        $max_record = Niche::where('web_name', $domain)->where('price', $max_val)->with('categories')->first();
+        $url =  str_replace("www.","",preg_replace("/^https?\:\/\//i", "" , $domain));
+        $min_val = Niche::orWhere('web_name', 'like', '%' . $url . '%')->with('categories')->groupBy('web_name')->min('price');
+        $max_val = Niche::orWhere('web_name', 'like', '%' . $url . '%')->with('categories')->groupBy('web_name')->max('price');
+        $min_record = Niche::orWhere('web_name', 'like', '%' . $url . '%')->where('price', $min_val)->with('categories')->first();
+        $max_record = Niche::orWhere('web_name', 'like', '%' . $url . '%')->where('price', $max_val)->with('categories')->first();
 
         if (!empty($min_val) && !empty($max_val) && $max_val != $min_val) {
             $result = $max_record[$field] . ' >> ' . $min_record[$field];
