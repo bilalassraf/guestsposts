@@ -166,9 +166,17 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
     $(document).ready(function() {
-    $('.select2').select2({
-        tags: true,
-    });
+        $('.select2').select2({
+            tags: true,
+        });
+        $(".select2").on("select2:select", function (evt) {
+            var element = evt.params.data.element;
+            var $element = $(element);
+            
+            $element.detach();
+            $(this).append($element);
+            $(this).trigger("change");
+        });
     $(document).ready(function(){
         $("#outreachcoodinator1").select2();
     });

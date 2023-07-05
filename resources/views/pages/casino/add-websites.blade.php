@@ -275,9 +275,17 @@ textarea.select2-search__field {
         });
     });
     $(document).ready(function() {
-        $('.select2').select2({});
-        // $('#mySelect2').val(null).trigger('change');
+        $('#category').select2();
+        $("#category").on("select2:select", function (evt) {
+            var element = evt.params.data.element;
+            var $element = $(element);
+            
+            $element.detach();
+            $(this).append($element);
+            $(this).trigger("change");
+        });
     });
+
     $(document).ready(function(){
         $("#outreachcoodinator1").select2();
     });
