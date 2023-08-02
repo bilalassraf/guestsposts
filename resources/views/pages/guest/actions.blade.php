@@ -8,10 +8,13 @@
 <a href="javascript:void(0);" onclick="sendAjaxRequest('{{route('admin.guest.request.rejected', $request->id)}}', {{ $request->id }});">
     <i class="material-icons fa fa-close text-green" title="reject request"></i>
 </a>
-{{-- <a href="javascript:void(0);" class="edit" onclick="sendAjaxRequest('{{ route('admin.guest.request.good', $request->id) }}', {{ $request->id }});">    
+<a href="javascript:void(0);" class="edit" onclick="sendAjaxRequest('{{ route('admin.guest.request.good', $request->id) }}', {{ $request->id }});">    
   <i class="material-icons fa fa-check-circle text-success" title="Good Request"></i>
-</a> --}}
-<a href="{{ route('admin.single.guest.request.spam', $request->id) }}" class="edit">    
+</a>
+<a href="javascript:void(0);" class="edit" onclick="sendAjaxRequest('{{ route('admin.guest.request.blackhat', $request->id) }}', {{ $request->id }});">    
+  <i class="material-icons fas fa-hat-cowboy text-dark" title="Bad Request"></i>
+</a>
+<a href="javascript:void(0);" class="edit" onclick="sendAjaxRequest('{{ route('admin.single.guest.request.spam', $request->id) }}', {{ $request->id }});" class="edit">    
   <i class="material-icons fa fa-user-secret text-danger" title="Spam Request"></i>
 </a>
 <a href="#" class="delete" data-toggle="modal" data-target="#deleteGuestModal-{{ $request->id }}"><i class="material-icons fa fa-trash text-green" title="Delete a request"></i></a>
@@ -48,14 +51,20 @@
             toastr.success('Request has been Good Site');
         }else if(response.info == 'Already Good Request'){
             toastr.success('Request is Already Good Site');
+        }else if(response.success == 'Black Hat Request'){
+            toastr.success('Request has been Black Hat Site');
+        }else if(response.info == 'Already Black Hat Request'){
+            toastr.success('Request is Already Black Hat Site');
         }else if(response.success == 'Spam Request'){
             toastr.success('Request has been added to Spam Request');
         }else if(response.info == 'Already Spam Request'){
             toastr.info('Already in Spam Request');
-        }else {
-            // Handle other response scenarios
+        }else if(response.success == 'Add to Spam Request Successfully'){
+          toastr.success('Add to Spam Request Successfully');
+        } else {
             console.log(response);
         }
+        guest_table.draw();
       },
       error: function(xhr, status, error) {
         // Request failed, handle the error

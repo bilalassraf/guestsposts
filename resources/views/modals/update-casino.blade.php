@@ -1,12 +1,12 @@
 <!-- Edit Modal HTML -->
-<form class="theme-form login-form" method="post" action="{{ route('admin.update.casino', $request->id) }}" novalidate>
-    @csrf
 <div id="editRequestModal-{{$request->id}}" class="modal fade bd-example-modal-lg">
 	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
+        <div class="modal-content">
+            <form class="theme-form login-form" id="updateCasinoForm-{{$request->id}}" method="post" action="{{ route('admin.update.casino', $request->id) }}" novalidate>
+                @csrf
 				<div class="modal-header bg-dark">
 					<h4 class="modal-title">Update Request</h4>
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<button type="button" class="close" id="editCasinoModalClose-{{$request->id}}" data-dismiss="modal" aria-hidden="true">&times;</button>
 				</div>
 				<div class="modal-body">
                         <div class="form-icon"><i class="icofont icofont-envelope-open"></i></div>
@@ -43,7 +43,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="price">Price</label>
-                                    <input class="form-control" id="price" type="text" placeholder="Price" name="price"
+                                    <input class="form-control" id="casinoPrice-{{$request->id}}" type="text" placeholder="Price" name="price"
                                         required value="{{$request->new_price >0 ? $request->new_price : $request->price}}">&nbsp;<span id="errmsg"></span>
                                 </div>
                             </div>
@@ -51,11 +51,11 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="companyprice">Company price</label>
-                                        <input class="form-control" id="companyprice" type="text" placeholder="Company Price" name="company_price" required value="{{ $request->company_price }}">
+                                        <input class="form-control casinocompanyprice-{{$request->id}}" type="text" placeholder="Company Price" name="company_price" required value="{{ $request->company_price }}">
                                     </div>
                                 </div>
                             @else
-                            <input class="form-control" id="companyprice" type="hidden" placeholder="Company Price" name="company_price" required value="{{ $request->company_price }}">
+                            <input class="form-control casinocompanyprice-{{$request->id}}" type="hidden" placeholder="Company Price" name="company_price" required value="{{ $request->company_price }}">
                             @endif
                         </div>
                         <div class="row">
@@ -86,7 +86,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="spanscore">Span Score</label>
+                                    <label for="spanscore">Spam Score</label>
                                     <input class="form-control"  type="text" placeholder="Span Score"
                                         name="span_score" required value="{{ $request->span_score }}">
                                 </div>
@@ -167,17 +167,15 @@
 	</div>
 </div>
 
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
 
     $(document).ready(function() {
-        $('.selectCategory').select2({
-            tags: true,
-        });
+        $('.selectCategory').select2();
         $(".selectCategory").on("select2:select", function (evt) {
             var element = evt.params.data.element;
             var $element = $(element);
@@ -192,11 +190,11 @@
     });
     $(document).ready(function() {
     
-        $("#price").keyup(function(){
-            var price = $("#price").val();
+        $("#casinoPrice-{{$request->id}}").keyup(function(){
+            var price = $("#casinoPrice-{{$request->id}}").val();
             var percentage = price ;
             var company = parseInt(price *8/100 + 50) + parseInt(price);
-            $("#companyprice").val(company);
+            $(".casinocompanyprice-{{$request->id}}").val(company);
         });
         $('#domainauthorityCasino').on('change', function(ev) {  
             $('#domainAuthCasino').addClass('d-none'); 
@@ -219,6 +217,27 @@
             if(value < 1000){
                 $('#organicTrasCasino').removeClass('d-none');
             }
+        });
+    });
+    $(document).ready(function() {
+        $("#updateCasinoForm-{{$request->id}}").off("submit").on("submit", function(event) {
+            // Your AJAX code here
+            event.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                type: "POST", // Change this to the appropriate method (e.g., POST, PUT, etc.)
+                url: $(this).attr("action"), // URL to send the request
+                data: formData, // The serialized form data
+                success: function(response) {
+                    $('#editCasinoModalClose-{{$request->id}}').trigger('click');
+                    toastr.success('Request has been Updated');
+                    table.draw();
+                },
+                error: function(error) {
+                    // Handle errors here (if needed)
+                    console.error("Error occurred:", error);
+                }
+            });
         });
     });
 </script>

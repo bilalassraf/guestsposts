@@ -36,7 +36,7 @@
           <h5 class="modal-title" id="exampleModalLabel1"><b>Are You Sure ?</b></h5>
         </div>
         <div class="modal-body">
-          <form action="{{ route('user.niche.new.price',$request->id) }}" method="post">
+          <form id="updateNichePriceModal-{{$request->id}}" action="{{ route('user.niche.new.price',$request->id) }}" method="post">
             @csrf
             <div class="form-group">
                 <p>Changing the price will require admin approval.
@@ -72,4 +72,25 @@ function showModal(id) {
     $('#new_price'+id).val(price);
     $('#myModal-'+id).show('#myModal');
 }
+$(document).ready(function() {
+    $("#updateNichePriceModal-{{$request->id}}").off("submit").on("submit", function(event) {
+        // Your AJAX code here
+        event.preventDefault();
+        var formData = $(this).serialize();
+        $.ajax({
+            type: "POST", // Change this to the appropriate method (e.g., POST, PUT, etc.)
+            url: $(this).attr("action"), // URL to send the request
+            data: formData, // The serialized form data
+            success: function(response) {
+                $('#myModal-{{$request->id}}').hide('#myModal');
+                toastr.success('New Price Updated Successfully');
+                table.draw();
+            },
+            error: function(error) {
+                // Handle errors here (if needed)
+                console.error("Error occurred:", error);
+            }
+        });
+    });
+});
 </script>

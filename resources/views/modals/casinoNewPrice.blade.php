@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancle</button>
+                <button type="button"  class="btn btn-secondary" data-dismiss="modal">Cancle</button>
                 <input type="button" onclick='showModal({{ $request->id }})' value="Save" class="btn bg-lightblack text-white mybutton">
             </div>
         </div>
@@ -34,9 +34,12 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel1"><b>Are You Sure ?</b></h5>
+          <button type="button" id="casinoPriceModalClose-{{$request->id}}" class="close text-dark" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>  
         </div>
         <div class="modal-body">
-          <form action="{{ route('user.casino.new.price',$request->id) }}" method="post">
+          <form id="updateCasinoPriceModal-{{$request->id}}" action="{{ route('user.casino.new.price',$request->id) }}" method="post">
             @csrf
             <div class="form-group">
                 <p>Changing the price will require admin approval.
@@ -54,17 +57,17 @@
 </div>
 <script type="text/javascript">
 $(document).ready(function() {
-      $(".allow-numeric").bind("keypress", function (e) {
-          var keyCode = e.which ? e.which : e.keyCode
+  $(".allow-numeric").bind("keypress", function (e) {
+      var keyCode = e.which ? e.which : e.keyCode
 
-          if (!(keyCode >= 48 && keyCode <= 57)) {
-            $(".error").css("display", "inline");
-            return false;
-          }else{
-            $(".error").css("display", "none");
-          }
-      });
-    });
+      if (!(keyCode >= 48 && keyCode <= 57)) {
+        $(".error").css("display", "inline");
+        return false;
+      }else{
+        $(".error").css("display", "none");
+      }
+  });
+});
 function showModal(id) {
     $('#newPriceModel-'+id).hide('#newPriceModel');
     var price = $('#update_price'+id).val();
@@ -72,4 +75,25 @@ function showModal(id) {
     $('#new_price'+id).val(price);
     $('#myModal-'+id).show('#myModal');
 }
+$(document).ready(function() {
+    $("#updateCasinoPriceModal-{{$request->id}}").off("submit").on("submit", function(event) {
+        event.preventDefault();
+        var formData = $(this).serialize();
+        $.ajax({
+            type: "POST",
+            url: $(this).attr("action"),
+            data: formData,
+            success: function(response) {
+                $('#myModal-{{$request->id}}').hide('#myModal');
+                $('#casinoPriceModalClose-{{$request->id}}').trigger('click');
+                toastr.success('New Price Updated Successfully');
+                table.draw();
+            },
+            error: function(error) {
+                // Handle errors here (if needed)
+                console.error("Error occurred:", error);
+            }
+        });
+    });
+});
 </script>

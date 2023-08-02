@@ -1,11 +1,11 @@
 <div id="deleteNicheModal-{{$niche->id}}" class="modal fade">
 	<div class="modal-dialog">
 		<div class="modal-content">
-			<form action="{{ route('admin.niche.deleted', $niche->id) }}" method="get">
+			<form id="nicheDeleteModal-{{$niche->id}}" action="{{ route('admin.niche.deleted', $niche->id) }}" method="get">
                 @csrf
 				<div class="modal-header">
 					<h4 class="modal-title">Delete User</h4>
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<button type="button" id="deleteNicheModalClose-{{$niche->id}}" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				</div>
 				<div class="modal-body">
 					<p>Are you sure you want to remove this user"</p>
@@ -19,3 +19,25 @@
 		</div>
 	</div>
 </div>
+
+<script>
+	$(document).ready(function() {
+		$("#nicheDeleteModal-{{$niche->id}}").off("submit").on("submit", function(event) {
+			event.preventDefault();
+			var formData = $(this).serialize();
+			$.ajax({
+				type: "get",
+				url: $(this).attr("action"),
+				data: formData,
+				success: function(response) {
+					$('#deleteNicheModalClose-{{$niche->id}}').trigger('click');
+					toastr.success('Niche Request has been deleted');
+					table.draw();
+				},
+				error: function(error) {
+					console.error("Error occurred:", error);
+				}
+			});
+		});
+	});
+</script>

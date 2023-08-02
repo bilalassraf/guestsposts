@@ -64,7 +64,6 @@
                                 @empty
                                     <td><p class="text-bold">{{$empty_message}}</p></td>
                                 @endforelse
-
                         </table>
                     </div>
                     <!-- /.card-body -->

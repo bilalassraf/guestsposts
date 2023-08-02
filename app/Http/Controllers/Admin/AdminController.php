@@ -47,7 +47,7 @@ class AdminController extends Controller
     public function storeCasinoRequest(Request $request)
     {
         $request->validate([
-            'web_name'         => 'required|unique:user_requests',
+            'web_name'         => 'required|unique:casino_requests',
             'coordinator_id'      => 'required',
             'price'            => 'required|integer|regex:/^[-0-9\+]+$/',
             'categories'         => 'required',
@@ -71,7 +71,7 @@ class AdminController extends Controller
                     $userRequest->web_name = $request->web_name;
                     $userRequest->Coordinator = $request->coordinator_id;
                     $userRequest->price = $request->price;
-                    $userRequest->company_price  = $request->company_price;
+                    $userRequest->company_price  = $request->company_price ? $request->company_price : $request->price * 8 / 100 + 50;
                     $userRequest->span_score     = $request->span_score;
                     $userRequest->domain_rating     = $request->domain_rating;
                     $userRequest->domain_authority     = $request->domain_authority;
@@ -213,7 +213,7 @@ class AdminController extends Controller
             $permission->status = 'Deleted';
             $permission->update();
             $permission->delete();
-            return back()->with('success', 'CasinoRequest has been deleted');
+            return response()->json(['success'=>"CasinoRequest has been deleted"]);
         }
     }
     public function updateCasino(Request $request, $id)
@@ -431,7 +431,7 @@ class AdminController extends Controller
         $new_price->new_price = $request->new_price;
         $new_price->status = 'Pending';
         $new_price->update();
-        return back()->with('success', 'New Price Updated Successfully');
+        return response()->json(['success'=>"New Price Updated Successfully"]);
     }
     public function newPrice(Request $request , $id)
     {
@@ -715,7 +715,7 @@ class AdminController extends Controller
             $permission->status = 'Deleted';
             $permission->update();
             $permission->delete();
-            return back()->with('success', 'UserRequest has been deleted');
+            return response()->json(['success'=>"UserRequest has been deleted"]);
         }
     }
     public function makeAdmin($id)
@@ -879,7 +879,7 @@ class AdminController extends Controller
         $userRequest->black_hat = $request->site_quality == "Black" ? 1 : 0;
         $userRequest->update();
         $userRequest->categories()->sync($request->categories);
-        return back()->with('success', 'Request updated successfully');
+        return response()->json(['success'=>"Update"]);
     }
     public function updatePassword(Request $request, $id)
     {
@@ -1350,7 +1350,7 @@ class AdminController extends Controller
         $Niche->black_hat = $request->site_quality == "Black" ? 1 : 0;
         $Niche->update();
         $Niche->categories()->sync($request->categories);
-        return redirect(route('admin.show.niches'))->with('success', 'Your Niche has been Updated');
+        return response()->json(['success'=>"Update"]);
     }
     public function nicheApprove(Request $request, $id)
     {
@@ -1406,11 +1406,23 @@ class AdminController extends Controller
         $permission = Niche::find($id);
         if($permission->good != 1){
             $permission->good = 1;
-            $permission->spam = 0;
+            $permission->black_hat = 0;
             $permission->update();
             return response()->json(['success'=>"Good Request"]);
         }else{
             return response()->json(['info'=>"Already Good Request"]);
+        }
+    }
+    public function nicheBlackhat($id)
+    {
+        $permission = Niche::find($id);
+        if($permission->black_hat != 1){
+            $permission->good = 0;
+            $permission->black_hat = 1;
+            $permission->update();
+            return response()->json(['success'=>"Black Hat Request"]);
+        }else{
+            return response()->json(['info'=>"Already Black Hat Request"]);
         }
     }
     public function nicheSpam(Request $request)
@@ -1441,17 +1453,28 @@ class AdminController extends Controller
         $permission = UserRequest::find($id);
         if($permission->good != 1){
             $permission->good = 1;
-            $permission->spam = 0;
+            $permission->black_hat = 0;
             $permission->update();
             return response()->json(['success'=>"Good Request"]);
         }else{
             return response()->json(['info'=>"Already Good Request"]);
         }
     }
-
+    public function guestRequestBlackhat($id)
+    {
+        $permission = UserRequest::find($id);
+        if($permission->black_hat != 1){
+            $permission->black_hat = 1;
+            $permission->good = 0;
+            $permission->update();
+            return response()->json(['success'=>"Black Hat Request"]);
+        }else{
+            return response()->json(['info'=>"Already Black Hat Request"]);
+        }
+    }
     public function singleGuestSpam($id){
         UserRequest::whereIn('id', explode(",", $id))->update(['spam' => 1]);
-        return back()->with(['success' => "Add to Spam Request Successfully"]);
+        return response()->json(['success'=>"Add to Spam Request Successfully"]);
     }
 
     public function guestSpamWebsites()
@@ -1465,14 +1488,25 @@ class AdminController extends Controller
         $permission = CasinoRequest::find($id);
         if($permission->good != 1){
             $permission->good = 1;
-            $permission->spam = 0;
+            $permission->black_hat = 0;
             $permission->update();
             return response()->json(['success'=>"Good Request"]);
         }else{
             return response()->json(['info'=>"Already Good Request"]);
         }
     }
-
+    public function casinoBlackhat($id)
+    {
+        $permission = CasinoRequest::find($id);
+        if($permission->black_hat != 1){
+            $permission->black_hat = 1;
+            $permission->good = 0;
+            $permission->update();
+            return response()->json(['success'=>"Black Hat Request"]);
+        }else{
+            return response()->json(['info'=>"Already Black Hat Request"]);
+        }
+    }
     public function casinoSpam(Request $request)
     {
         $ids = $request->ids;
@@ -1483,7 +1517,7 @@ class AdminController extends Controller
     public function singleCasinoSpam($id)
     {
         CasinoRequest::whereIn('id', explode(",", $id))->update(['spam' => 1]);
-        return back()->with(['success' => "Add to Spam Request Successfully"]);
+        return response()->json(['success' => "Add to Spam Request Successfully"]);
     }
 
     public function casinoUnspam($id)
@@ -1522,13 +1556,13 @@ class AdminController extends Controller
             $permission->status = 'Deleted';
             $permission->update();
             $permission->delete();
-            return back()->with('success', 'Niche has been deleted');
+            return response()->json(['success'=>"Niche has been deleted"]);
         }
     }
     public function singleNicheSpam($id)
     {
         Niche::whereIn('id', explode(",", $id))->update(['spam' => 1]);
-        return back()->with(['success' => "Add to Spam Request Successfully"]);
+        return response()->json(['success'=>"Add to Spam Request Successfully"]);
     }
     public function showDeleteNiches()
     {

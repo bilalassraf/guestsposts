@@ -7,10 +7,13 @@
 <a href="javascript:void(0);" class="edit" onclick="sendAjaxRequest('{{ route('admin.niche.rejected', $niche->id) }}', {{ $niche->id }});">    
     <i class="material-icons fa fa-close text-green" title="Reject request"></i>
 </a>
-{{-- <a href="javascript:void(0);" class="edit" onclick="sendAjaxRequest('{{ route('admin.niche.good', $niche->id) }}', {{ $niche->id }});">    
+<a href="javascript:void(0);" class="edit" onclick="sendAjaxRequest('{{ route('admin.niche.good', $niche->id) }}', {{ $niche->id }});">    
     <i class="material-icons fa fa-check-circle text-success" title="Good Request"></i>
-</a> --}}
-<a href="{{ route('admin.single.niche.request.spam', $niche->id) }}" class="edit">    
+</a>
+<a href="javascript:void(0);" class="edit" onclick="sendAjaxRequest('{{ route('admin.niche.blackhat', $niche->id) }}', {{ $niche->id }});">    
+    <i class="material-icons fas fa-hat-cowboy text-dark" title="Bad Request"></i>
+</a>
+<a href="javascript:void(0);" class="edit" onclick="sendAjaxRequest('{{ route('admin.single.niche.request.spam', $niche->id) }}', {{ $niche->id }});">    
     <i class="material-icons fa fa-user-secret text-danger" title="Spam Request"></i>
 </a>
 <a href="" class="delete" data-toggle="modal" data-target="#deleteNicheModal-{{ $niche->id }}"><i class="material-icons fa fa-trash text-green" title="Delete a request"></i></a>
@@ -50,14 +53,21 @@
             toastr.success('Niche added to Good Request');
         }else if(response.info == 'Already Good Request'){
             toastr.success('Niche Already in Good Request');
+        }else if(response.success == 'Black Hat Request'){
+            toastr.success('Niche added to Black Hat Site');
+        }else if(response.info == 'Already Black Hat Request'){
+            toastr.success('Niche Already Black Hat Site');
         }else if(response.success == 'Spam Request'){
             toastr.success('Niche added to Spam Request');
         }else if(response.info == 'Already Spam Request'){
             toastr.info('Niche Already in Spam Request');
+        }else if(response.success == 'Add to Spam Request Successfully'){
+            toastr.success('Add to Spam Request Successfully');
         }else {
             // Handle other response scenarios
             console.log(response);
         }
+        table.draw();
       },
       error: function(xhr, status, error) {
         // Request failed, handle the error

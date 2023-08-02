@@ -4,10 +4,10 @@
         <div class="modal-content">
             <div class="modal-header bg-dark">
                 <h4 class="modal-title">Update Niche</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <button type="button" id="editNicheModalClose-{{ $niche->id }}" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             </div>
             <div class="modal-body">
-                <form class="theme-form" action="{{ route('admin.chnage.niche', $niche->id) }}" method="post" novalidate>
+                <form class="theme-form" id="updateNicheForm-{{$niche->id}}" action="{{ route('admin.chnage.niche', $niche->id) }}" method="post" novalidate>
                     @csrf
                     <div class="form-icon"><i class="icofont icofont-envelope-open"></i></div>
                     <div class="row">
@@ -41,18 +41,18 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="price">Price</label>
-                                <input class="form-control" id="price" type="text" placeholder="Price" name="price" required value="{{ $niche->price }}">
+                                <input class="form-control" id="priceNiche-{{$niche->id}}" type="text" placeholder="Price" name="price" required value="{{ $niche->price }}">
                             </div>
                         </div>
                         @if (auth()->user()->type == "Admin")
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="companyprice">Company price</label>
-                                    <input class="form-control" id="companyprice" type="text" placeholder="Company Price" name="company_price" required value="{{ $niche->company_price }}">
+                                    <input class="form-control companyprice-{{$niche->id}}" type="text" placeholder="Company Price" name="company_price" required value="{{ $niche->company_price }}">
                                 </div>
                             </div>
                         @else
-                        <input class="form-control" id="companyprice" type="hidden" placeholder="Company Price" name="company_price" required value="{{ $niche->company_price }}">
+                        <input class="form-control companyprice-{{$niche->id}}" type="hidden" placeholder="Company Price" name="company_price" required value="{{ $niche->company_price }}">
                         @endif
                     </div>
                     <div class="row">
@@ -159,32 +159,30 @@
     </div>
 </div>
 
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
     $(document).ready(function() {
-        $('.select2').select2({
-            tags: true,
-        });
-        $(".select2").on("select2:select", function (evt) {
-            var element = evt.params.data.element;
-            var $element = $(element);
-            
-            $element.detach();
-            $(this).append($element);
-            $(this).trigger("change");
-        });
+    $('.select2').select2();
+    $(".select2").on("select2:select", function (evt) {
+        var element = evt.params.data.element;
+        var $element = $(element);
+        
+        $element.detach();
+        $(this).append($element);
+        $(this).trigger("change");
+    });
     $(document).ready(function(){
         $("#outreachcoodinator1").select2();
     });
-    $("#price").keyup(function(){
-        var price = $("#price").val();
+    $("#priceNiche-{{$niche->id}}").keyup(function(){
+        var price = $("#priceNiche-{{$niche->id}}").val();
         var percentage = price ;
         var company = parseInt(price *8/100 + 50) + parseInt(price);
-        $("#companyprice").val(company);
+        $(".companyprice-{{$niche->id}}").val(company);
     });
     $('#domainauthorityNiche').on('change', function(ev) {  
         $('#domainAuthNiche').addClass('d-none'); 
@@ -200,13 +198,33 @@
             $('#domainRateNiche').removeClass('d-none');
         }
     });
-
     $('#organictraficNiche').on('change', function(ev) {  
         $('#organicTrasNiche').addClass('d-none'); 
         var value = $(this).val();
         if(value < 1000){
             $('#organicTrasNiche').removeClass('d-none');
         }
+    });
+    $(document).ready(function() {
+        $("#updateNicheForm-{{$niche->id}}").off("submit").on("submit", function(event) {
+            // Your AJAX code here
+            event.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                type: "POST", // Change this to the appropriate method (e.g., POST, PUT, etc.)
+                url: $(this).attr("action"), // URL to send the request
+                data: formData, // The serialized form data
+                success: function(response) {
+                    $('#editNicheModalClose-{{$niche->id}}').trigger('click');
+                    toastr.success('Request has been Updated');
+                    table.draw();
+                },
+                error: function(error) {
+                    // Handle errors here (if needed)
+                    console.error("Error occurred:", error);
+                }
+            });
+        });
     });
 });
 </script>
@@ -220,8 +238,5 @@
     }
     .select2-container--default .select2-selection--single {
         height: 38px !important;
-    }
-    .selectCategory span.select2-selection.select2-selection--single {
-        display: none !important;
     }
 </style>

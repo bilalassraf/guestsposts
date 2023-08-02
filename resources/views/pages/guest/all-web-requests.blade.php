@@ -80,19 +80,7 @@ Show Website
                         </tr>
                     </thead>
                     <tbody>
-                        <div class="modal fade" id="getCodeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-lg">
-                               <div class="modal-content">
-                                <div class="modal-header">
-                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                  <h4 class="modal-title" id="myModalLabel"> API CODE </h4>
-                                </div>
-                                <div class="modal-body" id="getCode" style="overflow-x: scroll;">
-                                   //ajax success content here.
-                                </div>
-                             </div>
-                            </div>
-                          </div>
+    
                     </tbody>
                   </table>
                 </div>
@@ -196,7 +184,7 @@ var raitings_lower  = domain_lower = span_lower = 100;
 var traffic_lower = organic_lower = 10000000;
 var company_lower = 8000;
 var web_lower = 5000; 
-var table = $('#users-table').DataTable({
+var guest_table = $('#users-table').DataTable({
     deferRender: true,
     serverSide: true,
     order:[[3, 'desc']],
@@ -289,13 +277,13 @@ $('#site_quality').on('change', function(ev) {
     changeDataTableUrl();
 });
 function changeDataTableUrl(){
-    table.ajax.url('{{ route('get-web-requests') }}?category='+category+'&status='+status+'&to='+dateTo+'&from='+dateFrom+'&raitings_upper='+raitings_upper+'&raitings_lower='+raitings_lower+'&domain_upper='+domain_upper+'&domain_lower='+domain_lower+'&span_upper='+span_upper+'&span_lower='+span_lower+'&traffic_upper='+traffic_upper+'&traffic_lower='+traffic_lower+'&company_upper='+company_upper+'&company_lower='+company_lower+'&organic_upper='+organic_upper+'&organic_lower='+organic_lower+'&web_lower='+web_lower+'&web_upper='+web_upper+'&siteQuality='+siteQuality).load(); 
+    guest_table.ajax.url('{{ route('get-web-requests') }}?category='+category+'&status='+status+'&to='+dateTo+'&from='+dateFrom+'&raitings_upper='+raitings_upper+'&raitings_lower='+raitings_lower+'&domain_upper='+domain_upper+'&domain_lower='+domain_lower+'&span_upper='+span_upper+'&span_lower='+span_lower+'&traffic_upper='+traffic_upper+'&traffic_lower='+traffic_lower+'&company_upper='+company_upper+'&company_lower='+company_lower+'&organic_upper='+organic_upper+'&organic_lower='+organic_lower+'&web_lower='+web_lower+'&web_upper='+web_upper+'&siteQuality='+siteQuality).load(); 
 }
 // Add event listener for opening and closing details
 $('#users-table tbody').on('click', '.detail', function () {
 
     var tr = $(this).closest('tr');
-    var row = table.row( tr );
+    var row = guest_table.row( tr );
 
     if ( row.child.isShown() ) {
         // This row is already open - close it
@@ -348,7 +336,7 @@ $('.approved-selected').on('click', function(e) {
                             $(this).parents("tr").remove();
                         });
                         alert(data['success']);
-                        table.draw();
+                        guest_table.draw();
                         //location.reload();
                     } else if (data['error']) {
                         alert(data['error']);
@@ -389,7 +377,7 @@ $('.delete-selected').on('click', function(e) {
                         $(this).parents("tr").remove();
                     });
                     alert(data['success']);
-                    table.draw();
+                    guest_table.draw();
                     //location.reload();
                 } else if (data['error']) {
                     alert(data['error']);
@@ -429,7 +417,7 @@ $('.selected-spam').on('click', function(e) {
                             $(this).parents("tr").remove();
                         });
                         alert(data['success']);
-                        table.draw();
+                        guest_table.draw();
                         //location.reload();
                     } else if (data['error']) {
                         alert(data['error']);

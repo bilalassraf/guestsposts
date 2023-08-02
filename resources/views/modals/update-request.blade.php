@@ -1,12 +1,12 @@
 <!-- Edit Modal HTML -->
-<form class="theme-form login-form" method="post" action="{{ route('admin.update.request', $request->id) }}" novalidate>
-    @csrf
 <div id="editRequestModal-{{$request->id}}" class="modal fade bd-example-modal-lg">
 	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
+        <div class="modal-content">
+            <form class="theme-form login-form" id="updateForm-{{$request->id}}" action="{{ route('admin.update.request', $request->id) }}" method="POST" novalidate>
+                @csrf
 				<div class="modal-header bg-dark">
 					<h4 class="modal-title">Update Request</h4>
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<button type="button" class="close" id="editRequestModalClose-{{$request->id}}" data-dismiss="modal" aria-hidden="true">&times;</button>
 				</div>
 				<div class="modal-body">
                         <div class="form-icon"><i class="icofont icofont-envelope-open"></i></div>
@@ -43,7 +43,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="price">Price</label>
-                                    <input class="form-control" id="price" type="text" placeholder="Price" name="price"
+                                    <input class="form-control" id="price-{{$request->id}}" type="text" placeholder="Price" name="price"
                                         required value="{{$request->new_price >0 ? $request->new_price : $request->price}}">&nbsp;<span id="errmsg"></span>
                                 </div>
                             </div>
@@ -51,11 +51,11 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="companyprice">Company price</label>
-                                        <input class="form-control" id="companyprice" type="text" placeholder="Company Price" name="company_price" required value="{{ $request->company_price }}">
+                                        <input class="form-control companypricerequest-{{$request->id}}" type="text" placeholder="Company Price" name="company_price" required value="{{ $request->company_price }}">
                                     </div>
                                 </div>
                             @else
-                            <input class="form-control" id="companyprice" type="hidden" placeholder="Company Price" name="company_price" required value="{{ $request->company_price }}">
+                            <input class="form-control companypricerequest-{{$request->id}}" type="hidden" placeholder="Company Price" name="company_price" required value="{{ $request->company_price }}">
                             @endif
                         </div>
                         <div class="row">
@@ -86,7 +86,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="spanscore">Span Score</label>
+                                    <label for="spanscore">Spam Score</label>
                                     <input class="form-control"  type="text" placeholder="Span Score"
                                         name="span_score" required value="{{ $request->span_score }}">
                                 </div>
@@ -167,16 +167,21 @@
 	</div>
 </div>
 
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 <script>
     $(document).ready(function() {
-        $('.select2').select2({
-            tags: true,
+        $(document).ready(function(){
+            $("#outreachcoodinator1").select2();
         });
+        $('.select2').select2();
         $(".select2").on("select2:select", function (evt) {
             var element = evt.params.data.element;
             var $element = $(element);
@@ -185,38 +190,55 @@
             $(this).append($element);
             $(this).trigger("change");
         });
-    $(document).ready(function(){
-        $("#outreachcoodinator1").select2();
+        $("#price-{{$request->id}}").keyup(function(){
+            var price = $("#price-{{$request->id}}").val();
+            var percentage = price ;
+            var company = parseInt(price *8/100 + 50) + parseInt(price);
+            $(".companypricerequest-{{$request->id}}").val(company);
+        });
+        $('#domainauthoritys').on('change', function(ev) { 
+            $('#domainAuthss').addClass('d-none'); 
+            var value = $(this).val();
+            if(value < 25){
+                $('#domainAuthss').removeClass('d-none');
+            }
+        });
+        $('#domainratings').on('change', function(ev) {  
+            $('#domainRatess').addClass('d-none'); 
+            var value = $(this).val();
+            if(value < 25){
+                $('#domainRatess').removeClass('d-none');
+            }
+        });
+        $('#organictraficss').on('change', function(ev) {  
+            $('#organicTras').addClass('d-none'); 
+            var value = $(this).val();
+            if(value < 1000){
+                $('#organicTras').removeClass('d-none');
+            }
+        });
     });
-    $("#price").keyup(function(){
-        var price = $("#price").val();
-        var percentage = price ;
-        var company = parseInt(price *8/100 + 50) + parseInt(price);
-        $("#companyprice").val(company);
+    $(document).ready(function() {
+        $("#updateForm-{{$request->id}}").off("submit").on("submit", function(event) {
+            // Your AJAX code here
+            event.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                type: "POST", // Change this to the appropriate method (e.g., POST, PUT, etc.)
+                url: $(this).attr("action"), // URL to send the request
+                data: formData, // The serialized form data
+                success: function(response) {
+                    $('#editRequestModalClose-{{$request->id}}').trigger('click');
+                    toastr.success('Request has been Updated');
+                    guest_table.draw();
+                },
+                error: function(error) {
+                    // Handle errors here (if needed)
+                    console.error("Error occurred:", error);
+                }
+            });
+        });
     });
-    $('#domainauthoritys').on('change', function(ev) { 
-        $('#domainAuthss').addClass('d-none'); 
-        var value = $(this).val();
-        if(value < 25){
-            $('#domainAuthss').removeClass('d-none');
-        }
-    });
-    $('#domainratings').on('change', function(ev) {  
-        $('#domainRatess').addClass('d-none'); 
-        var value = $(this).val();
-        if(value < 25){
-            $('#domainRatess').removeClass('d-none');
-        }
-    });
-
-    $('#organictraficss').on('change', function(ev) {  
-        $('#organicTras').addClass('d-none'); 
-        var value = $(this).val();
-        if(value < 1000){
-            $('#organicTras').removeClass('d-none');
-        }
-    });
-});
 </script>
 <style>
     .select2-container--default .select2-selection--multiple .select2-selection__choice {
@@ -229,7 +251,5 @@
     .select2-container--default .select2-selection--single {
         height: 38px !important;
     }
-    .selectCategory span.select2-selection.select2-selection--single {
-        display: none !important;
-    }
+    
 </style>

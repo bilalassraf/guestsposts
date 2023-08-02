@@ -232,7 +232,6 @@ $('.approved-selected').on('click', function(e) {
     if(check == true){
 
         var join_selected_values = allVals.join(",");
-
         $.ajax({
             url: "{{ route('admin.approved.selected.request') }}",
             type: 'POST',
