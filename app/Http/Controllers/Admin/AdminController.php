@@ -1184,10 +1184,10 @@ class AdminController extends Controller
         if($request->status ){
             $guest_requests->where(['status'=> $request->status]);
         }
-        if($request->siteQuality == 'Good'){
+        if(isset($request->siteQuality) && $request->siteQuality == 'Good'){
             $guest_requests->where(['good'=> 1]);
         }
-        if($request->siteQuality == 'Black'){
+        if(isset($request->siteQuality) && $request->siteQuality == 'Black'){
             $guest_requests->where(['black_hat'=> 1]);
         }
         if($request->category){

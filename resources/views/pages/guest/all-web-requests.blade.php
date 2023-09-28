@@ -178,7 +178,7 @@ if ('{{ auth()->user()->type }}' == 'Admin') {
     @endif
     ];
 }
-var category = status = dateTo = dateFrom = '';
+var category = status = dateTo = dateFrom = siteQuality = '';
 var raitings_upper = domain_upper = span_upper =  traffic_upper = company_upper  = organic_upper  = web_upper =  1;
 var raitings_lower  = domain_lower = span_lower = 100;
 var traffic_lower = organic_lower = 10000000;
